@@ -2,12 +2,13 @@ package capstone.oras.entity;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "Job", schema = "dbo", catalog = "ORAS")
 public class JobEntity {
-    private Integer id;
+    private int id;
     private String title;
     private String description;
     private Double salaryFrom;
@@ -21,19 +22,22 @@ public class JobEntity {
     private Integer creatorId;
     private String status;
     private Date createDate;
+    private TalentPoolEntity talentPoolByTalentPoolId;
+    private AccountEntity accountByCreatorId;
+    private Collection<JobApplicationEntity> jobApplicationsById;
 
     @Id
-    @Column(name = "id")
-    public Integer getId() {
+    @Column(name = "id", nullable = false)
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
     @Basic
-    @Column(name = "title")
+    @Column(name = "title", nullable = true, length = 100)
     public String getTitle() {
         return title;
     }
@@ -43,7 +47,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "description")
+    @Column(name = "description", nullable = true, length = 2147483647)
     public String getDescription() {
         return description;
     }
@@ -53,7 +57,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "salaryFrom")
+    @Column(name = "salaryFrom", nullable = true, precision = 0)
     public Double getSalaryFrom() {
         return salaryFrom;
     }
@@ -63,7 +67,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "salaryTo")
+    @Column(name = "salaryTo", nullable = true, precision = 0)
     public Double getSalaryTo() {
         return salaryTo;
     }
@@ -73,7 +77,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "currency")
+    @Column(name = "currency", nullable = true, length = 50)
     public String getCurrency() {
         return currency;
     }
@@ -83,7 +87,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "salaryHidden")
+    @Column(name = "salaryHidden", nullable = true)
     public Boolean getSalaryHidden() {
         return salaryHidden;
     }
@@ -93,7 +97,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "vacancies")
+    @Column(name = "vacancies", nullable = true)
     public Integer getVacancies() {
         return vacancies;
     }
@@ -103,7 +107,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "applyFrom")
+    @Column(name = "applyFrom", nullable = true)
     public Date getApplyFrom() {
         return applyFrom;
     }
@@ -113,7 +117,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "applyTo")
+    @Column(name = "applyTo", nullable = true)
     public Date getApplyTo() {
         return applyTo;
     }
@@ -123,7 +127,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "talentPoolId")
+    @Column(name = "talentPoolId", nullable = true)
     public Integer getTalentPoolId() {
         return talentPoolId;
     }
@@ -133,7 +137,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "creatorId")
+    @Column(name = "creatorId", nullable = true)
     public Integer getCreatorId() {
         return creatorId;
     }
@@ -143,7 +147,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "status")
+    @Column(name = "status", nullable = true, length = 50)
     public String getStatus() {
         return status;
     }
@@ -153,7 +157,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "createDate")
+    @Column(name = "createDate", nullable = true)
     public Date getCreateDate() {
         return createDate;
     }
@@ -167,7 +171,7 @@ public class JobEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JobEntity jobEntity = (JobEntity) o;
-        return Objects.equals(id, jobEntity.id) &&
+        return id == jobEntity.id &&
                 Objects.equals(title, jobEntity.title) &&
                 Objects.equals(description, jobEntity.description) &&
                 Objects.equals(salaryFrom, jobEntity.salaryFrom) &&
@@ -186,5 +190,34 @@ public class JobEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, talentPoolId, creatorId, status, createDate);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "talentPoolId", referencedColumnName = "id")
+    public TalentPoolEntity getTalentPoolByTalentPoolId() {
+        return talentPoolByTalentPoolId;
+    }
+
+    public void setTalentPoolByTalentPoolId(TalentPoolEntity talentPoolByTalentPoolId) {
+        this.talentPoolByTalentPoolId = talentPoolByTalentPoolId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "creatorId", referencedColumnName = "id")
+    public AccountEntity getAccountByCreatorId() {
+        return accountByCreatorId;
+    }
+
+    public void setAccountByCreatorId(AccountEntity accountByCreatorId) {
+        this.accountByCreatorId = accountByCreatorId;
+    }
+
+    @OneToMany(mappedBy = "jobByJobId")
+    public Collection<JobApplicationEntity> getJobApplicationsById() {
+        return jobApplicationsById;
+    }
+
+    public void setJobApplicationsById(Collection<JobApplicationEntity> jobApplicationsById) {
+        this.jobApplicationsById = jobApplicationsById;
     }
 }
