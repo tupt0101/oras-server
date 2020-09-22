@@ -16,13 +16,19 @@
     <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
-          <factory-entry name="NewPersistenceUnit" />
-          <factory-entry name="entityManagerFactory" />
+          <factory-entry name="NewPersistenceUnit" value="9d65121b-188a-462b-a7e9-d61a635c6d46" />
           <factory-entry name="noname-a.xml@0" value="9d65121b-188a-462b-a7e9-d61a635c6d46" />
         </datasource-mapping>
         <naming-strategy-map />
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/java/META-INF/persistence.xml" />
+      </configuration>
+    </facet>
+    <facet type="hibernate" name="Hibernate">
+      <configuration>
+        <datasource-map />
+        <naming-strategy-map />
       </configuration>
     </facet>
   </component>
@@ -123,6 +129,5 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.2.9.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:5.2.9.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-core:2.7.0" level="project" />
-    <orderEntry type="library" name="Maven: hikari-cp:hikari-cp:2.13.0" level="project" />
   </component>
 </module>

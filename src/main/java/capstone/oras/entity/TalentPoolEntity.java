@@ -1,26 +1,29 @@
 package capstone.oras.entity;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "TalentPool", schema = "dbo", catalog = "ORAS")
 public class TalentPoolEntity {
-    private Integer id;
+    private int id;
     private String name;
+    private Collection<JobEntity> jobsById;
+    private Collection<JobApplicationEntity> jobApplicationsById;
 
     @Id
-    @Column(name = "id")
-    public Integer getId() {
+    @Column(name = "id", nullable = false)
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "name", nullable = true, length = 100)
     public String getName() {
         return name;
     }
@@ -34,12 +37,30 @@ public class TalentPoolEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TalentPoolEntity that = (TalentPoolEntity) o;
-        return Objects.equals(id, that.id) &&
+        return id == that.id &&
                 Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    @OneToMany(mappedBy = "talentPoolByTalentPoolId")
+    public Collection<JobEntity> getJobsById() {
+        return jobsById;
+    }
+
+    public void setJobsById(Collection<JobEntity> jobsById) {
+        this.jobsById = jobsById;
+    }
+
+    @OneToMany(mappedBy = "talentPoolByTalentPoolId")
+    public Collection<JobApplicationEntity> getJobApplicationsById() {
+        return jobApplicationsById;
+    }
+
+    public void setJobApplicationsById(Collection<JobApplicationEntity> jobApplicationsById) {
+        this.jobApplicationsById = jobApplicationsById;
     }
 }

@@ -7,7 +7,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "JobApplication", schema = "dbo", catalog = "ORAS")
 public class JobApplicationEntity {
-    private Integer id;
+    private int id;
     private Integer candidateId;
     private Integer jobId;
     private Double matchingRate;
@@ -17,19 +17,22 @@ public class JobApplicationEntity {
     private String source;
     private String status;
     private String comment;
+    private CandidateEntity candidateByCandidateId;
+    private JobEntity jobByJobId;
+    private TalentPoolEntity talentPoolByTalentPoolId;
 
     @Id
-    @Column(name = "id")
-    public Integer getId() {
+    @Column(name = "id", nullable = false)
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
     @Basic
-    @Column(name = "candidateId")
+    @Column(name = "candidateId", nullable = true)
     public Integer getCandidateId() {
         return candidateId;
     }
@@ -39,7 +42,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "jobId")
+    @Column(name = "jobId", nullable = true)
     public Integer getJobId() {
         return jobId;
     }
@@ -49,7 +52,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "matchingRate")
+    @Column(name = "matchingRate", nullable = true, precision = 0)
     public Double getMatchingRate() {
         return matchingRate;
     }
@@ -59,7 +62,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "cv")
+    @Column(name = "cv", nullable = true, length = 2147483647)
     public String getCv() {
         return cv;
     }
@@ -69,7 +72,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "applyDate")
+    @Column(name = "applyDate", nullable = true)
     public Date getApplyDate() {
         return applyDate;
     }
@@ -79,7 +82,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "talentPoolId")
+    @Column(name = "talentPoolId", nullable = true)
     public Integer getTalentPoolId() {
         return talentPoolId;
     }
@@ -89,7 +92,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "source")
+    @Column(name = "source", nullable = true, length = 100)
     public String getSource() {
         return source;
     }
@@ -99,7 +102,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "status")
+    @Column(name = "status", nullable = true, length = 50)
     public String getStatus() {
         return status;
     }
@@ -109,7 +112,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "comment")
+    @Column(name = "comment", nullable = true, length = 2147483647)
     public String getComment() {
         return comment;
     }
@@ -123,7 +126,7 @@ public class JobApplicationEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JobApplicationEntity that = (JobApplicationEntity) o;
-        return Objects.equals(id, that.id) &&
+        return id == that.id &&
                 Objects.equals(candidateId, that.candidateId) &&
                 Objects.equals(jobId, that.jobId) &&
                 Objects.equals(matchingRate, that.matchingRate) &&
@@ -138,5 +141,35 @@ public class JobApplicationEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, candidateId, jobId, matchingRate, cv, applyDate, talentPoolId, source, status, comment);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "candidateId", referencedColumnName = "id")
+    public CandidateEntity getCandidateByCandidateId() {
+        return candidateByCandidateId;
+    }
+
+    public void setCandidateByCandidateId(CandidateEntity candidateByCandidateId) {
+        this.candidateByCandidateId = candidateByCandidateId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "jobId", referencedColumnName = "id")
+    public JobEntity getJobByJobId() {
+        return jobByJobId;
+    }
+
+    public void setJobByJobId(JobEntity jobByJobId) {
+        this.jobByJobId = jobByJobId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "talentPoolId", referencedColumnName = "id")
+    public TalentPoolEntity getTalentPoolByTalentPoolId() {
+        return talentPoolByTalentPoolId;
+    }
+
+    public void setTalentPoolByTalentPoolId(TalentPoolEntity talentPoolByTalentPoolId) {
+        this.talentPoolByTalentPoolId = talentPoolByTalentPoolId;
     }
 }
