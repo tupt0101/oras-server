@@ -10,5 +10,15 @@
         <property name="applicationName" value="DataGrip" />
       </driver-properties>
     </data-source>
+    <data-source source="LOCAL" name="NewPersistenceUnit/Hibernate" uuid="2ef5a72c-87d0-415e-b1d5-ba85b7a741c3">
+      <driver-ref>sqlserver.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>Hibernate
+
+D:/fpt/capstone/code/oras-server/src/main/java/META-INF/persistence.xml</remarks>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://oras.cdntglzasifp.ap-southeast-1.rds.amazonaws.com\oras:1433;database=ORAS</jdbc-url>
+    </data-source>
   </component>
 </project>

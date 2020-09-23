@@ -15,4 +15,10 @@ public class JobController {
     JobEntity createJob(@RequestBody JobEntity job) {
         return jobService.createJob(job);
     }
+
+    @RequestMapping(value = "/test")
+    @ResponseBody
+    public String test() {
+        return "test";
+    }
 }
