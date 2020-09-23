@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "TalentPool", schema = "dbo", catalog = "ORAS")
+@Table(name = "talent _pool", schema = "dbo", catalog = "ORAS")
 public class TalentPoolEntity {
     private int id;
     private String name;

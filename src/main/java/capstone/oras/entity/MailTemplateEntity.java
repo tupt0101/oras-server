@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "MailTemplate", schema = "dbo", catalog = "ORAS")
+@Table(name = "mail_template", schema = "dbo", catalog = "ORAS")
 public class MailTemplateEntity {
     private int id;
     private String subject;
@@ -54,7 +54,7 @@ public class MailTemplateEntity {
     }
 
     @Basic
-    @Column(name = "creatorId", nullable = true)
+    @Column(name = "creator_id", nullable = true)
     public Integer getCreatorId() {
         return creatorId;
     }
@@ -81,7 +81,7 @@ public class MailTemplateEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "creatorId", referencedColumnName = "id")
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }
