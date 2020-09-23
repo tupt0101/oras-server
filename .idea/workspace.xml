@@ -5,18 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a626e92b-47d1-4c0d-91d5-d4c351b17ac3" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/META-INF/persistence.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/AccountEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/CandidateEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobApplicationEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/MailTemplateEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/SysdiagramsEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/TalentPoolEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_guava_guava_20_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_bean_validators_3_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_boot_starter_3_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_core_3_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_data_rest_3_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_oas_3_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_schema_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_spi_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_spring_web_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_spring_webflux_3_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_spring_webmvc_3_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_swagger2_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_swagger_common_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_swagger_ui_2_9_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_swagger_core_v3_swagger_annotations_2_1_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_swagger_core_v3_swagger_models_2_1_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_swagger_swagger_annotations_1_5_20.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_swagger_swagger_models_1_5_20.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mapstruct_mapstruct_1_2_0_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_plugin_spring_plugin_core_2_0_0_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_plugin_spring_plugin_metadata_2_0_0_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/SpringFoxConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/dao/IJobRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/job/controller/JobController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/job/service/IJobService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/job/service/JobService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__hikari_cp_hikari_cp_2_13_0.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/oras.iml" beforeDir="false" afterPath="$PROJECT_DIR$/oras.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
@@ -74,11 +89,12 @@
     <property name="RequestMappingsPanelOrder1" value="1" />
     <property name="RequestMappingsPanelWidth0" value="75" />
     <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.intellij.database.dataSource.DataSourceTemplate" value="SQL Server (Microsoft)" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/capstone/oras" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/capstone/oras" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -87,6 +103,9 @@
     <key name="ImportMappingsDialog.RecentPackages">
       <recent name="capstone.oras" />
       <recent name="" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\fpt\capstone\code\oras-server\src\main\java\capstone\oras" />
     </key>
   </component>
   <component name="RunManager">
@@ -161,38 +180,46 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="353" y="0" width="722" height="634" key="#com.intellij.jpa.generation.ui.DatabaseSchemaImportDialog/0.0.1366.728@0.0.1366.728" timestamp="1600722054419" />
-    <state width="1323" height="199" key="GridCell.Tab.0.bottom" timestamp="1600721782864">
+    <state x="463" y="118" key="FileChooserDialogImpl" timestamp="1600843640935">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="199" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1600721782864" />
-    <state width="1323" height="199" key="GridCell.Tab.0.center" timestamp="1600721782864">
+    <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1600843640935" />
+    <state width="1323" height="199" key="GridCell.Tab.0.bottom" timestamp="1600858000427">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="199" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1600721782864" />
-    <state width="1323" height="199" key="GridCell.Tab.0.left" timestamp="1600721782864">
+    <state width="1323" height="199" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1600858000427" />
+    <state width="1323" height="199" key="GridCell.Tab.0.center" timestamp="1600858000427">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="199" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1600721782864" />
-    <state width="1323" height="199" key="GridCell.Tab.0.right" timestamp="1600721782864">
+    <state width="1323" height="199" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1600858000427" />
+    <state width="1323" height="199" key="GridCell.Tab.0.left" timestamp="1600858000427">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="199" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1600721782864" />
-    <state width="1323" height="199" key="GridCell.Tab.1.bottom" timestamp="1600721782864">
+    <state width="1323" height="199" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1600858000427" />
+    <state width="1323" height="199" key="GridCell.Tab.0.right" timestamp="1600858000427">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="199" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1600721782864" />
-    <state width="1323" height="199" key="GridCell.Tab.1.center" timestamp="1600721782864">
+    <state width="1323" height="199" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1600858000427" />
+    <state width="1323" height="199" key="GridCell.Tab.1.bottom" timestamp="1600858000428">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="199" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1600721782864" />
-    <state width="1323" height="199" key="GridCell.Tab.1.left" timestamp="1600721782864">
+    <state width="1323" height="199" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1600858000428" />
+    <state width="1323" height="199" key="GridCell.Tab.1.center" timestamp="1600858000427">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="199" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1600721782864" />
-    <state width="1323" height="199" key="GridCell.Tab.1.right" timestamp="1600721782864">
+    <state width="1323" height="199" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1600858000427" />
+    <state width="1323" height="199" key="GridCell.Tab.1.left" timestamp="1600858000427">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="199" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1600721782864" />
+    <state width="1323" height="199" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1600858000427" />
+    <state width="1323" height="199" key="GridCell.Tab.1.right" timestamp="1600858000427">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="199" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1600858000427" />
+    <state x="213" y="18" key="Maven.ArtifactSearchDialog" timestamp="1600857776573">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="213" y="18" key="Maven.ArtifactSearchDialog/0.0.1366.728@0.0.1366.728" timestamp="1600857776573" />
     <state x="499" y="141" key="chooseDestDirectoryDialog" timestamp="1600721881719">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
