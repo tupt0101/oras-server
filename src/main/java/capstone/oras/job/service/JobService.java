@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class JobService implements IJobService {
     @Autowired
-    private IJobRepository jobRepository;
+    private IJobRepository IJobRepository;
 
     @Override
     public JobEntity createJob(JobEntity job) {
-        return jobRepository.save(job);
+        return IJobRepository.save(job);
     }
 }
