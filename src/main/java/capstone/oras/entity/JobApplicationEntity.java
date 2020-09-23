@@ -5,11 +5,10 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "JobApplication", schema = "dbo", catalog = "ORAS")
+@Table(name = "job_application", schema = "dbo", catalog = "ORAS")
 public class JobApplicationEntity {
     private int id;
     private Integer candidateId;
-    private Integer jobId;
     private Double matchingRate;
     private String cv;
     private Date applyDate;
@@ -17,9 +16,10 @@ public class JobApplicationEntity {
     private String source;
     private String status;
     private String comment;
+    private Integer jobId;
     private CandidateEntity candidateByCandidateId;
-    private JobEntity jobByJobId;
     private TalentPoolEntity talentPoolByTalentPoolId;
+    private JobEntity jobByJobId;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -32,7 +32,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "candidateId", nullable = true)
+    @Column(name = "candidate_id", nullable = true)
     public Integer getCandidateId() {
         return candidateId;
     }
@@ -42,17 +42,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "jobId", nullable = true)
-    public Integer getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(Integer jobId) {
-        this.jobId = jobId;
-    }
-
-    @Basic
-    @Column(name = "matchingRate", nullable = true, precision = 0)
+    @Column(name = "matching_rate", nullable = true, precision = 0)
     public Double getMatchingRate() {
         return matchingRate;
     }
@@ -72,7 +62,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "applyDate", nullable = true)
+    @Column(name = "apply_date", nullable = true)
     public Date getApplyDate() {
         return applyDate;
     }
@@ -82,7 +72,7 @@ public class JobApplicationEntity {
     }
 
     @Basic
-    @Column(name = "talentPoolId", nullable = true)
+    @Column(name = "talent_pool_id", nullable = true)
     public Integer getTalentPoolId() {
         return talentPoolId;
     }
@@ -121,6 +111,16 @@ public class JobApplicationEntity {
         this.comment = comment;
     }
 
+    @Basic
+    @Column(name = "job_id", nullable = true)
+    public Integer getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(Integer jobId) {
+        this.jobId = jobId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -128,23 +128,29 @@ public class JobApplicationEntity {
         JobApplicationEntity that = (JobApplicationEntity) o;
         return id == that.id &&
                 Objects.equals(candidateId, that.candidateId) &&
-                Objects.equals(jobId, that.jobId) &&
                 Objects.equals(matchingRate, that.matchingRate) &&
                 Objects.equals(cv, that.cv) &&
                 Objects.equals(applyDate, that.applyDate) &&
                 Objects.equals(talentPoolId, that.talentPoolId) &&
                 Objects.equals(source, that.source) &&
                 Objects.equals(status, that.status) &&
-                Objects.equals(comment, that.comment);
+                Objects.equals(comment, that.comment) &&
+                Objects.equals(jobId, that.jobId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, candidateId, jobId, matchingRate, cv, applyDate, talentPoolId, source, status, comment);
+        return Objects.hash(id,
+                candidateId,
+                matchingRate, cv, applyDate,
+                talentPoolId,
+                source, status, comment,
+                jobId
+        );
     }
 
     @ManyToOne
-    @JoinColumn(name = "candidateId", referencedColumnName = "id")
+    @JoinColumn(name = "candidate_id", referencedColumnName = "id", insertable=false, updatable=false)
     public CandidateEntity getCandidateByCandidateId() {
         return candidateByCandidateId;
     }
@@ -154,22 +160,22 @@ public class JobApplicationEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "jobId", referencedColumnName = "id")
-    public JobEntity getJobByJobId() {
-        return jobByJobId;
-    }
-
-    public void setJobByJobId(JobEntity jobByJobId) {
-        this.jobByJobId = jobByJobId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "talentPoolId", referencedColumnName = "id")
+    @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
     public TalentPoolEntity getTalentPoolByTalentPoolId() {
         return talentPoolByTalentPoolId;
     }
 
     public void setTalentPoolByTalentPoolId(TalentPoolEntity talentPoolByTalentPoolId) {
         this.talentPoolByTalentPoolId = talentPoolByTalentPoolId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "job_id", referencedColumnName = "id", insertable=false, updatable=false)
+    public JobEntity getJobByJobId() {
+        return jobByJobId;
+    }
+
+    public void setJobByJobId(JobEntity jobByJobId) {
+        this.jobByJobId = jobByJobId;
     }
 }

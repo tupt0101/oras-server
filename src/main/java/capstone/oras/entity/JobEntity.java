@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Job", schema = "dbo", catalog = "ORAS")
+@Table(name = "job", schema = "dbo", catalog = "ORAS")
 public class JobEntity {
     private int id;
     private String title;
@@ -57,7 +57,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "salaryFrom", nullable = true, precision = 0)
+    @Column(name = "salary_from", nullable = true, precision = 0)
     public Double getSalaryFrom() {
         return salaryFrom;
     }
@@ -67,7 +67,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "salaryTo", nullable = true, precision = 0)
+    @Column(name = "salary_to", nullable = true, precision = 0)
     public Double getSalaryTo() {
         return salaryTo;
     }
@@ -87,7 +87,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "salaryHidden", nullable = true)
+    @Column(name = "salary_hidden", nullable = true)
     public Boolean getSalaryHidden() {
         return salaryHidden;
     }
@@ -107,7 +107,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "applyFrom", nullable = true)
+    @Column(name = "apply_from", nullable = true)
     public Date getApplyFrom() {
         return applyFrom;
     }
@@ -117,7 +117,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "applyTo", nullable = true)
+    @Column(name = "apply_to", nullable = true)
     public Date getApplyTo() {
         return applyTo;
     }
@@ -127,7 +127,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "talentPoolId", nullable = true)
+    @Column(name = "talent_pool_id", nullable = true)
     public Integer getTalentPoolId() {
         return talentPoolId;
     }
@@ -137,7 +137,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "creatorId", nullable = true)
+    @Column(name = "creator_id", nullable = true)
     public Integer getCreatorId() {
         return creatorId;
     }
@@ -157,7 +157,7 @@ public class JobEntity {
     }
 
     @Basic
-    @Column(name = "createDate", nullable = true)
+    @Column(name = "create_date", nullable = true)
     public Date getCreateDate() {
         return createDate;
     }
@@ -193,7 +193,7 @@ public class JobEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "talentPoolId", referencedColumnName = "id")
+    @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
     public TalentPoolEntity getTalentPoolByTalentPoolId() {
         return talentPoolByTalentPoolId;
     }
@@ -203,7 +203,7 @@ public class JobEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "creatorId", referencedColumnName = "id")
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }
