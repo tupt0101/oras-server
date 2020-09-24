@@ -1,12 +1,16 @@
 package capstone.oras.entity;
 
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "account", schema = "dbo", catalog = "ORAS")
-public class AccountEntity {
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+public class AccountEntity implements Serializable {
     private int id;
     private String email;
     private String password;
@@ -82,7 +86,8 @@ public class AccountEntity {
         return Objects.hash(id, email, password, fullname, active);
     }
 
-    @OneToMany(mappedBy = "accountByCreatorId")
+    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY)
+    @JsonIgnore
     public Collection<JobEntity> getJobsById() {
         return jobsById;
     }
@@ -91,7 +96,8 @@ public class AccountEntity {
         this.jobsById = jobsById;
     }
 
-    @OneToMany(mappedBy = "accountByCreatorId")
+    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY)
+    @JsonIgnore
     public Collection<MailTemplateEntity> getMailTemplatesById() {
         return mailTemplatesById;
     }

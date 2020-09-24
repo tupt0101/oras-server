@@ -1,12 +1,20 @@
 package capstone.oras.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jdk.nashorn.internal.ir.annotations.Ignore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "candidate", schema = "dbo", catalog = "ORAS")
-public class CandidateEntity {
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+public class CandidateEntity implements Serializable {
     private int id;
     private String fullname;
     private String email;
@@ -81,7 +89,8 @@ public class CandidateEntity {
         return Objects.hash(id, fullname, email, phoneNo, address);
     }
 
-    @OneToMany(mappedBy = "candidateByCandidateId")
+    @OneToMany(mappedBy = "candidateByCandidateId", fetch = FetchType.LAZY)
+    @Ignore
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }

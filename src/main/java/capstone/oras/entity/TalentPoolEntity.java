@@ -1,12 +1,16 @@
 package capstone.oras.entity;
 
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "talent_pool", schema = "dbo", catalog = "ORAS")
-public class TalentPoolEntity {
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+public class TalentPoolEntity implements Serializable {
     private int id;
     private String name;
     private Collection<JobEntity> jobsById;
@@ -46,7 +50,8 @@ public class TalentPoolEntity {
         return Objects.hash(id, name);
     }
 
-    @OneToMany(mappedBy = "talentPoolByTalentPoolId")
+    @OneToMany(mappedBy = "talentPoolByTalentPoolId", fetch = FetchType.LAZY)
+    @JsonIgnore
     public Collection<JobEntity> getJobsById() {
         return jobsById;
     }
@@ -55,7 +60,8 @@ public class TalentPoolEntity {
         this.jobsById = jobsById;
     }
 
-    @OneToMany(mappedBy = "talentPoolByTalentPoolId")
+    @OneToMany(mappedBy = "talentPoolByTalentPoolId", fetch = FetchType.LAZY)
+    @JsonIgnore
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }

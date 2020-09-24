@@ -3,10 +3,14 @@ capstone\oras\entity\AccountEntity.class
 capstone\oras\job\service\IJobService.class
 capstone\oras\OrasApplication.class
 capstone\oras\SpringFoxConfig.class
+capstone\oras\filters\JWTLoginFilter.class
 capstone\oras\entity\JobEntity.class
+capstone\oras\job\constant\JobStatus.class
 capstone\oras\entity\CandidateEntity.class
 capstone\oras\dao\IJobRepository.class
 capstone\oras\job\service\JobService.class
 capstone\oras\job\controller\JobController.class
+capstone\oras\jwt\JwtTokenProvider.class
+capstone\oras\WebSecurityConfig.class
 capstone\oras\entity\TalentPoolEntity.class
 capstone\oras\entity\JobApplicationEntity.class

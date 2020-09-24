@@ -1,13 +1,17 @@
 package capstone.oras.entity;
 
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "job", schema = "dbo", catalog = "ORAS")
-public class JobEntity {
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+public class JobEntity implements Serializable {
     private int id;
     private String title;
     private String description;
@@ -192,7 +196,7 @@ public class JobEntity {
         return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, talentPoolId, creatorId, status, createDate);
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
     public TalentPoolEntity getTalentPoolByTalentPoolId() {
         return talentPoolByTalentPoolId;
@@ -202,7 +206,7 @@ public class JobEntity {
         this.talentPoolByTalentPoolId = talentPoolByTalentPoolId;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
@@ -212,7 +216,7 @@ public class JobEntity {
         this.accountByCreatorId = accountByCreatorId;
     }
 
-    @OneToMany(mappedBy = "jobByJobId")
+    @OneToMany(mappedBy = "jobByJobId", fetch = FetchType.LAZY)
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }
