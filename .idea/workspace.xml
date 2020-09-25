@@ -5,24 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a626e92b-47d1-4c0d-91d5-d4c351b17ac3" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/WebSecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/filters/JWTLoginFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/jwt/JwtTokenProvider.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oras.iml" beforeDir="false" afterPath="$PROJECT_DIR$/oras.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/AccountEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/AccountEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/CandidateEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/CandidateEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobApplicationEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobApplicationEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/MailTemplateEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/MailTemplateEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/TalentPoolEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/TalentPoolEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/oras-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/oras-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-capstone.oras.OrasApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-capstone.oras.OrasApplicationTests.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/capstone.oras.OrasApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/capstone.oras.OrasApplicationTests.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +137,7 @@
       <workItem from="1600889127420" duration="2699000" />
       <workItem from="1600923980011" duration="2182000" />
       <workItem from="1600937834748" duration="2397000" />
-      <workItem from="1600967988357" duration="9333000" />
+      <workItem from="1600967988357" duration="10225000" />
     </task>
     <servers />
   </component>
@@ -180,38 +169,38 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1600975049833" />
-    <state width="1323" height="237" key="GridCell.Tab.0.bottom" timestamp="1600978931745">
+    <state width="1323" height="237" key="GridCell.Tab.0.bottom" timestamp="1600979080102">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1600978931745" />
-    <state width="1323" height="237" key="GridCell.Tab.0.center" timestamp="1600978931744">
+    <state width="1323" height="237" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1600979080102" />
+    <state width="1323" height="237" key="GridCell.Tab.0.center" timestamp="1600979080102">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1600978931744" />
-    <state width="1323" height="237" key="GridCell.Tab.0.left" timestamp="1600978931744">
+    <state width="1323" height="237" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1600979080102" />
+    <state width="1323" height="237" key="GridCell.Tab.0.left" timestamp="1600979080102">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1600978931744" />
-    <state width="1323" height="237" key="GridCell.Tab.0.right" timestamp="1600978931745">
+    <state width="1323" height="237" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1600979080102" />
+    <state width="1323" height="237" key="GridCell.Tab.0.right" timestamp="1600979080102">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1600978931745" />
-    <state width="1323" height="237" key="GridCell.Tab.1.bottom" timestamp="1600978931745">
+    <state width="1323" height="237" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1600979080102" />
+    <state width="1323" height="237" key="GridCell.Tab.1.bottom" timestamp="1600979080103">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1600978931745" />
-    <state width="1323" height="237" key="GridCell.Tab.1.center" timestamp="1600978931745">
+    <state width="1323" height="237" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1600979080103" />
+    <state width="1323" height="237" key="GridCell.Tab.1.center" timestamp="1600979080103">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1600978931745" />
-    <state width="1323" height="237" key="GridCell.Tab.1.left" timestamp="1600978931745">
+    <state width="1323" height="237" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1600979080103" />
+    <state width="1323" height="237" key="GridCell.Tab.1.left" timestamp="1600979080102">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1600978931745" />
-    <state width="1323" height="237" key="GridCell.Tab.1.right" timestamp="1600978931745">
+    <state width="1323" height="237" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1600979080102" />
+    <state width="1323" height="237" key="GridCell.Tab.1.right" timestamp="1600979080103">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1600978931745" />
+    <state width="1323" height="237" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1600979080103" />
     <state width="1323" height="451" key="GridCell.Tab.2.bottom" timestamp="1600880057883">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

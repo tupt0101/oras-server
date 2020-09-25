@@ -89,6 +89,7 @@ public class MailTemplateEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JsonManagedReference
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }

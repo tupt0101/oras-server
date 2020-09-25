@@ -51,7 +51,7 @@ public class TalentPoolEntity implements Serializable {
     }
 
     @OneToMany(mappedBy = "talentPoolByTalentPoolId", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonBackReference
     public Collection<JobEntity> getJobsById() {
         return jobsById;
     }
@@ -61,7 +61,7 @@ public class TalentPoolEntity implements Serializable {
     }
 
     @OneToMany(mappedBy = "talentPoolByTalentPoolId", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonBackReference
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }

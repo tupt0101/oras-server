@@ -87,7 +87,7 @@ public class AccountEntity implements Serializable {
     }
 
     @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonBackReference
     public Collection<JobEntity> getJobsById() {
         return jobsById;
     }
@@ -97,7 +97,7 @@ public class AccountEntity implements Serializable {
     }
 
     @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonBackReference
     public Collection<MailTemplateEntity> getMailTemplatesById() {
         return mailTemplatesById;
     }

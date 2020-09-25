@@ -198,6 +198,7 @@ public class JobEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JsonManagedReference
     public TalentPoolEntity getTalentPoolByTalentPoolId() {
         return talentPoolByTalentPoolId;
     }
@@ -208,6 +209,7 @@ public class JobEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JsonManagedReference
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }
@@ -217,6 +219,7 @@ public class JobEntity implements Serializable {
     }
 
     @OneToMany(mappedBy = "jobByJobId", fetch = FetchType.LAZY)
+    @JsonBackReference
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }

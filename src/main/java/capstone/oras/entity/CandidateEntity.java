@@ -90,7 +90,7 @@ public class CandidateEntity implements Serializable {
     }
 
     @OneToMany(mappedBy = "candidateByCandidateId", fetch = FetchType.LAZY)
-    @Ignore
+    @JsonBackReference
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }
