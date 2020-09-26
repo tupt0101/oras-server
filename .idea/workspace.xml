@@ -5,18 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a626e92b-47d1-4c0d-91d5-d4c351b17ac3" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/dao/IAccountRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/jwt/JwtAuthenticationFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/jwt/MyUserDetailService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/jwt/UserDetail.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/AccountEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/AccountEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/CandidateEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/CandidateEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobApplicationEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobApplicationEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/MailTemplateEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/MailTemplateEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/TalentPoolEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/TalentPoolEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oras.iml" beforeDir="false" afterPath="$PROJECT_DIR$/oras.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/SpringFoxConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/SpringFoxConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/job/controller/JobController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/job/controller/JobController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/jwt/JwtTokenProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/jwt/JwtTokenProvider.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -36,12 +43,16 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/java/capstone/oras/WebSecurityConfig.java" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -94,6 +105,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
@@ -137,7 +159,7 @@
       <workItem from="1600889127420" duration="2699000" />
       <workItem from="1600923980011" duration="2182000" />
       <workItem from="1600937834748" duration="2397000" />
-      <workItem from="1600967988357" duration="10225000" />
+      <workItem from="1600967988357" duration="23589000" />
     </task>
     <servers />
   </component>
@@ -149,10 +171,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="274" y="22" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1600971480216" />
-    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser" timestamp="1600893430526">
+    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser" timestamp="1601069783766">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1600893430526" />
+    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1601069783766" />
     <state x="444" y="92" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1600722050963">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -169,38 +191,38 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1600975049833" />
-    <state width="1323" height="237" key="GridCell.Tab.0.bottom" timestamp="1600979080102">
+    <state width="1323" height="207" key="GridCell.Tab.0.bottom" timestamp="1601072348092">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1600979080102" />
-    <state width="1323" height="237" key="GridCell.Tab.0.center" timestamp="1600979080102">
+    <state width="1323" height="207" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1601072348092" />
+    <state width="1323" height="207" key="GridCell.Tab.0.center" timestamp="1601072348092">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1600979080102" />
-    <state width="1323" height="237" key="GridCell.Tab.0.left" timestamp="1600979080102">
+    <state width="1323" height="207" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1601072348092" />
+    <state width="1323" height="207" key="GridCell.Tab.0.left" timestamp="1601072348092">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1600979080102" />
-    <state width="1323" height="237" key="GridCell.Tab.0.right" timestamp="1600979080102">
+    <state width="1323" height="207" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1601072348092" />
+    <state width="1323" height="207" key="GridCell.Tab.0.right" timestamp="1601072348092">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1600979080102" />
-    <state width="1323" height="237" key="GridCell.Tab.1.bottom" timestamp="1600979080103">
+    <state width="1323" height="207" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1601072348092" />
+    <state width="1323" height="280" key="GridCell.Tab.1.bottom" timestamp="1601072348067">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1600979080103" />
-    <state width="1323" height="237" key="GridCell.Tab.1.center" timestamp="1600979080103">
+    <state width="1323" height="280" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1601072348067" />
+    <state width="1323" height="280" key="GridCell.Tab.1.center" timestamp="1601072348067">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1600979080103" />
-    <state width="1323" height="237" key="GridCell.Tab.1.left" timestamp="1600979080102">
+    <state width="1323" height="280" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1601072348067" />
+    <state width="1323" height="280" key="GridCell.Tab.1.left" timestamp="1601072348066">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1600979080102" />
-    <state width="1323" height="237" key="GridCell.Tab.1.right" timestamp="1600979080103">
+    <state width="1323" height="280" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1601072348066" />
+    <state width="1323" height="280" key="GridCell.Tab.1.right" timestamp="1601072348067">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="237" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1600979080103" />
+    <state width="1323" height="280" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1601072348067" />
     <state width="1323" height="451" key="GridCell.Tab.2.bottom" timestamp="1600880057883">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -217,22 +239,22 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="451" key="GridCell.Tab.2.right/0.0.1366.728@0.0.1366.728" timestamp="1600880057883" />
-    <state x="213" y="18" key="Maven.ArtifactSearchDialog" timestamp="1600857776573">
+    <state x="213" y="18" key="Maven.ArtifactSearchDialog" timestamp="1601069467734">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="213" y="18" key="Maven.ArtifactSearchDialog/0.0.1366.728@0.0.1366.728" timestamp="1600857776573" />
+    <state x="213" y="18" key="Maven.ArtifactSearchDialog/0.0.1366.728@0.0.1366.728" timestamp="1601069467734" />
     <state x="499" y="141" key="chooseDestDirectoryDialog" timestamp="1600721881719">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="499" y="141" key="chooseDestDirectoryDialog/0.0.1366.728@0.0.1366.728" timestamp="1600721881719" />
-    <state x="389" y="97" width="587" height="534" key="find.popup" timestamp="1600978570040">
+    <state x="389" y="97" width="587" height="592" key="find.popup" timestamp="1601069242747">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="389" y="97" width="587" height="534" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1600978570040" />
-    <state x="339" y="162" key="run.anything.popup" timestamp="1600972645052">
+    <state x="389" y="97" width="587" height="592" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1601069242747" />
+    <state x="339" y="162" key="run.anything.popup" timestamp="1601071142343">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="339" y="162" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1600972645052" />
+    <state x="339" y="162" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1601071142343" />
   </component>
   <component name="masterDetails">
     <states>

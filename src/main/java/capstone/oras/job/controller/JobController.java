@@ -12,6 +12,12 @@ public class JobController {
     @Autowired
     private IJobService jobService;
 
+    @RequestMapping(value = "/job-management/jobss", method = RequestMethod.GET)
+    @ResponseBody
+    List<JobEntity> getAllJob() {
+        return jobService.getAllJob();
+    }
+
     @RequestMapping(value = "/job-management/job", method = RequestMethod.POST)
     @ResponseBody
     JobEntity createJob(@RequestBody JobEntity job) {
@@ -30,10 +36,6 @@ public class JobController {
         return jobService.closeJob(id);
     }
 
-    @RequestMapping(value = "/job-management/jobs", method = RequestMethod.GET)
-    @ResponseBody
-    List<JobEntity> getAllJob() {
-        return jobService.getAllJob();
-    }
+
 
 }
