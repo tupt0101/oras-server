@@ -3,6 +3,7 @@ package capstone.oras.job.service;
 import capstone.oras.dao.IJobRepository;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.job.constant.JobStatus;
+import capstone.oras.job.model.JobModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,19 @@ public class JobService implements IJobService {
     private IJobRepository IJobRepository;
 
     @Override
-    public JobEntity saveJob(JobEntity job) {
-        return IJobRepository.save(job);
+    public JobEntity createUpdateJob(JobModel job) {
+        switch (job.getMode()) {
+            case "POST": {
+                return IJobRepository.save(job.getJobEntity());
+
+            }
+            case "PUT": {
+                //Sau này check ID
+                return IJobRepository.save(job.getJobEntity());
+
+            }
+        }
+        return null;    
     }
 
     @Override

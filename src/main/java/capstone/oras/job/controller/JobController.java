@@ -1,6 +1,7 @@
 package capstone.oras.job.controller;
 
 import capstone.oras.entity.JobEntity;
+import capstone.oras.job.model.JobModel;
 import capstone.oras.job.service.IJobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -8,29 +9,25 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "/job-management")
 public class JobController {
     @Autowired
     private IJobService jobService;
 
-    @RequestMapping(value = "/job-management/jobss", method = RequestMethod.GET)
+    @RequestMapping(value = "/jobs", method = RequestMethod.GET)
     @ResponseBody
     List<JobEntity> getAllJob() {
         return jobService.getAllJob();
     }
 
-    @RequestMapping(value = "/job-management/job", method = RequestMethod.POST)
+    @RequestMapping(value = "/job", method = {RequestMethod.POST, RequestMethod.PUT})
     @ResponseBody
-    JobEntity createJob(@RequestBody JobEntity job) {
-        return jobService.saveJob(job);
+    JobEntity createUpdateJob(@RequestBody JobModel job) {
+        return jobService.createUpdateJob(job);
     }
 
-    @RequestMapping(value = "/job-management/job", method = RequestMethod.PUT)
-    @ResponseBody
-    JobEntity editJob(@RequestBody JobEntity job) {
-        return jobService.saveJob(job);
-    }
 
-    @RequestMapping(value = "/job-management/job/{id}/close", method = RequestMethod.PUT)
+    @RequestMapping(value = "/job/{id}/close", method = RequestMethod.PUT)
     @ResponseBody
     JobEntity editJob(@PathVariable("id") int id) {
         return jobService.closeJob(id);
