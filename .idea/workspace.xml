@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a626e92b-47d1-4c0d-91d5-d4c351b17ac3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/WebSecurityConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,6 +77,9 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
   </component>
   <component name="RecentsManager">
     <key name="ImportMappingsDialog.RecentPackages">
@@ -141,7 +143,7 @@
       <workItem from="1600937834748" duration="2397000" />
       <workItem from="1600967988357" duration="23589000" />
       <workItem from="1601197974040" duration="1794000" />
-      <workItem from="1601204144081" duration="1376000" />
+      <workItem from="1601204144081" duration="2102000" />
     </task>
     <servers />
   </component>
@@ -161,6 +163,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="444" y="92" key="#com.intellij.ide.util.PackageChooserDialog/0.0.1366.728@0.0.1366.728" timestamp="1600722050963" />
+    <state x="413" y="154" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1601208235208">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="413" y="154" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1366.728@0.0.1366.728" timestamp="1601208235208" />
     <state x="353" y="0" width="722" height="634" key="#com.intellij.jpa.generation.ui.DatabaseSchemaImportDialog" timestamp="1600975060607">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -225,6 +231,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="213" y="18" key="Maven.ArtifactSearchDialog/0.0.1366.728@0.0.1366.728" timestamp="1601069467734" />
+    <state x="163" y="0" key="SettingsEditor" timestamp="1601208306262">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="163" y="0" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1601208306262" />
     <state x="499" y="141" key="chooseDestDirectoryDialog" timestamp="1600721881719">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -237,21 +247,5 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="339" y="162" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1601071142343" />
-  </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ProjectJDKs.UI">
-        <settings>
-          <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-    </states>
   </component>
 </project>
