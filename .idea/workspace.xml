@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a626e92b-47d1-4c0d-91d5-d4c351b17ac3" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/WebSecurityConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +141,7 @@
       <workItem from="1600937834748" duration="2397000" />
       <workItem from="1600967988357" duration="23589000" />
       <workItem from="1601197974040" duration="1794000" />
-      <workItem from="1601204144081" duration="681000" />
+      <workItem from="1601204144081" duration="1376000" />
     </task>
     <servers />
   </component>
