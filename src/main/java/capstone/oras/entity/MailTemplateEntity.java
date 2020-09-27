@@ -1,11 +1,18 @@
 package capstone.oras.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "mail_template", schema = "dbo", catalog = "ORAS")
-public class MailTemplateEntity {
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+public class MailTemplateEntity implements Serializable {
     private int id;
     private String subject;
     private String body;
@@ -80,8 +87,9 @@ public class MailTemplateEntity {
         return Objects.hash(id, subject, body, type, creatorId);
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JsonManagedReference
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }
