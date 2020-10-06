@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: capstone.oras.OrasApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.6 s - in capstone.oras.OrasApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 231.316 s - in capstone.oras.OrasApplicationTests

@@ -31,4 +31,11 @@ public class TalentPoolController {
     TalentPoolEntity updateTalentPool(@RequestBody TalentPoolEntity talentPoolEntity) {
         return talentPoolService.updateTalentPool(talentPoolEntity);
     }
+
+    @RequestMapping(value = "/abc", method = RequestMethod.POST)
+    @ResponseBody
+
+    String sadasda() {
+        return "sadasdasdasdasd";
+    }
 }
