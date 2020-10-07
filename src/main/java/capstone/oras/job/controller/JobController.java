@@ -1,7 +1,6 @@
 package capstone.oras.job.controller;
 
 import capstone.oras.entity.JobEntity;
-import capstone.oras.job.model.JobModel;
 import capstone.oras.job.service.IJobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +19,17 @@ public class JobController {
         return jobService.getAllJob();
     }
 
-    @RequestMapping(value = "/job", method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(value = "/job", method = RequestMethod.POST)
     @ResponseBody
-    JobEntity createUpdateJob(@RequestBody JobModel job) {
-        return jobService.createUpdateJob(job);
+    JobEntity createJob(@RequestBody JobEntity job) {
+        return jobService.createJob(job);
     }
 
+    @RequestMapping(value = "/job", method = RequestMethod.PUT)
+    @ResponseBody
+    JobEntity updateJob(@RequestBody JobEntity job) {
+        return jobService.updateJob(job);
+    }
 
     @RequestMapping(value = "/job/{id}/close", method = RequestMethod.PUT)
     @ResponseBody

@@ -40,7 +40,7 @@ public class AccountEntity implements Serializable {
     }
 
     @Basic
-    @Column(name = "password", nullable = true, length = 50)
+    @Column(name = "password", nullable = true, length = 70)
     public String getPassword() {
         return password;
     }

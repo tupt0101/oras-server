@@ -1,12 +1,12 @@
 package capstone.oras.job.service;
 
 import capstone.oras.entity.JobEntity;
-import capstone.oras.job.model.JobModel;
 
 import java.util.List;
 
 public interface IJobService {
-    JobEntity createUpdateJob(JobModel job);
+    JobEntity createJob(JobEntity job);
+    JobEntity updateJob(JobEntity job);
     List<JobEntity> getAllJob();
     JobEntity closeJob(int id);
 }

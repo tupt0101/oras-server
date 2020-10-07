@@ -14,7 +14,7 @@ public class AccountController {
 
     @RequestMapping(value = "/login")
     @ResponseBody
-    String getAllJob() {
+    String login() {
         String token = accountService.login("admin@gmail.com","123456");
         return token;
     }
