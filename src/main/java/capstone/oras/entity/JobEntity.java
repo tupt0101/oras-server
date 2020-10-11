@@ -1,6 +1,6 @@
 package capstone.oras.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,8 +26,11 @@ public class JobEntity implements Serializable {
     private Integer creatorId;
     private String status;
     private Date createDate;
+//    @ApiModelProperty(hidden = true)
     private TalentPoolEntity talentPoolByTalentPoolId;
+//    @ApiModelProperty(hidden = true)
     private AccountEntity accountByCreatorId;
+//    @ApiModelProperty(hidden = true)
     private Collection<JobApplicationEntity> jobApplicationsById;
 
     @Id
@@ -196,9 +199,9 @@ public class JobEntity implements Serializable {
         return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, talentPoolId, creatorId, status, createDate);
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
-    @JsonManagedReference
+//    @JsonManagedReference(value = "job-talent")
     public TalentPoolEntity getTalentPoolByTalentPoolId() {
         return talentPoolByTalentPoolId;
     }
@@ -207,9 +210,9 @@ public class JobEntity implements Serializable {
         this.talentPoolByTalentPoolId = talentPoolByTalentPoolId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
-    @JsonManagedReference
+//    @JsonManagedReference (value =  "job-creator")
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }
@@ -218,8 +221,8 @@ public class JobEntity implements Serializable {
         this.accountByCreatorId = accountByCreatorId;
     }
 
-    @OneToMany(mappedBy = "jobByJobId", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "jobByJobId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "application-job")
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }

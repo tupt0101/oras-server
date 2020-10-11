@@ -1,10 +1,6 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -89,8 +85,8 @@ public class CandidateEntity implements Serializable {
         return Objects.hash(id, fullname, email, phoneNo, address);
     }
 
-    @OneToMany(mappedBy = "candidateByCandidateId", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "candidateByCandidateId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "application-candidate")
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }

@@ -3,6 +3,7 @@ package capstone.oras.job.controller;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.job.service.IJobService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class JobController {
         return jobService.getAllJob();
     }
 
-    @RequestMapping(value = "/job", method = RequestMethod.POST)
+    @PostMapping(value = "/job",consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     JobEntity createJob(@RequestBody JobEntity job) {
         return jobService.createJob(job);

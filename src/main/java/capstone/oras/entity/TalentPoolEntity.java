@@ -50,8 +50,8 @@ public class TalentPoolEntity implements Serializable {
         return Objects.hash(id, name);
     }
 
-    @OneToMany(mappedBy = "talentPoolByTalentPoolId", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "talentPoolByTalentPoolId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "job-talent")
     public Collection<JobEntity> getJobsById() {
         return jobsById;
     }
@@ -60,8 +60,8 @@ public class TalentPoolEntity implements Serializable {
         this.jobsById = jobsById;
     }
 
-    @OneToMany(mappedBy = "talentPoolByTalentPoolId", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "talentPoolByTalentPoolId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "application-talent")
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }

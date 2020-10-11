@@ -19,7 +19,10 @@ public class AccountEntity implements Serializable {
     private Collection<JobEntity> jobsById;
     private Collection<MailTemplateEntity> mailTemplatesById;
 
+
+
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -86,8 +89,8 @@ public class AccountEntity implements Serializable {
         return Objects.hash(id, email, password, fullname, active);
     }
 
-    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference (value =  "job-creator")
     public Collection<JobEntity> getJobsById() {
         return jobsById;
     }
@@ -96,8 +99,8 @@ public class AccountEntity implements Serializable {
         this.jobsById = jobsById;
     }
 
-    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference (value = "mail-creator")
     public Collection<MailTemplateEntity> getMailTemplatesById() {
         return mailTemplatesById;
     }

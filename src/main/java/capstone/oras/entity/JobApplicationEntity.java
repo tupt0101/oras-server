@@ -1,7 +1,5 @@
 package capstone.oras.entity;
 
-import com.fasterxml.jackson.annotation.*;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -153,9 +151,9 @@ public class JobApplicationEntity implements Serializable {
         );
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id", referencedColumnName = "id", insertable=false, updatable=false)
-    @JsonManagedReference
+//    @JsonManagedReference (value = "application-candidate")
     public CandidateEntity getCandidateByCandidateId() {
         return candidateByCandidateId;
     }
@@ -164,9 +162,9 @@ public class JobApplicationEntity implements Serializable {
         this.candidateByCandidateId = candidateByCandidateId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
-    @JsonManagedReference
+//    @JsonManagedReference(value = "application-talent")
     public TalentPoolEntity getTalentPoolByTalentPoolId() {
         return talentPoolByTalentPoolId;
     }
@@ -175,9 +173,9 @@ public class JobApplicationEntity implements Serializable {
         this.talentPoolByTalentPoolId = talentPoolByTalentPoolId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "job_id", referencedColumnName = "id", insertable=false, updatable=false)
-    @JsonManagedReference
+//    @JsonManagedReference (value = "application-job")
     public JobEntity getJobByJobId() {
         return jobByJobId;
     }
