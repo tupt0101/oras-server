@@ -24,6 +24,7 @@ public class JobApplicationEntity implements Serializable {
     private JobEntity jobByJobId;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;

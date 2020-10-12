@@ -16,6 +16,7 @@ public class MailTemplateEntity implements Serializable {
     private AccountEntity accountByCreatorId;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;

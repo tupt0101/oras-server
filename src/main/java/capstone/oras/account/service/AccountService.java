@@ -35,7 +35,6 @@ public class AccountService implements IAccountService {
         accountEntity.setActive(true);
         accountEntity.setEmail(email);
         accountEntity.setFullname(fullname);
-        accountEntity.setId(0);
         return accountRepository.save(accountEntity);
     }
 }

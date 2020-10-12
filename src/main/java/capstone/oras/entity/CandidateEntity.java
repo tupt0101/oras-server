@@ -19,6 +19,7 @@ public class CandidateEntity implements Serializable {
     private Collection<JobApplicationEntity> jobApplicationsById;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
