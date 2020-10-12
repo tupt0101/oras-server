@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,25 +13,37 @@ import java.util.Objects;
 @Table(name = "job", schema = "dbo", catalog = "ORAS")
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class JobEntity implements Serializable {
+    @ApiModelProperty()
     private int id;
+    @ApiModelProperty(example = "Coder")
     private String title;
+    @ApiModelProperty(example = "Code a lot")
     private String description;
+    @ApiModelProperty(example = "500")
     private Double salaryFrom;
+    @ApiModelProperty(example = "1500")
     private Double salaryTo;
+    @ApiModelProperty(example = "$")
     private String currency;
     private Boolean salaryHidden;
     private Integer vacancies;
+    @ApiModelProperty(example = "2020-09-28")
     private Date applyFrom;
+    @ApiModelProperty(example = "2020-10-28")
     private Date applyTo;
+    @ApiModelProperty(example = "1", value = "should be a valid id")
     private Integer talentPoolId;
+    @ApiModelProperty(example = "1", value = "should be a valid id")
     private Integer creatorId;
+    @ApiModelProperty(example = "open")
     private String status;
+    @ApiModelProperty(example = "2020-09-28")
     private Date createDate;
-//    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(hidden = true)
     private TalentPoolEntity talentPoolByTalentPoolId;
-//    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(hidden = true)
     private AccountEntity accountByCreatorId;
-//    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(hidden = true)
     private Collection<JobApplicationEntity> jobApplicationsById;
 
     @Id

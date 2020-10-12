@@ -1,5 +1,7 @@
 package capstone.oras.entity;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -9,10 +11,15 @@ import java.util.Objects;
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class MailTemplateEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "Thu Reject")
     private String subject;
+    @ApiModelProperty(example = "Chung toi thanh that xin loi vi ban da rot phong van")
     private String body;
+    @ApiModelProperty(example = "Reject")
     private String type;
+    @ApiModelProperty(example = "1")
     private Integer creatorId;
+    @ApiModelProperty(hidden = true)
     private AccountEntity accountByCreatorId;
 
     @Id

@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,11 +13,16 @@ import java.util.Objects;
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class AccountEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "example@mail.com")
     private String email;
+    @ApiModelProperty(example = "123456")
     private String password;
+    @ApiModelProperty(example = "Nguyen Nhan Cu")
     private String fullname;
     private Boolean active;
+    @ApiModelProperty(hidden = true)
     private Collection<JobEntity> jobsById;
+    @ApiModelProperty(hidden = true)
     private Collection<MailTemplateEntity> mailTemplatesById;
 
 
