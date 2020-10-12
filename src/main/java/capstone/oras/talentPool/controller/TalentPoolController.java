@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/talentPool-management")
+@RequestMapping(value = "/v1/talentPool-management")
 public class TalentPoolController {
     @Autowired
     private ITalentPoolService talentPoolService;
