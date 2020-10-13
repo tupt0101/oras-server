@@ -20,6 +20,8 @@ public class AccountEntity implements Serializable {
     @ApiModelProperty(example = "Nguyen Nhan Cu")
     private String fullname;
     private Boolean active;
+    @ApiModelProperty(example = "admin")
+    private String role;
     @ApiModelProperty(hidden = true)
     private Collection<JobEntity> jobsById;
     @ApiModelProperty(hidden = true)
@@ -76,6 +78,16 @@ public class AccountEntity implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    @Basic
+    @Column(name = "role", nullable = true, length = 20)
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

@@ -3,6 +3,7 @@ package capstone.oras.account.service;
 import capstone.oras.dao.IAccountRepository;
 import capstone.oras.entity.AccountEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,9 @@ public class AccountService implements IAccountService {
 //
 //    @Autowired
 //    private MyUserDetailService userDetailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private IAccountRepository IAccountRepository;
@@ -33,11 +37,13 @@ public class AccountService implements IAccountService {
 
     @Override
     public AccountEntity createAccount(AccountEntity accountEntity) {
+        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
         return IAccountRepository.save(accountEntity);
     }
 
     @Override
     public AccountEntity updateAccount(AccountEntity accountEntity) {
+        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
         return IAccountRepository.save(accountEntity);
     }
 
