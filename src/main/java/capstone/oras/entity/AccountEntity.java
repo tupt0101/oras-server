@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,11 +13,18 @@ import java.util.Objects;
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class AccountEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "example@mail.com")
     private String email;
+    @ApiModelProperty(example = "123456")
     private String password;
+    @ApiModelProperty(example = "Nguyen Nhan Cu")
     private String fullname;
     private Boolean active;
+    @ApiModelProperty(example = "admin")
+    private String role;
+    @ApiModelProperty(hidden = true)
     private Collection<JobEntity> jobsById;
+    @ApiModelProperty(hidden = true)
     private Collection<MailTemplateEntity> mailTemplatesById;
 
 
@@ -70,6 +78,16 @@ public class AccountEntity implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    @Basic
+    @Column(name = "role", nullable = true, length = 20)
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

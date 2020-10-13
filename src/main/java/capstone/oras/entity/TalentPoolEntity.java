@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,8 +13,11 @@ import java.util.Objects;
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class TalentPoolEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "Back-end Developer")
     private String name;
+    @ApiModelProperty(hidden = true)
     private Collection<JobEntity> jobsById;
+    @ApiModelProperty(hidden = true)
     private Collection<JobApplicationEntity> jobApplicationsById;
 
     @Id

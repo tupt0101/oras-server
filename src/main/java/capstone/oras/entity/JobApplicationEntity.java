@@ -1,5 +1,7 @@
 package capstone.oras.entity;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -10,17 +12,27 @@ import java.util.Objects;
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class JobApplicationEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "1")
     private Integer candidateId;
     private Double matchingRate;
     private String cv;
+    @ApiModelProperty(example = "2020-09-28")
     private Date applyDate;
+    @ApiModelProperty(example = "1")
     private Integer talentPoolId;
+    @ApiModelProperty(example = "linkedin")
     private String source;
+    @ApiModelProperty(example = "apply")
     private String status;
+    @ApiModelProperty(example = "This guy is good")
     private String comment;
+    @ApiModelProperty(example = "1")
     private Integer jobId;
+    @ApiModelProperty(hidden = true)
     private CandidateEntity candidateByCandidateId;
+    @ApiModelProperty(hidden = true)
     private TalentPoolEntity talentPoolByTalentPoolId;
+    @ApiModelProperty(hidden = true)
     private JobEntity jobByJobId;
 
     @Id
