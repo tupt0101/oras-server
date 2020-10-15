@@ -1,10 +1,7 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,13 +13,19 @@ import java.util.Objects;
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class CandidateEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "Tran Trong Tuan")
     private String fullname;
+    @ApiModelProperty(example = "example@mail.com")
     private String email;
+    @ApiModelProperty(example = "089512344")
     private String phoneNo;
+    @ApiModelProperty(example = "56 Nguyen Phu Trong Q.05")
     private String address;
+    @ApiModelProperty(hidden = true)
     private Collection<JobApplicationEntity> jobApplicationsById;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -89,8 +92,8 @@ public class CandidateEntity implements Serializable {
         return Objects.hash(id, fullname, email, phoneNo, address);
     }
 
-    @OneToMany(mappedBy = "candidateByCandidateId", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "candidateByCandidateId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "application-candidate")
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }

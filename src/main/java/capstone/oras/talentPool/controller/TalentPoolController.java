@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/v1/talentPool-management")
+@RequestMapping(value = "/v1/talent-pool-management")
 public class TalentPoolController {
     @Autowired
     private ITalentPoolService talentPoolService;
@@ -20,22 +20,16 @@ public class TalentPoolController {
         return talentPoolService.getAllTalentPool();
     }
 
-    @RequestMapping(value = "/createTalentPool", method = RequestMethod.POST)
+    @RequestMapping(value = "/talentPool", method = RequestMethod.POST)
     @ResponseBody
     TalentPoolEntity createTalentPool(@RequestBody TalentPoolEntity talentPoolEntity) {
         return talentPoolService.createTalentPool(talentPoolEntity);
     }
 
-    @RequestMapping(value = "/updateTalentPool/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/talentPool", method = RequestMethod.PUT)
     @ResponseBody
     TalentPoolEntity updateTalentPool(@RequestBody TalentPoolEntity talentPoolEntity) {
         return talentPoolService.updateTalentPool(talentPoolEntity);
     }
 
-    @RequestMapping(value = "/abc", method = RequestMethod.POST)
-    @ResponseBody
-
-    String sadasda() {
-        return "sadasdasdasdasd";
-    }
 }

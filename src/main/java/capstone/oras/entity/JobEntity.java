@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,25 +13,41 @@ import java.util.Objects;
 @Table(name = "job", schema = "dbo", catalog = "ORAS")
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class JobEntity implements Serializable {
+    @ApiModelProperty()
     private int id;
+    @ApiModelProperty(example = "Coder")
     private String title;
+    @ApiModelProperty(example = "Code a lot")
     private String description;
+    @ApiModelProperty(example = "500")
     private Double salaryFrom;
+    @ApiModelProperty(example = "1500")
     private Double salaryTo;
+    @ApiModelProperty(example = "$")
     private String currency;
     private Boolean salaryHidden;
     private Integer vacancies;
+    @ApiModelProperty(example = "2020-09-28")
     private Date applyFrom;
+    @ApiModelProperty(example = "2020-10-28")
     private Date applyTo;
+    @ApiModelProperty(example = "1", value = "should be a valid id")
     private Integer talentPoolId;
+    @ApiModelProperty(example = "1", value = "should be a valid id")
     private Integer creatorId;
+    @ApiModelProperty(example = "open")
     private String status;
+    @ApiModelProperty(example = "2020-09-28")
     private Date createDate;
+    @ApiModelProperty(hidden = true)
     private TalentPoolEntity talentPoolByTalentPoolId;
+    @ApiModelProperty(hidden = true)
     private AccountEntity accountByCreatorId;
+    @ApiModelProperty(hidden = true)
     private Collection<JobApplicationEntity> jobApplicationsById;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -196,9 +213,9 @@ public class JobEntity implements Serializable {
         return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, talentPoolId, creatorId, status, createDate);
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
-    @JsonManagedReference
+//    @JsonManagedReference(value = "job-talent")
     public TalentPoolEntity getTalentPoolByTalentPoolId() {
         return talentPoolByTalentPoolId;
     }
@@ -207,9 +224,9 @@ public class JobEntity implements Serializable {
         this.talentPoolByTalentPoolId = talentPoolByTalentPoolId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
-    @JsonManagedReference
+//    @JsonManagedReference (value =  "job-creator")
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }
@@ -218,8 +235,8 @@ public class JobEntity implements Serializable {
         this.accountByCreatorId = accountByCreatorId;
     }
 
-    @OneToMany(mappedBy = "jobByJobId", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "jobByJobId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "application-job")
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }

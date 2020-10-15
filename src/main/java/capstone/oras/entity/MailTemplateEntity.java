@@ -1,9 +1,6 @@
 package capstone.oras.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,13 +11,19 @@ import java.util.Objects;
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class MailTemplateEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "Thu Reject")
     private String subject;
+    @ApiModelProperty(example = "Chung toi thanh that xin loi vi ban da rot phong van")
     private String body;
+    @ApiModelProperty(example = "Reject")
     private String type;
+    @ApiModelProperty(example = "1")
     private Integer creatorId;
+    @ApiModelProperty(hidden = true)
     private AccountEntity accountByCreatorId;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -87,9 +90,9 @@ public class MailTemplateEntity implements Serializable {
         return Objects.hash(id, subject, body, type, creatorId);
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
-    @JsonManagedReference
+//    @JsonManagedReference(value = "mail-creator")
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }

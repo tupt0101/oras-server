@@ -1,12 +1,20 @@
 package capstone.oras;
 
+import org.assertj.core.util.Lists;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.ApiKeyVehicle;
+import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.Arrays;
 
 
 @Configuration
@@ -23,52 +31,52 @@ public class SpringFoxConfig {
             return new Docket(DocumentationType.SWAGGER_2)
                     .select()
                     .paths(PathSelectors.ant("/v1/**"))
-                    .build();
-//                    .securitySchemes(Lists.newArrayList(apiKey()))
-//                    .securityContexts(Arrays.asList(securityContext()))
-//                    .apiInfo(apiEndPointsInfo());
+                    .build()
+                    .securitySchemes(Lists.newArrayList(apiKey()))
+                    .securityContexts(Arrays.asList(securityContext()))
+                    .apiInfo(apiEndPointsInfo());
     }
 
 
-//
-//    private ApiInfo apiEndPointsInfo() {
-//        return new ApiInfoBuilder().title("Spring Boot REST API")
-//                .description("ORAS REST API")
-//                .version("1.0.0")
-//                .build();
-//    }
-//
-//    @Bean
-//    SecurityConfiguration security() {
-//        return new SecurityConfiguration(
-//                "test-app-client-id",
-//                "test-app-client-secret",
-//                "test-app-realm",
-//                "test-app",
-//                "",
-//                ApiKeyVehicle.HEADER,
-//                "Authorization",
-//                "," /*scope separator*/);
-//    }
-//
-//    private AuthorizationScope[] scopes() {
-//        AuthorizationScope[] scopes = {
-//                new AuthorizationScope("ORAS", "Access ORAS API") };
-//        return scopes;
-//    }
-//
-//    @Bean
-//    SecurityContext securityContext() {
-//        return SecurityContext.builder()
-//                .securityReferences(
-//                        Arrays.asList(new SecurityReference("token", scopes())))
-//                .build();
-//    }
-//
-//    @Bean
-//    SecurityScheme apiKey() {
-//        return new ApiKey("token", "Authorization", "header");
-//    }
+
+    private ApiInfo apiEndPointsInfo() {
+        return new ApiInfoBuilder().title("Spring Boot REST API")
+                .description("ORAS REST API")
+                .version("1.0.0")
+                .build();
+    }
+
+    @Bean
+    SecurityConfiguration security() {
+        return new SecurityConfiguration(
+                "test-app-client-id",
+                "test-app-client-secret",
+                "test-app-realm",
+                "test-app",
+                "",
+                ApiKeyVehicle.HEADER,
+                "Authorization",
+                "," /*scope separator*/);
+    }
+
+    private AuthorizationScope[] scopes() {
+        AuthorizationScope[] scopes = {
+                new AuthorizationScope("ORAS", "Access ORAS API") };
+        return scopes;
+    }
+
+    @Bean
+    SecurityContext securityContext() {
+        return SecurityContext.builder()
+                .securityReferences(
+                        Arrays.asList(new SecurityReference("token", scopes())))
+                .build();
+    }
+
+    @Bean
+    SecurityScheme apiKey() {
+        return new ApiKey("token", "Authorization", "header");
+    }
 //    public static final String AUTHORIZATION_HEADER = "Authorization";
 //    public static final String DEFAULT_INCLUDE_PATTERN = "/api/.*";
 //    private final Logger log = LoggerFactory.getLogger(SpringFoxConfig.class);

@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,14 +13,24 @@ import java.util.Objects;
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class AccountEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "example@mail.com")
     private String email;
+    @ApiModelProperty(example = "123456")
     private String password;
+    @ApiModelProperty(example = "Nguyen Nhan Cu")
     private String fullname;
     private Boolean active;
+    @ApiModelProperty(example = "admin")
+    private String role;
+    @ApiModelProperty(hidden = true)
     private Collection<JobEntity> jobsById;
+    @ApiModelProperty(hidden = true)
     private Collection<MailTemplateEntity> mailTemplatesById;
 
+
+
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -69,6 +80,16 @@ public class AccountEntity implements Serializable {
         this.active = active;
     }
 
+    @Basic
+    @Column(name = "role", nullable = true, length = 20)
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,8 +107,8 @@ public class AccountEntity implements Serializable {
         return Objects.hash(id, email, password, fullname, active);
     }
 
-    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference (value =  "job-creator")
     public Collection<JobEntity> getJobsById() {
         return jobsById;
     }
@@ -96,8 +117,8 @@ public class AccountEntity implements Serializable {
         this.jobsById = jobsById;
     }
 
-    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference (value = "mail-creator")
     public Collection<MailTemplateEntity> getMailTemplatesById() {
         return mailTemplatesById;
     }

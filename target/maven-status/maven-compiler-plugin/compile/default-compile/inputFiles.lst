@@ -7,6 +7,7 @@ D:\oras-server\src\main\java\capstone\oras\entity\TalentPoolEntity.java
 D:\oras-server\src\main\java\capstone\oras\oauth2\WebSecurityConfig.java
 D:\oras-server\src\main\java\capstone\oras\entity\JobEntity.java
 D:\oras-server\src\main\java\capstone\oras\OrasApplication.java
+D:\oras-server\src\main\java\capstone\oras\dao\IMailTemplateRepository.java
 D:\oras-server\src\main\java\capstone\oras\entity\MailTemplateEntity.java
 D:\oras-server\src\main\java\capstone\oras\job\service\IJobService.java
 D:\oras-server\src\main\java\capstone\oras\job\service\JobService.java
@@ -21,6 +22,9 @@ D:\oras-server\src\main\java\capstone\oras\SpringFoxConfig.java
 D:\oras-server\src\main\java\capstone\oras\talentPool\service\ITalentPoolService.java
 D:\oras-server\src\main\java\capstone\oras\oauth2\services\CustomUserDetailsService.java
 D:\oras-server\src\main\java\capstone\oras\job\constant\JobStatus.java
+D:\oras-server\src\main\java\capstone\oras\mailTemplate\service\IMailTemplateService.java
 D:\oras-server\src\main\java\capstone\oras\entity\JobApplicationEntity.java
 D:\oras-server\src\main\java\capstone\oras\dao\IAccountRepository.java
 D:\oras-server\src\main\java\capstone\oras\dao\IJobRepository.java
+D:\oras-server\src\main\java\capstone\oras\mailTemplate\controller\MailTemplateController.java
+D:\oras-server\src\main\java\capstone\oras\mailTemplate\service\MailTemplateService.java
