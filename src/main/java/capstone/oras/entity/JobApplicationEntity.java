@@ -1,27 +1,42 @@
 package capstone.oras.entity;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "job_application", schema = "dbo", catalog = "ORAS")
-public class JobApplicationEntity {
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+public class JobApplicationEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "1")
     private Integer candidateId;
     private Double matchingRate;
     private String cv;
+    @ApiModelProperty(example = "2020-09-28")
     private Date applyDate;
+    @ApiModelProperty(example = "1")
     private Integer talentPoolId;
+    @ApiModelProperty(example = "linkedin")
     private String source;
+    @ApiModelProperty(example = "apply")
     private String status;
+    @ApiModelProperty(example = "This guy is good")
     private String comment;
+    @ApiModelProperty(example = "1")
     private Integer jobId;
+    @ApiModelProperty(hidden = true)
     private CandidateEntity candidateByCandidateId;
+    @ApiModelProperty(hidden = true)
     private TalentPoolEntity talentPoolByTalentPoolId;
+    @ApiModelProperty(hidden = true)
     private JobEntity jobByJobId;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -149,8 +164,9 @@ public class JobApplicationEntity {
         );
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id", referencedColumnName = "id", insertable=false, updatable=false)
+//    @JsonManagedReference (value = "application-candidate")
     public CandidateEntity getCandidateByCandidateId() {
         return candidateByCandidateId;
     }
@@ -159,8 +175,9 @@ public class JobApplicationEntity {
         this.candidateByCandidateId = candidateByCandidateId;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
+//    @JsonManagedReference(value = "application-talent")
     public TalentPoolEntity getTalentPoolByTalentPoolId() {
         return talentPoolByTalentPoolId;
     }
@@ -169,8 +186,9 @@ public class JobApplicationEntity {
         this.talentPoolByTalentPoolId = talentPoolByTalentPoolId;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "job_id", referencedColumnName = "id", insertable=false, updatable=false)
+//    @JsonManagedReference (value = "application-job")
     public JobEntity getJobByJobId() {
         return jobByJobId;
     }

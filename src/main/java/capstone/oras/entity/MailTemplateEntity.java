@@ -1,19 +1,29 @@
 package capstone.oras.entity;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "mail_template", schema = "dbo", catalog = "ORAS")
-public class MailTemplateEntity {
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+public class MailTemplateEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "Thu Reject")
     private String subject;
+    @ApiModelProperty(example = "Chung toi thanh that xin loi vi ban da rot phong van")
     private String body;
+    @ApiModelProperty(example = "Reject")
     private String type;
+    @ApiModelProperty(example = "1")
     private Integer creatorId;
+    @ApiModelProperty(hidden = true)
     private AccountEntity accountByCreatorId;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -80,8 +90,9 @@ public class MailTemplateEntity {
         return Objects.hash(id, subject, body, type, creatorId);
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
+//    @JsonManagedReference(value = "mail-creator")
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }

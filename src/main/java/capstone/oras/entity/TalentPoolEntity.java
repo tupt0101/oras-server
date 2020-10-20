@@ -1,18 +1,27 @@
 package capstone.oras.entity;
 
+import com.fasterxml.jackson.annotation.*;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "talent_pool", schema = "dbo", catalog = "ORAS")
-public class TalentPoolEntity {
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+public class TalentPoolEntity implements Serializable {
     private int id;
+    @ApiModelProperty(example = "Back-end Developer")
     private String name;
+    @ApiModelProperty(hidden = true)
     private Collection<JobEntity> jobsById;
+    @ApiModelProperty(hidden = true)
     private Collection<JobApplicationEntity> jobApplicationsById;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -46,7 +55,8 @@ public class TalentPoolEntity {
         return Objects.hash(id, name);
     }
 
-    @OneToMany(mappedBy = "talentPoolByTalentPoolId")
+    @OneToMany(mappedBy = "talentPoolByTalentPoolId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "job-talent")
     public Collection<JobEntity> getJobsById() {
         return jobsById;
     }
@@ -55,7 +65,8 @@ public class TalentPoolEntity {
         this.jobsById = jobsById;
     }
 
-    @OneToMany(mappedBy = "talentPoolByTalentPoolId")
+    @OneToMany(mappedBy = "talentPoolByTalentPoolId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "application-talent")
     public Collection<JobApplicationEntity> getJobApplicationsById() {
         return jobApplicationsById;
     }

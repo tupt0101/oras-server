@@ -17,5 +17,20 @@
         </introspection-scope>
       </schema-mapping>
     </data-source>
+    <data-source name="NewPersistenceUnit/Hibernate" uuid="2ef5a72c-87d0-415e-b1d5-ba85b7a741c3">
+      <database-info product="Microsoft SQL Server" version="14.00.3281" jdbc-version="4.2" driver-name="Microsoft JDBC Driver 8.2 for SQL Server" driver-version="8.2.2.0" dbms="MSSQL" exact-version="14.0.3281" exact-driver-version="8.2">
+        <extra-name-characters>$#@</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <user-name>admin</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="@">
+            <node kind="schema" qname="@" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
   </component>
 </project>
