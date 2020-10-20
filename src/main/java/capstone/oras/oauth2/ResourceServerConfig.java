@@ -25,7 +25,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         ,"/swagger-ui**","/v2/api-docs", "/webjars/**"
                         ,"/swagger-resources/**","/configuration/**"
                         ,"/linkedin/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated().and().cors().and().csrf();
     }
 
 
