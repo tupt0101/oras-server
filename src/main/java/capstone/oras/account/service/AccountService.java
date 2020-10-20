@@ -37,6 +37,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public AccountEntity createAccount(AccountEntity accountEntity) {
+        accountEntity.setActive(true);
         accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
         return IAccountRepository.save(accountEntity);
     }
@@ -51,6 +52,17 @@ public class AccountService implements IAccountService {
     public List<AccountEntity> getAllAccount() {
         return IAccountRepository.findAll();
     }
+
+    @Override
+    public AccountEntity findAccountByEmail(String email) {
+        return IAccountRepository.findAccountEntitiesByEmailEquals(email).get();
+    }
+
+    @Override
+    public AccountEntity findAccountEntityById(int id) {
+        return IAccountRepository.findById(id).get();
+    }
+
 
 //    @Override
 //    public AccountEntity createAccount(String email, String password,String fullname) {

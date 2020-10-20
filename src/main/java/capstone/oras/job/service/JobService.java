@@ -35,4 +35,9 @@ public class JobService implements IJobService {
         return IJobRepository.save(job);
     }
 
+    @Override
+    public JobEntity getJobById(int id) {
+        return IJobRepository.findById(id).get();
+    }
+
 }
