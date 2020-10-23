@@ -28,4 +28,11 @@ public class MailTemplateService implements IMailTemplateService {
     public List<MailTemplateEntity> getAllMailTemplate() {
         return IMailTemplateRepository.findAll();
     }
+
+    @Override
+    public MailTemplateEntity findMailEntityById(int id) {
+        if (IMailTemplateRepository.findById(id).isPresent()){
+            return IMailTemplateRepository.findById(id).get();
+        } else return null;
+    }
 }

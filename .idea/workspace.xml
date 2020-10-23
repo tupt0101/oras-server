@@ -10,9 +10,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a626e92b-47d1-4c0d-91d5-d4c351b17ac3" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/error/AccountException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/OrasApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/OrasApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/oauth2/AuthorizationServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/oauth2/AuthorizationServerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/account/controller/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/account/controller/AccountController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/account/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/account/service/AccountService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/account/service/IAccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/account/service/IAccountService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/dao/IAccountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/dao/IAccountRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/job/controller/JobController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/job/controller/JobController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/job/service/IJobService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/job/service/IJobService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/job/service/JobService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/job/service/JobService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/oauth2/ResourceServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/oauth2/ResourceServerConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,19 +108,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
@@ -173,7 +167,14 @@
       <workItem from="1602418501413" duration="5797000" />
       <workItem from="1602511918926" duration="802000" />
       <workItem from="1602575021693" duration="2973000" />
-      <workItem from="1602581745500" duration="10064000" />
+      <workItem from="1602581745500" duration="11121000" />
+      <workItem from="1602700901282" duration="14176000" />
+      <workItem from="1602772743633" duration="3847000" />
+      <workItem from="1603037242753" duration="660000" />
+      <workItem from="1603161762071" duration="18000" />
+      <workItem from="1603161822421" duration="8000" />
+      <workItem from="1603162558326" duration="551000" />
+      <workItem from="1603166803207" duration="2770000" />
     </task>
     <servers />
   </component>
@@ -189,10 +190,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="274" y="22" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1600971480216" />
-    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser" timestamp="1601978743206">
+    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser" timestamp="1603177327737">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1601978743206" />
+    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1603177327737" />
     <state x="444" y="92" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1600722050963">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -217,58 +218,62 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="413" y="110" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728@0.0.1366.728" timestamp="1601856352462" />
+    <state x="303" y="110" key="#xdebugger.evaluate" timestamp="1602717776467">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="303" y="110" key="#xdebugger.evaluate/0.0.1366.728@0.0.1366.728" timestamp="1602717776467" />
     <state x="463" y="118" key="FileChooserDialogImpl" timestamp="1602590481625">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1602590481625" />
-    <state width="1323" height="220" key="GridCell.Tab.0.bottom" timestamp="1602602099555">
+    <state width="1323" height="239" key="GridCell.Tab.0.bottom" timestamp="1602721242445">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="220" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1602602099555" />
-    <state width="1323" height="220" key="GridCell.Tab.0.center" timestamp="1602602099554">
+    <state width="1323" height="239" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1602721242445" />
+    <state width="1323" height="239" key="GridCell.Tab.0.center" timestamp="1602721242445">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="220" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1602602099554" />
-    <state width="1323" height="220" key="GridCell.Tab.0.left" timestamp="1602602099554">
+    <state width="1323" height="239" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1602721242445" />
+    <state width="1323" height="239" key="GridCell.Tab.0.left" timestamp="1602721242445">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="220" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1602602099554" />
-    <state width="1323" height="220" key="GridCell.Tab.0.right" timestamp="1602602099555">
+    <state width="1323" height="239" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1602721242445" />
+    <state width="1323" height="239" key="GridCell.Tab.0.right" timestamp="1602721242445">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="220" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1602602099555" />
-    <state width="0" height="0" key="GridCell.Tab.1.bottom" timestamp="1602602099481">
+    <state width="1323" height="239" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1602721242445" />
+    <state width="1323" height="239" key="GridCell.Tab.1.bottom" timestamp="1602721242445">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="0" height="0" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1602602099481" />
-    <state width="0" height="0" key="GridCell.Tab.1.center" timestamp="1602602099481">
+    <state width="1323" height="239" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1602721242445" />
+    <state width="1323" height="239" key="GridCell.Tab.1.center" timestamp="1602721242445">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="0" height="0" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1602602099481" />
-    <state width="0" height="0" key="GridCell.Tab.1.left" timestamp="1602602099481">
+    <state width="1323" height="239" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1602721242445" />
+    <state width="1323" height="239" key="GridCell.Tab.1.left" timestamp="1602721242445">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="0" height="0" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1602602099481" />
-    <state width="0" height="0" key="GridCell.Tab.1.right" timestamp="1602602099481">
+    <state width="1323" height="239" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1602721242445" />
+    <state width="1323" height="239" key="GridCell.Tab.1.right" timestamp="1602721242445">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="0" height="0" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1602602099481" />
-    <state width="0" height="0" key="GridCell.Tab.2.bottom" timestamp="1602602099481">
+    <state width="1323" height="239" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1602721242445" />
+    <state width="1323" height="239" key="GridCell.Tab.2.bottom" timestamp="1602721242446">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="0" height="0" key="GridCell.Tab.2.bottom/0.0.1366.728@0.0.1366.728" timestamp="1602602099481" />
-    <state width="0" height="0" key="GridCell.Tab.2.center" timestamp="1602602099481">
+    <state width="1323" height="239" key="GridCell.Tab.2.bottom/0.0.1366.728@0.0.1366.728" timestamp="1602721242446" />
+    <state width="1323" height="239" key="GridCell.Tab.2.center" timestamp="1602721242446">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="0" height="0" key="GridCell.Tab.2.center/0.0.1366.728@0.0.1366.728" timestamp="1602602099481" />
-    <state width="0" height="0" key="GridCell.Tab.2.left" timestamp="1602602099481">
+    <state width="1323" height="239" key="GridCell.Tab.2.center/0.0.1366.728@0.0.1366.728" timestamp="1602721242446" />
+    <state width="1323" height="239" key="GridCell.Tab.2.left" timestamp="1602721242446">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="0" height="0" key="GridCell.Tab.2.left/0.0.1366.728@0.0.1366.728" timestamp="1602602099481" />
-    <state width="0" height="0" key="GridCell.Tab.2.right" timestamp="1602602099481">
+    <state width="1323" height="239" key="GridCell.Tab.2.left/0.0.1366.728@0.0.1366.728" timestamp="1602721242446" />
+    <state width="1323" height="239" key="GridCell.Tab.2.right" timestamp="1602721242446">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="0" height="0" key="GridCell.Tab.2.right/0.0.1366.728@0.0.1366.728" timestamp="1602602099481" />
+    <state width="1323" height="239" key="GridCell.Tab.2.right/0.0.1366.728@0.0.1366.728" timestamp="1602721242446" />
     <state x="213" y="18" key="Maven.ArtifactSearchDialog" timestamp="1601858942684">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -297,23 +302,30 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="178" y="98" width="1009" height="630" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1366.728@0.0.1366.728" timestamp="1602430045548" />
-    <state x="389" y="97" width="587" height="592" key="find.popup" timestamp="1602601337806">
+    <state x="92" y="92" width="1182" height="544" key="dock-window-1" timestamp="1602783621716">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="389" y="97" width="587" height="592" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1602601337806" />
+    <state x="92" y="92" width="1182" height="544" key="dock-window-1/0.0.1366.728@0.0.1366.728" timestamp="1602783621716" />
+    <state x="92" y="92" width="1182" height="544" key="dock-window-2" timestamp="1602783621716">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="92" y="92" width="1182" height="544" key="dock-window-2/0.0.1366.728@0.0.1366.728" timestamp="1602783621716" />
+    <state x="389" y="97" width="587" height="592" key="find.popup" timestamp="1602783998681">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="389" y="97" width="587" height="592" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1602783998681" />
     <state x="339" y="162" key="run.anything.popup" timestamp="1601827417136">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="339" y="162" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1601827417136" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1602773093417">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1602773093417" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/capstone/oras/account/controller/AccountController.java</url>
-          <line>20</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/capstone/oras/account/service/AccountService.java</url>
           <line>27</line>
@@ -326,13 +338,19 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/capstone/oras/account/service/AccountService.java</url>
-          <line>46</line>
+          <line>47</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
-        <breakpoint enabled="true" type="java-exception">
-          <properties class="com.microsoft.sqlserver.jdbc.SQLServerException" package="com.microsoft.sqlserver.jdbc" />
-          <option name="timeStamp" value="3" />
-        </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/capstone/oras/account/validator/AccountValidator.java</url>
+          <line>16</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/capstone/oras/account/validator/AccountValidator.java</url>
+          <line>23</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
