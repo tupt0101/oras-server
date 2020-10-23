@@ -14,18 +14,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    
+
     @Autowired
     private UserDetailsService customUserDetailsService;
-    
+
     @Autowired
-    private PasswordEncoder passwordEncoder;    
-        
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     public void configureGlobal(final AuthenticationManagerBuilder auth) throws Exception {
         auth
             .userDetailsService(customUserDetailsService)
-            .passwordEncoder(passwordEncoder);    
+            .passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -37,9 +37,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .httpBasic()
                 .and()
-            .csrf().disable();
+            .csrf().and().cors();
     }
-    
+
     /**
          * See: https://github.com/spring-projects/spring-boot/issues/11136
          *
@@ -50,6 +50,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }    
+    }
 
 }
