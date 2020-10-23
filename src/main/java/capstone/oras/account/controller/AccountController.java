@@ -80,4 +80,10 @@ public class AccountController {
     ResponseEntity<List<AccountEntity>> test() {
         return new ResponseEntity<List<AccountEntity>>(accountService.getAllAccount(), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/account/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<AccountEntity> getAccountById(@PathVariable("id") int id) {
+        return new ResponseEntity<AccountEntity>(accountService.findAccountEntityById(id), HttpStatus.OK);
+    }
 }

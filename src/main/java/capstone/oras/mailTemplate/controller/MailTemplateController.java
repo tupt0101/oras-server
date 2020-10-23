@@ -31,6 +31,13 @@ public class MailTemplateController {
         return new ResponseEntity<List<MailTemplateEntity>>(mailTemplateService.getAllMailTemplate(), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/mail-template/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<MailTemplateEntity> getMailTemplateById(@PathVariable("id")int id) {
+
+        return new ResponseEntity<MailTemplateEntity>(mailTemplateService.findMailEntityById(id), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/mail-template", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<MailTemplateEntity> createMailTemplate(@RequestBody MailTemplateEntity mailTemplateEntity) {

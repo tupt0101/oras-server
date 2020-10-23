@@ -25,6 +25,12 @@ public class TalentPoolController {
         return new ResponseEntity<List<TalentPoolEntity>>(talentPoolService.getAllTalentPool(), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/talentPool/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<TalentPoolEntity> getTalentPoolById(@PathVariable("id")int id) {
+        return new ResponseEntity<TalentPoolEntity>(talentPoolService.findTalentPoolEntityById(id), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/talentPool", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<TalentPoolEntity> createTalentPool(@RequestBody TalentPoolEntity talentPoolEntity) {

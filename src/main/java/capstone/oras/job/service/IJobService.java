@@ -11,4 +11,5 @@ public interface IJobService {
     JobEntity closeJob(int id);
     JobEntity getJobById(int id);
     boolean checkJobEntityById(int id);
+    List<JobEntity> getOpenJob();
 }

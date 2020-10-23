@@ -173,4 +173,18 @@ public class JobController {
         }
         return new ResponseEntity<>(jobService.closeJob(id), HttpStatus.OK);
     }
+
+
+
+    @RequestMapping(value = "/job/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<JobEntity> getJobById(@PathVariable("id") int id) {
+        return new ResponseEntity<JobEntity>(jobService.getJobById(id), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/open-jobs", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<JobEntity>> getAllOpenJob() {
+        return new ResponseEntity<List<JobEntity>>(jobService.getOpenJob(), HttpStatus.OK);
+    }
 }
