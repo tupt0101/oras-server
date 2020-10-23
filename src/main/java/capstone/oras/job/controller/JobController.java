@@ -3,6 +3,7 @@ package capstone.oras.job.controller;
 import capstone.oras.account.service.IAccountService;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.job.service.IJobService;
+import capstone.oras.talentPool.service.ITalentPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,10 @@ public class JobController {
     @Autowired
     private IAccountService accountService;
 
+    @Autowired
+    private ITalentPoolService talentPoolService;
+
+
     HttpHeaders httpHeaders = new HttpHeaders();
 
     @RequestMapping(value = "/jobs", method = RequestMethod.GET)
@@ -32,12 +37,12 @@ public class JobController {
     @PostMapping(value = "/job", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<JobEntity> createJob(@RequestBody JobEntity job) {
-        if (job.getAccountByCreatorId() == null) {
-            httpHeaders.set("error", "Creator is null");
+        if (job.getCreatorId() == null) {
+            httpHeaders.set("error", "CreatorId is null");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
-            httpHeaders.set("error", "Creator is empty");
+            httpHeaders.set("error", "Title is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
         if (job.getApplyFrom() == null) {
@@ -56,7 +61,7 @@ public class JobController {
         }
 
         if (job.getCurrency() == null) {
-            httpHeaders.set("error", "Currency Date is empty");
+            httpHeaders.set("error", "Currency is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
@@ -65,10 +70,26 @@ public class JobController {
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
-        if (job.getTalentPoolByTalentPoolId() == null) {
-            httpHeaders.set("error", "Talent Poll is empty");
+        if (job.getTalentPoolId() == null) {
+            httpHeaders.set("error", "Talent Poll ID is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
+
+        if (jobService.getJobById(job.getId()) != null) {
+            httpHeaders.set("error", "Job ID already exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
+            httpHeaders.set("error", "Account is not exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
+            httpHeaders.set("error", "Talent Pool ID is not exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(jobService.createJob(job), HttpStatus.OK);
     }
 
@@ -86,12 +107,12 @@ public class JobController {
             }
         }
 
-        if (job.getAccountByCreatorId() == null) {
-            httpHeaders.set("error", "Creator is null");
+        if (job.getCreatorId() == null) {
+            httpHeaders.set("error", "Creator ID is null");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
-            httpHeaders.set("error", "Creator is empty");
+            httpHeaders.set("error", "Title is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
         if (job.getApplyFrom() == null) {
@@ -110,7 +131,7 @@ public class JobController {
         }
 
         if (job.getCurrency() == null) {
-            httpHeaders.set("error", "Currency Date is empty");
+            httpHeaders.set("error", "Currency is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
@@ -119,10 +140,27 @@ public class JobController {
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
-        if (job.getTalentPoolByTalentPoolId() == null) {
-            httpHeaders.set("error", "Talent Poll is empty");
+        if (job.getTalentPoolId() == null) {
+            httpHeaders.set("error", "Talent Poll Id is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
+
+        if (jobService.getJobById(job.getId()) == null) {
+            httpHeaders.set("error", "Job ID doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
+            httpHeaders.set("error", "Account is not exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+
+        if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
+            httpHeaders.set("error", "Talent Pool ID is not exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
     }
 
@@ -134,5 +172,19 @@ public class JobController {
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(jobService.closeJob(id), HttpStatus.OK);
+    }
+
+
+
+    @RequestMapping(value = "/job/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<JobEntity> getJobById(@PathVariable("id") int id) {
+        return new ResponseEntity<JobEntity>(jobService.getJobById(id), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/open-jobs", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<JobEntity>> getAllOpenJob() {
+        return new ResponseEntity<List<JobEntity>>(jobService.getOpenJob(), HttpStatus.OK);
     }
 }

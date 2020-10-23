@@ -16,7 +16,8 @@ public class JobService implements IJobService {
 
     @Override
     public JobEntity createJob(JobEntity job) {
-        return IJobRepository.save(job);    }
+        return IJobRepository.save(job);
+    }
 
     @Override
     public JobEntity updateJob(JobEntity job) {
@@ -37,7 +38,21 @@ public class JobService implements IJobService {
 
     @Override
     public JobEntity getJobById(int id) {
-        return IJobRepository.findById(id).get();
+        if (IJobRepository.findById(id).isPresent()) {
+            return IJobRepository.findById(id).get();
+        } else return null;
+    }
+
+    @Override
+    public boolean checkJobEntityById(int id) {
+        return IJobRepository.findById(id).isPresent();
+    }
+
+    @Override
+    public List<JobEntity> getOpenJob() {
+        if (IJobRepository.findAllByStatus("open").isPresent()) {
+            return IJobRepository.findAllByStatus("open").get();
+        } else return null;
     }
 
 }

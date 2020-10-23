@@ -35,10 +35,14 @@ public class AccountController {
         } else if (accountService.findAccountByEmail(accountEntity.getEmail()) != null) {
             httpHeaders.set("error", "This email is already registered");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (accountService.findAccountEntityById(accountEntity.getId()) != null) {
+            httpHeaders.set("error", "Account already exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
         }
     }
+
 
     @RequestMapping(value = "/account", method = RequestMethod.PUT)
     @ResponseBody
@@ -56,8 +60,11 @@ public class AccountController {
         } else if (accountService.findAccountByEmail(accountEntity.getEmail()) == null) {
             httpHeaders.set("error", "Can not find this account");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (accountService.findAccountEntityById(accountEntity.getId()) == null) {
+            httpHeaders.set("error", "Account doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
+            return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
         }
 
     }
@@ -72,5 +79,11 @@ public class AccountController {
     @ResponseBody
     ResponseEntity<List<AccountEntity>> test() {
         return new ResponseEntity<List<AccountEntity>>(accountService.getAllAccount(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/account/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<AccountEntity> getAccountById(@PathVariable("id") int id) {
+        return new ResponseEntity<AccountEntity>(accountService.findAccountEntityById(id), HttpStatus.OK);
     }
 }
