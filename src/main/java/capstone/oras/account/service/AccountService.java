@@ -55,12 +55,16 @@ public class AccountService implements IAccountService {
 
     @Override
     public AccountEntity findAccountByEmail(String email) {
-        return IAccountRepository.findAccountEntitiesByEmailEquals(email).get();
+        if (IAccountRepository.findAccountEntitiesByEmailEquals(email).isPresent()) {
+            return IAccountRepository.findAccountEntitiesByEmailEquals(email).get();
+        } else return null;
     }
 
     @Override
     public AccountEntity findAccountEntityById(int id) {
-        return IAccountRepository.findById(id).get();
+        if (IAccountRepository.findById(id).isPresent()) {
+            return IAccountRepository.findById(id).get();
+        } else return null;
     }
 
 

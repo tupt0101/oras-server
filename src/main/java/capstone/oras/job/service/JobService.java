@@ -37,7 +37,14 @@ public class JobService implements IJobService {
 
     @Override
     public JobEntity getJobById(int id) {
-        return IJobRepository.findById(id).get();
+        if(IJobRepository.findById(id).isPresent()){
+            return IJobRepository.findById(id).get();
+        } else return null;
+    }
+
+    @Override
+    public boolean checkJobEntityById(int id) {
+        return IJobRepository.findById(id).isPresent();
     }
 
 }

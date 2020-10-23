@@ -8,4 +8,5 @@ public interface IMailTemplateService {
     MailTemplateEntity createMailTemplate(MailTemplateEntity mailTemplateEntity);
     MailTemplateEntity updateMailTemplate(MailTemplateEntity mailTemplateEntity);
     List<MailTemplateEntity> getAllMailTemplate();
+    MailTemplateEntity findMailEntityById(int id);
 }

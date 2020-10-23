@@ -27,4 +27,11 @@ public class TalentPoolService implements ITalentPoolService{
     public List<TalentPoolEntity> getAllTalentPool() {
         return ITalentPoolRepository.findAll();
     }
+
+    @Override
+    public TalentPoolEntity findTalentPoolEntityById(int id) {
+        if(ITalentPoolRepository.findById(id).isPresent()) {
+            return ITalentPoolRepository.findById(id).get();
+        } else return null;
+    }
 }
