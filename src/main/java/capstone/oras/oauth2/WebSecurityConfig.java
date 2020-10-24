@@ -24,28 +24,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(final AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .userDetailsService(customUserDetailsService)
-            .passwordEncoder(passwordEncoder);
+                .userDetailsService(customUserDetailsService)
+                .passwordEncoder(passwordEncoder);
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
+                .csrf().disable()
+                .authorizeRequests()
                 .antMatchers("/oauth/token").permitAll()
                 .anyRequest().authenticated()
                 .and()
-            .httpBasic()
+                .httpBasic()
                 .and()
-            .csrf().and().cors();
+//            .csrf().and()
+                .cors();
     }
 
     /**
-         * See: https://github.com/spring-projects/spring-boot/issues/11136
-         *
-         * @return
-         * @throws Exception
-         */
+     * See: https://github.com/spring-projects/spring-boot/issues/11136
+     *
+     * @return
+     * @throws Exception
+     */
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
