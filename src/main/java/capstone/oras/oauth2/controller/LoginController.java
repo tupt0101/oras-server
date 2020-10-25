@@ -1,6 +1,9 @@
 package capstone.oras.oauth2.controller;
 
 import org.codehaus.jettison.json.JSONObject;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
@@ -10,18 +13,23 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 @RestController
+@CrossOrigin(value = "http://localhost:9527")
 public class LoginController {
 
+    HttpHeaders httpHeaders = new HttpHeaders();
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    @ResponseBody
-    String login(@RequestParam("username") String email, @RequestParam("password") String password) throws Exception {
-        String url = "http://localhost:8080/oauth/token";
+//    @ResponseBody
+//    @CrossOrigin(origins = "http://localhost:8088")
+    ResponseEntity<String>  login(@RequestParam("username") String email, @RequestParam("password") String password) throws Exception {
+        String url = "http://localhost:8088/oauth/token";
         URL obj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setRequestMethod(RequestMethod.POST.name());
         connection.setRequestProperty("Host", "localhost:8080");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         connection.setRequestProperty("Authorization", "Basic bXktdHJ1c3RlZC1jbGllbnQ6c2VjcmV0");
+//        connection.setRequestProperty("Access-Control-Allow-Origin", "http://localhost:9527");
         String urlParameters = "grant_type=password&username="+ email + "&password=" + password;
 
         connection.setDoOutput(true);
@@ -41,6 +49,8 @@ public class LoginController {
 
         JSONObject jsonObject = new JSONObject(response.toString());
         String access_token = jsonObject.getString("access_token");
-        return access_token;
+//        httpHeaders.set("Access-Control-Allow-Origin", "http://localhost:8088");
+//        httpHeaders.setAccessControlAllowOrigin("http://localhost:8088");
+        return new ResponseEntity<>(access_token, HttpStatus.OK);
     }
 }

@@ -16,6 +16,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
+//                .cors().disable()
             .headers()
                 .frameOptions()
                 .disable()
@@ -26,6 +27,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         ,"/swagger-resources/**","/configuration/**"
                         ,"/linkedin/**"
                         ,"/v1/account-mananagement/**").permitAll()
-                .anyRequest().authenticated().and().cors().and().csrf();
+                .anyRequest().authenticated()
+                .and().cors()
+                .and().csrf();
     }
 }
