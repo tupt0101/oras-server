@@ -28,7 +28,8 @@ public class LoginController {
 //        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
         connection.setRequestMethod(RequestMethod.POST.name());
-        connection.setRequestProperty("Host", "localhost:8080");
+//        connection.setRequestProperty("Host", "localhost:8080");
+        connection.setRequestProperty("Host", "oras-api.herokuapp.com");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         connection.setRequestProperty("Authorization", "Basic bXktdHJ1c3RlZC1jbGllbnQ6c2VjcmV0");
 //        connection.setRequestProperty("Access-Control-Allow-Origin", "http://localhost:9527");
