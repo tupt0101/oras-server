@@ -35,14 +35,8 @@
   <component name="ChangeListManager">
     <list default="true" id="a626e92b-47d1-4c0d-91d5-d4c351b17ac3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/OrasApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/OrasApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-capstone.oras.OrasApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-capstone.oras.OrasApplicationTests.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/capstone.oras.OrasApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/capstone.oras.OrasApplicationTests.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -276,22 +270,22 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1602590481625" />
-    <state width="1323" height="259" key="GridCell.Tab.0.bottom" timestamp="1603646766648">
+    <state width="1323" height="259" key="GridCell.Tab.0.bottom" timestamp="1603648063350">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="259" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1603646766648" />
-    <state width="1323" height="259" key="GridCell.Tab.0.center" timestamp="1603646766647">
+    <state width="1323" height="259" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1603648063350" />
+    <state width="1323" height="259" key="GridCell.Tab.0.center" timestamp="1603648063350">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="259" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1603646766647" />
-    <state width="1323" height="259" key="GridCell.Tab.0.left" timestamp="1603646766647">
+    <state width="1323" height="259" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1603648063350" />
+    <state width="1323" height="259" key="GridCell.Tab.0.left" timestamp="1603648063350">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="259" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1603646766647" />
-    <state width="1323" height="259" key="GridCell.Tab.0.right" timestamp="1603646766647">
+    <state width="1323" height="259" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1603648063350" />
+    <state width="1323" height="259" key="GridCell.Tab.0.right" timestamp="1603648063350">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="259" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1603646766647" />
+    <state width="1323" height="259" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1603648063350" />
     <state width="1323" height="259" key="GridCell.Tab.1.bottom" timestamp="1603646759900">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
