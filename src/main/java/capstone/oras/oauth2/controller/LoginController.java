@@ -34,15 +34,12 @@ public class LoginController {
         connection.setRequestProperty("Host", "oras-api.herokuapp.com");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         connection.setRequestProperty("Authorization", "Basic bXktdHJ1c3RlZC1jbGllbnQ6c2VjcmV0");
-//        connection.setRequestProperty("Access-Control-Allow-Origin", "http://localhost:9527");
         String urlParameters = "grant_type=password&username="+ email + "&password=" + password;
-
         connection.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
         wr.writeBytes(urlParameters);
         wr.flush();
         wr.close();
-//        int responseCode = connection.getResponseCode();
         BufferedReader in = new BufferedReader( new InputStreamReader(connection.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
@@ -53,10 +50,6 @@ public class LoginController {
 
         JSONObject jsonObject = new JSONObject(response.toString());
         String access_token = jsonObject.getString("access_token");
-//        httpHeaders.set("Access-Control-Allow-Origin", "http://localhost:8088");
-//        httpHeaders.setAccessControlAllowOrigin("http://localhost:8088");
-
-//        return new ResponseEntity<>(InetAddress.getLoopbackAddress().getHostName(), HttpStatus.OK);
         return new ResponseEntity<>(access_token, HttpStatus.OK);
     }
 }
