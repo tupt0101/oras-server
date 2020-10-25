@@ -36,7 +36,6 @@
     <list default="true" id="a626e92b-47d1-4c0d-91d5-d4c351b17ac3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/oauth2/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/oauth2/controller/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +203,7 @@
       <workItem from="1603513677289" duration="9370000" />
       <workItem from="1603587402857" duration="848000" />
       <workItem from="1603594664864" duration="3851000" />
-      <workItem from="1603617570602" duration="22000" />
+      <workItem from="1603617570602" duration="1409000" />
     </task>
     <servers />
   </component>
