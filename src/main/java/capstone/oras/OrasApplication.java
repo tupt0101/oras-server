@@ -2,6 +2,7 @@ package capstone.oras;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,27 +24,12 @@ public class OrasApplication {
 		SpringApplication.run(OrasApplication.class, args);
 	}
 
-//	@Bean
-//	CorsConfigurationSource corsConfigurationSource() {
-//		CorsConfiguration configuration = new CorsConfiguration();
-//		// This Origin header you can see that in Network tab
-//		configuration.setAllowedOrigins(Arrays.asList("http:/localhost:8088","http:/localhost:9527"));
-//		configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-//		configuration.setAllowedHeaders(Arrays.asList("content-type"));
-//		configuration.setAllowCredentials(true);
-//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//		source.registerCorsConfiguration("/**", configuration);
-//		return source;
-//	}
+	@Bean
+	public EmbeddedServletContainerCustomizer containerCustomizer() {
+		return (container -> {
+			container.setContextPath("/nemswiftsvc");
+			container.setPort(Integer.valueOf(System.getenv("PORT")));
+		});
+	}
 
-//	@Bean
-//	public WebMvcConfigurer corsConfigurer() {
-//		return new WebMvcConfigurerAdapter() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/**")
-//						.allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
-//			}
-//		};
-//	}
 }
