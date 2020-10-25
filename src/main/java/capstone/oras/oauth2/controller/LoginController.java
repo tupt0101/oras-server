@@ -28,6 +28,8 @@ public class LoginController {
 //        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
         connection.setRequestMethod(RequestMethod.POST.name());
+        connection.addRequestProperty("User-Agent",
+                "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
 //        connection.setRequestProperty("Host", "localhost:8080");
         connection.setRequestProperty("Host", "oras-api.herokuapp.com");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
