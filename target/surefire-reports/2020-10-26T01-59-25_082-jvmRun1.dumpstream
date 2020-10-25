@@ -1,0 +1,57 @@
+# Created at 2020-10-26T02:02:59.777
+TestSet has not finished before stream error has appeared >> initializing exit by non-null configuration: null
+java.io.EOFException
+	at java.io.DataInputStream.readInt(DataInputStream.java:392)
+	at org.apache.maven.surefire.booter.MasterProcessCommand.decode(MasterProcessCommand.java:115)
+	at org.apache.maven.surefire.booter.CommandReader$CommandRunnable.run(CommandReader.java:391)
+	at java.lang.Thread.run(Thread.java:748)
+
+
+# Created at 2020-10-26T02:03:15.445
+Unexpected IOException with stream: 2020-10-26 02:03:15.444  INFO 2368 --- [         task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+
+
+# Created at 2020-10-26T02:03:15.454
+Unexpected IOException with stream: 2020-10-26 02:03:15.454  INFO 2368 --- [         task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+
+
+# Created at 2020-10-26T02:03:16.088
+Unexpected IOException with stream: 2020-10-26 02:03:16.087  WARN 2368 --- [           main] s.o.SpringCloudSecurityAutoConfiguration : All Spring Cloud Security modules and starters are deprecated. They will be moved to individual projects in the next major release.
+
+
+# Created at 2020-10-26T02:03:16.148
+Unexpected IOException with stream: 2020-10-26 02:03:16.147  INFO 2368 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+
+
+# Created at 2020-10-26T02:03:16.190
+Unexpected IOException with stream: 2020-10-26 02:03:16.189  INFO 2368 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+
+
+# Created at 2020-10-26T02:03:16.287
+Unexpected IOException with stream: 2020-10-26 02:03:16.283  INFO 2368 --- [           main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+
+
+# Created at 2020-10-26T02:03:16.659
+Unexpected IOException with stream: 2020-10-26 02:03:16.659  INFO 2368 --- [           main] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
+
+
+# Created at 2020-10-26T02:03:17.243
+Unexpected IOException with stream: 2020-10-26 02:03:17.243  INFO 2368 --- [           main] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
+
+
+# Created at 2020-10-26T02:03:17.261
+Unexpected IOException with stream: 2020-10-26 02:03:17.261  INFO 2368 --- [           main] capstone.oras.OrasApplicationTests       : Started OrasApplicationTests in 229.456 seconds (JVM running for 231.072)
+
+
+# Created at 2020-10-26T02:03:17.332
+Unexpected IOException: 5,1,capstone.oras.OrasApplicationTests,contextLoads,null,null,null
+
+
+# Created at 2020-10-26T02:03:17.438
+Unexpected IOException: 6,1,capstone.oras.OrasApplicationTests,contextLoads,null,null,null
+
+
+# Created at 2020-10-26T02:03:17.440
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,capstone.oras.OrasApplicationTests,null,null,null
+
+

@@ -9,6 +9,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.Collections;
+
 @SpringBootApplication
 @EnableAuthorizationServer
 @EnableResourceServer
@@ -20,7 +22,14 @@ public class OrasApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(OrasApplication.class, args);
+		SpringApplication app = new SpringApplication(OrasApplication.class);
+		String port = System.getenv("PORT");
+		if (port != null){
+			port = "8080";
+		}
+		app.setDefaultProperties(Collections.singletonMap("server.port",port));
+		app.run();
+//		SpringApplication.run(OrasApplication.class, args);
 	}
 
 //	@Bean
