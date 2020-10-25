@@ -24,7 +24,6 @@ public class LoginController {
     ResponseEntity<String>  login(@RequestParam("username") String email, @RequestParam("password") String password) throws Exception {
 //        String url = "http://localhost:8088/oauth/token";
         String url = "https://oras-api.herokuapp.com/";
-//        InetAddress.getLoopbackAddress().getHostName();
         URL obj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setRequestMethod(RequestMethod.POST.name());
