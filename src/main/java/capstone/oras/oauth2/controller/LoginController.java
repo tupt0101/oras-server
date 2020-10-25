@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
 
 @RestController
@@ -23,8 +22,9 @@ public class LoginController {
 //    @ResponseBody
 //    @CrossOrigin(origins = "http://localhost:8088")
     ResponseEntity<String>  login(@RequestParam("username") String email, @RequestParam("password") String password) throws Exception {
-        String url = "http://localhost:8088/oauth/token";
-        InetAddress.getLoopbackAddress().getHostName();
+//        String url = "http://localhost:8088/oauth/token";
+        String url = "https://oras-api.herokuapp.com/";
+//        InetAddress.getLoopbackAddress().getHostName();
         URL obj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setRequestMethod(RequestMethod.POST.name());
@@ -53,7 +53,7 @@ public class LoginController {
 //        httpHeaders.set("Access-Control-Allow-Origin", "http://localhost:8088");
 //        httpHeaders.setAccessControlAllowOrigin("http://localhost:8088");
 
-        return new ResponseEntity<>(InetAddress.getLoopbackAddress().getHostName(), HttpStatus.OK);
-//        return new ResponseEntity<>(access_token, HttpStatus.OK);
+//        return new ResponseEntity<>(InetAddress.getLoopbackAddress().getHostName(), HttpStatus.OK);
+        return new ResponseEntity<>(access_token, HttpStatus.OK);
     }
 }
