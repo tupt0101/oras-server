@@ -2,7 +2,6 @@ package capstone.oras;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,15 +20,22 @@ public class OrasApplication {
 	}
 
 	public static void main(String[] args) {
+//		SpringApplication app = new SpringApplication(OrasApplication.class);
+//		String port = System.getenv("PORT");
+//		if (port != null){
+//			port = "8080";
+//		}
+//		app.setDefaultProperties(Collections.singletonMap("server.port",port));
+//		app.run();
 		SpringApplication.run(OrasApplication.class, args);
 	}
 
-	@Bean
-	public EmbeddedServletContainerCustomizer containerCustomizer() {
-		return (container -> {
-			container.setContextPath("/nemswiftsvc");
-			container.setPort(Integer.valueOf(System.getenv("PORT")));
-		});
-	}
+// 2	@Bean
+//	public EmbeddedServletContainerCustomizer containerCustomizer() {
+//		return (container -> {
+//			container.setContextPath("/nemswiftsvc");
+//			container.setPort(Integer.valueOf(System.getenv("PORT")));
+//		});
+//	}
 
 }
