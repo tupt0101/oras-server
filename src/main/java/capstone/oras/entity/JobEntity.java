@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
@@ -14,36 +15,53 @@ import java.util.Objects;
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class JobEntity implements Serializable {
     @ApiModelProperty()
+    @JsonProperty("id")
     private int id;
     @ApiModelProperty(example = "Coder")
+    @JsonProperty("title")
     private String title;
     @ApiModelProperty(example = "Code a lot")
+    @JsonProperty("description")
     private String description;
     @ApiModelProperty(example = "500")
+    @JsonProperty("salaryFrom")
     private Double salaryFrom;
     @ApiModelProperty(example = "1500")
+    @JsonProperty("salaryTo")
     private Double salaryTo;
     @ApiModelProperty(example = "$")
+    @JsonProperty("currency")
     private String currency;
+    @JsonProperty("salaryHidden")
     private Boolean salaryHidden;
+    @JsonProperty("vacancies")
     private Integer vacancies;
     @ApiModelProperty(example = "2020-09-28")
+    @JsonProperty("applyFrom")
     private Date applyFrom;
     @ApiModelProperty(example = "2020-10-28")
+    @JsonProperty("applyTo")
     private Date applyTo;
     @ApiModelProperty(example = "1", value = "should be a valid id")
+    @JsonProperty("talentPoolId")
     private Integer talentPoolId;
     @ApiModelProperty(example = "1", value = "should be a valid id")
+    @JsonProperty("creatorId")
     private Integer creatorId;
     @ApiModelProperty(example = "open")
+    @JsonProperty("status")
     private String status;
     @ApiModelProperty(example = "2020-09-28")
+    @JsonProperty("createDate")
     private Date createDate;
     @ApiModelProperty(hidden = true)
+    @JsonProperty("talentPoolByTalentPoolId")
     private TalentPoolEntity talentPoolByTalentPoolId;
+    @JsonProperty("accountByCreatorId")
     @ApiModelProperty(hidden = true)
     private AccountEntity accountByCreatorId;
     @ApiModelProperty(hidden = true)
+    @JsonProperty("jobApplicationsById")
     private Collection<JobApplicationEntity> jobApplicationsById;
 
     @Id
