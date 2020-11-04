@@ -28,7 +28,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         ,"/linkedin/**"
                         ,"/v1/account-mananagement/**").permitAll()
                 .anyRequest().authenticated()
-                .and().cors()
-                .and().csrf();
+                .and().cors();
+//                .and().csrf();
     }
 }
