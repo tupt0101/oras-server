@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "mail_template", schema = "dbo", catalog = "ORAS")
+@Table(name = "mail_template", schema = "public", catalog = "db67ot35cl90oe")
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class MailTemplateEntity implements Serializable {
     private int id;
