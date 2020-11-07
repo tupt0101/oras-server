@@ -8,7 +8,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "job_application", schema = "public", catalog = "db67ot35cl90oe")
+@Table(name = "job_application")
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class JobApplicationEntity implements Serializable {
     private int id;

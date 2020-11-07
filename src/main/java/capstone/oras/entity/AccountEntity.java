@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "account", schema = "public", catalog = "db67ot35cl90oe")
+@Table(name = "account")
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class AccountEntity implements Serializable {
     private int id;

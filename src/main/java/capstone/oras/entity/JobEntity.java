@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "job", schema = "public", catalog = "db67ot35cl90oe")
+@Table(name = "job")
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class JobEntity implements Serializable {
     @ApiModelProperty()
