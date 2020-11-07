@@ -16,6 +16,7 @@ public class AccountEntity implements Serializable {
     @ApiModelProperty(example = "example@mail.com")
     private String email;
     @ApiModelProperty(example = "123456")
+    @JsonIgnore
     private String password;
     @ApiModelProperty(example = "Nguyen Nhan Cu")
     private String fullname;
