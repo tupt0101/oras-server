@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "account")
+@Table(name = "account", schema = "public", catalog = "db67ot35cl90oe")
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class AccountEntity implements Serializable {
     private int id;
@@ -27,8 +28,9 @@ public class AccountEntity implements Serializable {
     private Collection<JobEntity> jobsById;
     @ApiModelProperty(hidden = true)
     private Collection<MailTemplateEntity> mailTemplatesById;
-
-
+    private Integer companyId;
+    private CompanyEntity companyById;
+    private Collection<PurchaseEntity> purchasesById;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -91,6 +93,24 @@ public class AccountEntity implements Serializable {
         this.role = role;
     }
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        AccountEntity that = (AccountEntity) o;
+//        return id == that.id &&
+//                Objects.equals(email, that.email) &&
+//                Objects.equals(password, that.password) &&
+//                Objects.equals(fullname, that.fullname) &&
+//                Objects.equals(active, that.active);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(id, email, password, fullname, active);
+//    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,12 +120,14 @@ public class AccountEntity implements Serializable {
                 Objects.equals(email, that.email) &&
                 Objects.equals(password, that.password) &&
                 Objects.equals(fullname, that.fullname) &&
-                Objects.equals(active, that.active);
+                Objects.equals(active, that.active) &&
+                Objects.equals(role, that.role) &&
+                Objects.equals(companyId, that.companyId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, fullname, active);
+        return Objects.hash(id, email, password, fullname, active, role, companyId);
     }
 
     @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -126,5 +148,35 @@ public class AccountEntity implements Serializable {
 
     public void setMailTemplatesById(Collection<MailTemplateEntity> mailTemplatesById) {
         this.mailTemplatesById = mailTemplatesById;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
+    public CompanyEntity getCompanyById() {
+        return companyById;
+    }
+
+    public void setCompanyById(CompanyEntity companyById) {
+        this.companyById = companyById;
+    }
+
+    @Basic
+    @Column(name = "company_id")
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
+
+    @OneToMany(mappedBy = "accountById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference (value = "account-purchase")
+    public Collection<PurchaseEntity> getPurchasesById() {
+        return purchasesById;
+    }
+
+    public void setPurchasesById(Collection<PurchaseEntity> purchasesById) {
+        this.purchasesById = purchasesById;
     }
 }
