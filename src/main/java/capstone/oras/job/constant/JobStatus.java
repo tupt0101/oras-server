@@ -1,7 +1,7 @@
 package capstone.oras.job.constant;
 
 public enum JobStatus {
-    DRAFT("Draft"), OPEN("Open"), ONHOLD("On Hold"), CLOSED("Closed");
+    DRAFT("Draft"), OPEN("Published"), ONHOLD("On Hold"), CLOSED("Closed");
 
     private String value;
 
