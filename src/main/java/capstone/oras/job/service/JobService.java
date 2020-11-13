@@ -50,8 +50,8 @@ public class JobService implements IJobService {
 
     @Override
     public List<JobEntity> getOpenJob() {
-        if (IJobRepository.findAllByStatus("open").isPresent()) {
-            return IJobRepository.findAllByStatus("open").get();
+        if (IJobRepository.findAllByStatus(JobStatus.OPEN.getValue()).isPresent()) {
+            return IJobRepository.findAllByStatus(JobStatus.OPEN.getValue()).get();
         } else return null;
     }
 
