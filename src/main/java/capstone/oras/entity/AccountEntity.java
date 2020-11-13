@@ -151,7 +151,7 @@ public class AccountEntity implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "company_id", referencedColumnName = "id", insertable=false, updatable=false)
     public CompanyEntity getCompanyById() {
         return companyById;
     }
