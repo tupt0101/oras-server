@@ -150,7 +150,7 @@ public class AccountEntity implements Serializable {
         this.mailTemplatesById = mailTemplatesById;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", referencedColumnName = "id", insertable=false, updatable=false)
     public CompanyEntity getCompanyById() {
         return companyById;

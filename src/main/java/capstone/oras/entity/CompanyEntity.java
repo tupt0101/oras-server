@@ -17,7 +17,7 @@ public class CompanyEntity {
     private String phoneNo;
     private String description;
     private String avatar;
-    private Collection<AccountEntity> accountsById;
+    private AccountEntity accountById;
     private Collection<CompanyPackageEntity> companyPackagesById;
 
     @Id
@@ -120,14 +120,14 @@ public class CompanyEntity {
         return Objects.hash(id, name, location, taxCode, email, phoneNo, description, avatar);
     }
 
-    @OneToMany(mappedBy = "companyById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "companyById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference(value = "company-account")
-    public Collection<AccountEntity> getAccountsById() {
-        return accountsById;
+    public AccountEntity getAccountById() {
+        return accountById;
     }
 
-    public void setAccountsById(Collection<AccountEntity> accountsById) {
-        this.accountsById = accountsById;
+    public void setAccountById(AccountEntity accountById) {
+        this.accountById = accountById;
     }
 
     @OneToMany(mappedBy = "companyById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
