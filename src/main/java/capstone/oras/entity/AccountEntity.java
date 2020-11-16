@@ -29,7 +29,9 @@ public class AccountEntity implements Serializable {
     @ApiModelProperty(hidden = true)
     private Collection<MailTemplateEntity> mailTemplatesById;
     private Integer companyId;
+    @ApiModelProperty(hidden = true)
     private CompanyEntity companyById;
+    @ApiModelProperty(hidden = true)
     private Collection<PurchaseEntity> purchasesById;
 
     @Id

@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -17,8 +18,11 @@ public class CompanyEntity {
     private String phoneNo;
     private String description;
     private String avatar;
+    @ApiModelProperty(hidden = true)
     private AccountEntity accountById;
+    @ApiModelProperty(hidden = true)
     private Collection<CompanyPackageEntity> companyPackagesById;
+    private Integer openjobCompanyId;
 
     @Id
     @Column(name = "id")
@@ -112,12 +116,13 @@ public class CompanyEntity {
                 Objects.equals(email, that.email) &&
                 Objects.equals(phoneNo, that.phoneNo) &&
                 Objects.equals(description, that.description) &&
-                Objects.equals(avatar, that.avatar);
+                Objects.equals(avatar, that.avatar) &&
+                Objects.equals(openjobCompanyId, that.openjobCompanyId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, location, taxCode, email, phoneNo, description, avatar);
+        return Objects.hash(id, name, location, taxCode, email, phoneNo, description, avatar, openjobCompanyId);
     }
 
     @OneToOne(mappedBy = "companyById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -138,5 +143,15 @@ public class CompanyEntity {
 
     public void setCompanyPackagesById(Collection<CompanyPackageEntity> companyPackagesById) {
         this.companyPackagesById = companyPackagesById;
+    }
+
+    @Basic
+    @Column(name = "openjob_company_id")
+    public Integer getOpenjobCompanyId() {
+        return openjobCompanyId;
+    }
+
+    public void setOpenjobCompanyId(Integer openjobCompanyId) {
+        this.openjobCompanyId = openjobCompanyId;
     }
 }

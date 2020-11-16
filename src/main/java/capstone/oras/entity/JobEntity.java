@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "job")
+@Table(name = "job", schema = "public", catalog = "db67ot35cl90oe")
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class JobEntity implements Serializable {
     @ApiModelProperty()
@@ -63,6 +63,10 @@ public class JobEntity implements Serializable {
     @ApiModelProperty(hidden = true)
     @JsonProperty("jobApplicationsById")
     private Collection<JobApplicationEntity> jobApplicationsById;
+    private String jobType;
+    private String location;
+    private Integer openjobJobId;
+    private String category;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -151,6 +155,7 @@ public class JobEntity implements Serializable {
         return applyFrom;
     }
 
+
     public void setApplyFrom(Date applyFrom) {
         this.applyFrom = applyFrom;
     }
@@ -160,6 +165,7 @@ public class JobEntity implements Serializable {
     public Date getApplyTo() {
         return applyTo;
     }
+
 
     public void setApplyTo(Date applyTo) {
         this.applyTo = applyTo;
@@ -223,12 +229,16 @@ public class JobEntity implements Serializable {
                 Objects.equals(talentPoolId, jobEntity.talentPoolId) &&
                 Objects.equals(creatorId, jobEntity.creatorId) &&
                 Objects.equals(status, jobEntity.status) &&
-                Objects.equals(createDate, jobEntity.createDate);
+                Objects.equals(createDate, jobEntity.createDate) &&
+                Objects.equals(jobType, jobEntity.jobType) &&
+                Objects.equals(location, jobEntity.location) &&
+                Objects.equals(openjobJobId, jobEntity.openjobJobId) &&
+                Objects.equals(category, jobEntity.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, talentPoolId, creatorId, status, createDate);
+        return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, talentPoolId, creatorId, status, createDate, jobType, location, openjobJobId, category);
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -261,5 +271,45 @@ public class JobEntity implements Serializable {
 
     public void setJobApplicationsById(Collection<JobApplicationEntity> jobApplicationsById) {
         this.jobApplicationsById = jobApplicationsById;
+    }
+
+    @Basic
+    @Column(name = "job_type")
+    public String getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(String jobType) {
+        this.jobType = jobType;
+    }
+
+    @Basic
+    @Column(name = "location")
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    @Basic
+    @Column(name = "openjob_job_id")
+    public Integer getOpenjobJobId() {
+        return openjobJobId;
+    }
+
+    public void setOpenjobJobId(Integer openjobJobId) {
+        this.openjobJobId = openjobJobId;
+    }
+
+    @Basic
+    @Column(name = "category")
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

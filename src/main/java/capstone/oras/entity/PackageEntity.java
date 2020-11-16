@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -16,6 +17,7 @@ public class PackageEntity {
     private String duration;
     private String currency;
     private String description;
+    @ApiModelProperty(hidden = true)
     private Collection<CompanyPackageEntity> companyPackagesById;
 
     @Id

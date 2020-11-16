@@ -52,4 +52,5 @@ public class LoginController {
         String access_token = jsonObject.getString("access_token");
         return new ResponseEntity<>(access_token, HttpStatus.OK);
     }
+
 }

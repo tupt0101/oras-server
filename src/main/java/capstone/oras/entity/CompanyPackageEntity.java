@@ -1,5 +1,7 @@
 package capstone.oras.entity;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -9,10 +11,13 @@ import java.util.Objects;
 public class CompanyPackageEntity {
     private int id;
     private Integer companyId;
+    @ApiModelProperty(hidden = true)
     private CompanyEntity companyById;
     private Integer packageId;
-    private  PackageEntity packageById;
+    @ApiModelProperty(hidden = true)
+    private PackageEntity packageById;
     private Integer purchaseId;
+    @ApiModelProperty(hidden = true)
     private PurchaseEntity purchaseById;
     private Date validTo;
 
