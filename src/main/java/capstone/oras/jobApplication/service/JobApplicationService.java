@@ -19,6 +19,11 @@ public class JobApplicationService implements IJobApplicationService{
     }
 
     @Override
+    public List<JobApplicationEntity> createJobApplications(List<JobApplicationEntity> jobApplicationsEntity) {
+        return IJobApplicationRepository.saveAll(jobApplicationsEntity);
+    }
+
+    @Override
     public JobApplicationEntity updateJobApplication(JobApplicationEntity jobApplicationEntity) {
         return IJobApplicationRepository.save(jobApplicationEntity);
     }

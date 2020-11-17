@@ -1,4 +1,4 @@
-package capstone.oras.purchase.controller;
+package capstone.oras.oauth2.controller;
 
 import lombok.Getter;
 import lombok.Setter;

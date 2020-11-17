@@ -255,6 +255,7 @@ public class JobController {
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
         int companyId = accountService.findAccountEntityById(job.getCreatorId()).getCompanyId();
+        System.out.println(accountService.findAccountEntityById(job.getCreatorId()).toString());
         int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
         openjobJobEntity.setCompanyId(openjobCompanyId);
 
@@ -290,5 +291,105 @@ public class JobController {
         return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
     }
 
+
+    @PutMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    ResponseEntity<JobEntity> updateJobMulti(@RequestBody JobEntity job) {
+//        if (job.getCreatorId() == null) {
+//            httpHeaders.set("error", "CreatorId is null");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+//        if (job.getTitle() == null || job.getTitle().isEmpty()) {
+//            httpHeaders.set("error", "Title is empty");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+//        if (job.getApplyFrom() == null) {
+//            httpHeaders.set("error", "Apply from is empty");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+//
+//        if (job.getApplyTo() == null) {
+//            httpHeaders.set("error", "Apply to is empty");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+//
+//        if (job.getCreateDate() == null) {
+//            httpHeaders.set("error", "Create Date is empty");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+//
+//        if (job.getCurrency() == null) {
+//            httpHeaders.set("error", "Currency is empty");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+//
+//        if (job.getDescription() == null) {
+//            httpHeaders.set("error", "Description Date is empty");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+//
+//        if (job.getTalentPoolId() == null) {
+//            httpHeaders.set("error", "Talent Poll ID is empty");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+//
+//        if (jobService.getJobById(job.getId()) != null) {
+//            httpHeaders.set("error", "Job ID already exist");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+//
+//        if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
+//            httpHeaders.set("error", "Account is not exist");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+//
+//        if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
+//            httpHeaders.set("error", "Talent Pool ID is not exist");
+//            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+//        }
+
+//        JobEntity jobEntity = jobService.updateJob(job);
+
+        OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
+        openjobJobEntity.setApplyTo(job.getApplyTo());
+        openjobJobEntity.setAccountId(1);
+        openjobJobEntity.setCategory(job.getCategory());
+        // Get company id from openjob
+        int companyId = accountService.findAccountEntityById(job.getCreatorId()).getCompanyId();
+        System.out.println(accountService.findAccountEntityById(job.getCreatorId()).toString());
+        int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
+        openjobJobEntity.setCompanyId(openjobCompanyId);
+
+        // Set Attribute
+        openjobJobEntity.setCreateDate(job.getCreateDate());
+        openjobJobEntity.setCurrency(job.getCurrency());
+        openjobJobEntity.setDescription(job.getDescription());
+        openjobJobEntity.setJobType(job.getJobType());
+        openjobJobEntity.setLocation(job.getLocation());
+        openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
+        openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
+        openjobJobEntity.setSalaryTo(job.getSalaryTo());
+        openjobJobEntity.setStatus(job.getStatus());
+        openjobJobEntity.setTitle(job.getTitle());
+        openjobJobEntity.setVacancies(job.getVacancies());
+
+        //get openjob token
+        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
+        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        // post job to openjob
+        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+
+        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
+        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        job.setOpenjobJobId(openjobJobEntity.getId());
+//        jobService.updateJob(job);
+        return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
+    }
 
 }

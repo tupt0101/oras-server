@@ -1,14 +1,23 @@
 package capstone.oras.jobApplication.controller;
 
 
+import capstone.oras.candidate.service.ICandidateService;
+import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
+import capstone.oras.entity.JobEntity;
+import capstone.oras.entity.openjob.OpenjobAccountEntity;
+import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
+import capstone.oras.job.service.IJobService;
 import capstone.oras.jobApplication.service.IJobApplicationService;
+import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -18,6 +27,12 @@ public class JobApplicationController {
     @Autowired
     private IJobApplicationService jobApplicationService;
 
+    @Autowired
+    private ICandidateService candidateService;
+
+    @Autowired
+    private IJobService jobService;
+
     HttpHeaders httpHeaders = new HttpHeaders();
 
     @RequestMapping(value = "/job-application", method = RequestMethod.POST)
@@ -25,6 +40,14 @@ public class JobApplicationController {
     ResponseEntity<JobApplicationEntity> createJobApplication(@RequestBody JobApplicationEntity jobApplicationEntity) {
 
         return new ResponseEntity<>(jobApplicationService.createJobApplication(jobApplicationEntity), HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/job-applications", method = RequestMethod.POST)
+    @ResponseBody
+    ResponseEntity<List<JobApplicationEntity>> createJobApplications(@RequestBody List<JobApplicationEntity> jobApplicationsEntity) {
+
+        return new ResponseEntity<>(jobApplicationService.createJobApplications(jobApplicationsEntity), HttpStatus.OK);
 
     }
 
@@ -52,4 +75,67 @@ public class JobApplicationController {
         return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.getAllJobApplication(), HttpStatus.OK);
 
     }
+
+
+    @RequestMapping(value = "/job-applications-openjob/{jobId}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationMulti(@PathVariable("jobId")int jobId) {
+        //get openjob token
+        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
+        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        // post company to openjob
+        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + jobId;
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        //        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        ResponseEntity<OpenjobJobApplicationEntity[]> jobApplicationsList = restTemplate.exchange(uri,HttpMethod.GET,entity, OpenjobJobApplicationEntity[].class);
+        List<OpenjobJobApplicationEntity> jobApplicationEntityList = Arrays.asList(jobApplicationsList.getBody());
+        List<OpenjobAccountEntity> accountEntityList = new ArrayList<>();
+        List<CandidateEntity> candidateEntityList = new ArrayList<>();
+        List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
+        JobEntity jobEntity = jobService.getJobById(jobId);
+        int talentPoolId = jobEntity.getTalentPoolId();
+        for (int i = 0; i < jobApplicationEntityList.size(); i++) {
+            OpenjobJobApplicationEntity openjobJobApplication = jobApplicationEntityList.get(i);
+            JobApplicationEntity jobApplicationEntity = new JobApplicationEntity();
+            accountEntityList.add(openjobJobApplication.getAccountByAccountId());
+            jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
+            jobApplicationEntity.setCandidateId(openjobJobApplication.getAccountId());
+            jobApplicationEntity.setCv(openjobJobApplication.getCv());
+            jobApplicationEntity.setJobId(jobId);
+            jobApplicationEntity.setSource("openjob");
+            jobApplicationEntity.setTalentPoolId(talentPoolId);
+            jobApplicationEntity.setId(openjobJobApplication.getId());
+            jobApplicationEntity.setStatus("Applied");
+            jobApplicationsOras.add(jobApplicationEntity);
+        }
+        for (int i = 0; i < accountEntityList.size(); i++) {
+            OpenjobAccountEntity openjobAccountEntity = accountEntityList.get(i);
+            CandidateEntity candidateEntity = new CandidateEntity();
+            candidateEntity.setId(openjobAccountEntity.getId());
+            candidateEntity.setPhoneNo(openjobAccountEntity.getPhoneNo());
+            candidateEntity.setEmail(openjobAccountEntity.getEmail());
+            candidateEntity.setFullname(openjobAccountEntity.getFullname());
+            candidateEntity.setAddress(openjobAccountEntity.getAddress());
+            candidateService.createCandidate(candidateEntity);
+        }
+
+
+//        for (int i = 0; i < jobApplicationEntityList.size(); i++) {
+//
+//
+//        }
+
+        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.createJobApplications(jobApplicationsOras), HttpStatus.OK);
+
+
+
+//        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.getAllJobApplication(), HttpStatus.OK);
+
+    }
+
 }

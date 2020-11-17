@@ -6,7 +6,7 @@
 package capstone.oras.oauth2.services;
 
 import capstone.oras.dao.IAccountRepository;
-import capstone.oras.purchase.controller.TokenDto;
+import capstone.oras.oauth2.controller.TokenDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
