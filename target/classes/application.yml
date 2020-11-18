@@ -7,3 +7,10 @@ security:
     oauth2:
       resource:
         filter-order: 3
+
+
+amazonProperties:
+  endpointUrl: https://oras-myfile.s3-ap-southeast-1.amazonaws.com
+  accessKey: AKIAXMEMAFETNSB242WH
+  secretKey: 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
+  bucketName: oras-myfile

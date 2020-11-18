@@ -15,13 +15,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 /**
  * @author developer
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
-
 
 
     @Autowired
@@ -51,5 +52,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         String result = restTemplate.getForObject(uri, TokenDto.class).getToken();
         return result;
+    }
+
+    public Date convertLocalDateTimeToDate(LocalDate localDate) {
+        return  Date.valueOf(localDate);
     }
 }

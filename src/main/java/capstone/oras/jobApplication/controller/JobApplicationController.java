@@ -10,6 +10,7 @@ import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.job.service.IJobService;
 import capstone.oras.jobApplication.service.IJobApplicationService;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
+import capstone.oras.talentPool.service.ITalentPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -33,28 +34,84 @@ public class JobApplicationController {
     @Autowired
     private IJobService jobService;
 
+    @Autowired
+    private ITalentPoolService talentPoolService;
+
     HttpHeaders httpHeaders = new HttpHeaders();
 
     @RequestMapping(value = "/job-application", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<JobApplicationEntity> createJobApplication(@RequestBody JobApplicationEntity jobApplicationEntity) {
-
-        return new ResponseEntity<>(jobApplicationService.createJobApplication(jobApplicationEntity), HttpStatus.OK);
-
+        if (jobApplicationEntity.getApplyDate() == null) {
+            httpHeaders.set("error", "Apply Date is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobApplicationEntity.getCandidateId() == null) {
+            httpHeaders.set("error", "Candiate ID is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobApplicationEntity.getSource() == null) {
+            httpHeaders.set("error", "Source is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobApplicationEntity.getTalentPoolId() == null) {
+            httpHeaders.set("error", "Talent Pool ID is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobApplicationEntity.getStatus() == null) {
+            httpHeaders.set("error", "Status is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobApplicationEntity.getJobId() == null) {
+            httpHeaders.set("error", "Job ID is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobService.getJobById(jobApplicationEntity.getJobId()) == null) {
+            httpHeaders.set("error", "Job ID doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (talentPoolService.findTalentPoolEntityById(jobApplicationEntity.getTalentPoolId()) == null) {
+            httpHeaders.set("error", "Talent Pool Id doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (candidateService.findCandidateById(jobApplicationEntity.getCandidateId()) == null) {
+            httpHeaders.set("error", "Candidate ID doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else
+            return new ResponseEntity<>(jobApplicationService.createJobApplication(jobApplicationEntity), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/job-applications", method = RequestMethod.POST)
-    @ResponseBody
-    ResponseEntity<List<JobApplicationEntity>> createJobApplications(@RequestBody List<JobApplicationEntity> jobApplicationsEntity) {
-
-        return new ResponseEntity<>(jobApplicationService.createJobApplications(jobApplicationsEntity), HttpStatus.OK);
-
-    }
+//    @RequestMapping(value = "/job-applications", method = RequestMethod.POST)
+//    @ResponseBody
+//    ResponseEntity<List<JobApplicationEntity>> createJobApplications(@RequestBody List<JobApplicationEntity> jobApplicationsEntity) {
+//
+//        return new ResponseEntity<>(jobApplicationService.createJobApplications(jobApplicationsEntity), HttpStatus.OK);
+//
+//    }
 
     @RequestMapping(value = "/job-application", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<JobApplicationEntity> updateJobApplication(@RequestBody JobApplicationEntity jobApplicationEntity) {
-
+        if (jobApplicationEntity.getApplyDate() == null) {
+            httpHeaders.set("error", "Apply Date is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobApplicationEntity.getCandidateId() == null) {
+            httpHeaders.set("error", "Candiate ID is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobApplicationEntity.getSource() == null) {
+            httpHeaders.set("error", "Source is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobApplicationEntity.getTalentPoolId() == null) {
+            httpHeaders.set("error", "Talent Pool ID is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobApplicationEntity.getStatus() == null) {
+            httpHeaders.set("error", "Status is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobApplicationEntity.getJobId() == null) {
+            httpHeaders.set("error", "Job ID is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (jobService.getJobById(jobApplicationEntity.getJobId()) == null) {
+            httpHeaders.set("error", "Job ID doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (talentPoolService.findTalentPoolEntityById(jobApplicationEntity.getTalentPoolId()) == null) {
+            httpHeaders.set("error", "Talent Pool Id doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (candidateService.findCandidateById(jobApplicationEntity.getCandidateId()) == null) {
+            httpHeaders.set("error", "Candidate ID doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(jobApplicationService.createJobApplication(jobApplicationEntity), HttpStatus.OK);
 
     }
@@ -62,7 +119,7 @@ public class JobApplicationController {
 
     @RequestMapping(value = "/job-application/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<JobApplicationEntity> getJobApplicationById(@PathVariable("id")int id) {
+    ResponseEntity<JobApplicationEntity> getJobApplicationById(@PathVariable("id") int id) {
 
         return new ResponseEntity<JobApplicationEntity>(jobApplicationService.findJobApplicationById(id), HttpStatus.OK);
 
@@ -79,7 +136,7 @@ public class JobApplicationController {
 
     @RequestMapping(value = "/job-applications-openjob/{jobId}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationMulti(@PathVariable("jobId")int jobId) {
+    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationMulti(@PathVariable("jobId") int jobId) {
         //get openjob token
         CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = "Bearer " + userDetailsService.getOpenJobToken();
@@ -92,7 +149,7 @@ public class JobApplicationController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<String>(headers);
-        ResponseEntity<OpenjobJobApplicationEntity[]> jobApplicationsList = restTemplate.exchange(uri,HttpMethod.GET,entity, OpenjobJobApplicationEntity[].class);
+        ResponseEntity<OpenjobJobApplicationEntity[]> jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
         List<OpenjobJobApplicationEntity> jobApplicationEntityList = Arrays.asList(jobApplicationsList.getBody());
         List<OpenjobAccountEntity> accountEntityList = new ArrayList<>();
         List<CandidateEntity> candidateEntityList = new ArrayList<>();
@@ -131,7 +188,6 @@ public class JobApplicationController {
 //        }
 
         return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.createJobApplications(jobApplicationsOras), HttpStatus.OK);
-
 
 
 //        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.getAllJobApplication(), HttpStatus.OK);

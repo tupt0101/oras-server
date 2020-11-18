@@ -1,8 +1,11 @@
 package capstone.oras.companyPackage.controller;
 
 
+import capstone.oras.company.service.ICompanyService;
 import capstone.oras.companyPackage.service.ICompanyPackageService;
 import capstone.oras.entity.CompanyPackageEntity;
+import capstone.oras.packages.service.IPackageService;
+import capstone.oras.purchase.service.IPurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,21 +21,72 @@ public class CompanyPackageController {
     @Autowired
     private ICompanyPackageService companyPackageService;
 
+    @Autowired
+    private ICompanyService companyService;
+
+    @Autowired
+    private IPackageService packageService;
+
+    @Autowired
+    private IPurchaseService purchaseService;
+
     HttpHeaders httpHeaders = new HttpHeaders();
 
     @RequestMapping(value = "/company-package", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<CompanyPackageEntity> createCompanyPackage(@RequestBody CompanyPackageEntity companyEntity) {
-
-        return new ResponseEntity<>(companyPackageService.createCompanyPackage(companyEntity), HttpStatus.OK);
+    ResponseEntity<CompanyPackageEntity> createCompanyPackage(@RequestBody CompanyPackageEntity companyPackageEntity) {
+        if (companyPackageEntity.getPackageId() == null) {
+            httpHeaders.set("error", "Package Id is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (companyPackageEntity.getCompanyId() == null) {
+            httpHeaders.set("error", "Company Id is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (companyPackageEntity.getPurchaseId() == null) {
+            httpHeaders.set("error", "Purchase Id is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (companyPackageEntity.getValidTo() == null) {
+            httpHeaders.set("error", "Valid To is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (purchaseService.findPurchaseById(companyPackageEntity.getPurchaseId()) == null) {
+            httpHeaders.set("error", "Purchase Id doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (companyService.findCompanyById(companyPackageEntity.getCompanyId()) == null) {
+            httpHeaders.set("error", "Company Id doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (packageService.findPackageById(companyPackageEntity.getPackageId()) == null) {
+            httpHeaders.set("error", "Package Id doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(companyPackageService.createCompanyPackage(companyPackageEntity), HttpStatus.OK);
 
     }
 
     @RequestMapping(value = "/company-package", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<CompanyPackageEntity> updateCompanyPackage(@RequestBody CompanyPackageEntity companyEntity) {
-
-        return new ResponseEntity<>(companyPackageService.updateCompanyPackage(companyEntity), HttpStatus.OK);
+    ResponseEntity<CompanyPackageEntity> updateCompanyPackage(@RequestBody CompanyPackageEntity companyPackageEntity) {
+        if (companyPackageEntity.getPackageId() == null) {
+            httpHeaders.set("error", "Package Id is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (companyPackageEntity.getCompanyId() == null) {
+            httpHeaders.set("error", "Company Id is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (companyPackageEntity.getPurchaseId() == null) {
+            httpHeaders.set("error", "Purchase Id is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (companyPackageEntity.getValidTo() == null) {
+            httpHeaders.set("error", "Valid To is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (purchaseService.findPurchaseById(companyPackageEntity.getPurchaseId()) == null) {
+            httpHeaders.set("error", "Purchase Id doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (companyService.findCompanyById(companyPackageEntity.getCompanyId()) == null) {
+            httpHeaders.set("error", "Company Id doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (packageService.findPackageById(companyPackageEntity.getPackageId()) == null) {
+            httpHeaders.set("error", "Package Id doesn't exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(companyPackageService.updateCompanyPackage(companyPackageEntity), HttpStatus.OK);
 
     }
 

@@ -23,15 +23,40 @@ public class CandidateController {
     @RequestMapping(value = "/candidate", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<CandidateEntity> createCandidate(@RequestBody CandidateEntity candidateEntity) {
+        if (candidateEntity.getEmail() == null || candidateEntity.getEmail().isEmpty()) {
+            httpHeaders.set("error", "Email is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (candidateEntity.getFullname() == null || candidateEntity.getFullname().isEmpty()) {
+            httpHeaders.set("error", "Fullname is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (candidateEntity.getPhoneNo() == null || candidateEntity.getPhoneNo().isEmpty()) {
+            httpHeaders.set("error", "Phone Number is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (candidateEntity.getAddress() == null || candidateEntity.getAddress().isEmpty()) {
+            httpHeaders.set("error", "Address is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+            return new ResponseEntity<>(candidateService.createCandidate(candidateEntity), HttpStatus.OK);
 
-        return new ResponseEntity<>(candidateService.createCandidate(candidateEntity), HttpStatus.OK);
 
     }
 
     @RequestMapping(value = "/candidate", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<CandidateEntity> updateCandidate(@RequestBody CandidateEntity candidateEntity) {
-
+        if (candidateEntity.getEmail() == null || candidateEntity.getEmail().isEmpty()) {
+            httpHeaders.set("error", "Email is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (candidateEntity.getFullname() == null || candidateEntity.getFullname().isEmpty()) {
+            httpHeaders.set("error", "Fullname is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (candidateEntity.getPhoneNo() == null || candidateEntity.getPhoneNo().isEmpty()) {
+            httpHeaders.set("error", "Phone Number is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (candidateEntity.getAddress() == null || candidateEntity.getAddress().isEmpty()) {
+            httpHeaders.set("error", "Address is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(candidateService.createCandidate(candidateEntity), HttpStatus.OK);
 
     }

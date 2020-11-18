@@ -26,8 +26,8 @@ public class AccountEntity implements Serializable {
     private String role;
     @ApiModelProperty(hidden = true)
     private Collection<JobEntity> jobsById;
-    @ApiModelProperty(hidden = true)
-    private Collection<MailTemplateEntity> mailTemplatesById;
+//    @ApiModelProperty(hidden = true)
+//    private Collection<MailTemplateEntity> mailTemplatesById;
     private Integer companyId;
     @ApiModelProperty(hidden = true)
     private CompanyEntity companyById;
@@ -142,15 +142,15 @@ public class AccountEntity implements Serializable {
         this.jobsById = jobsById;
     }
 
-    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference (value = "mail-creator")
-    public Collection<MailTemplateEntity> getMailTemplatesById() {
-        return mailTemplatesById;
-    }
-
-    public void setMailTemplatesById(Collection<MailTemplateEntity> mailTemplatesById) {
-        this.mailTemplatesById = mailTemplatesById;
-    }
+//    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JsonBackReference (value = "mail-creator")
+//    public Collection<MailTemplateEntity> getMailTemplatesById() {
+//        return mailTemplatesById;
+//    }
+//
+//    public void setMailTemplatesById(Collection<MailTemplateEntity> mailTemplatesById) {
+//        this.mailTemplatesById = mailTemplatesById;
+//    }
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", referencedColumnName = "id", insertable=false, updatable=false)
