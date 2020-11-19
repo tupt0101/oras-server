@@ -22,6 +22,7 @@ public class CompanyPackageEntity {
     private Date validTo;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return id;
