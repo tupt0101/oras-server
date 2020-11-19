@@ -75,7 +75,8 @@ public class AccountController {
             httpHeaders.set("error", "Account already exist");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else {
-            companyService.createCompany(signup.companyEntity);
+            CompanyEntity companyEntity =  companyService.createCompany(signup.companyEntity);
+            signup.accountEntity.setCompanyId(companyEntity.getId());
             return new ResponseEntity<>(accountService.createAccount(signup.accountEntity), HttpStatus.OK);
         }
     }

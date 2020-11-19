@@ -1,7 +1,7 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
@@ -17,7 +17,7 @@ public class AccountEntity implements Serializable {
     @ApiModelProperty(example = "example@mail.com")
     private String email;
     @ApiModelProperty(example = "123456")
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @ApiModelProperty(example = "Nguyen Nhan Cu")
     private String fullname;
