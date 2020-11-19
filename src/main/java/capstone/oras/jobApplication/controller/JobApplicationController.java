@@ -133,6 +133,14 @@ public class JobApplicationController {
 
     }
 
+    @RequestMapping(value = "/job-applications-by-job-id/{jobId}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@PathVariable("jobId") int jobId) {
+
+        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.findJobApplicationsByJobId(jobId), HttpStatus.OK);
+
+    }
+
 
     @RequestMapping(value = "/job-applications-openjob/{jobId}", method = RequestMethod.GET)
     @ResponseBody
