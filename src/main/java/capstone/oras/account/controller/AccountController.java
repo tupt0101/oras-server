@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -26,7 +27,7 @@ public class AccountController {
 
     HttpHeaders httpHeaders = new HttpHeaders();
 
-    public class Signup {
+    public class Signup implements Serializable {
         AccountEntity accountEntity;
         CompanyEntity companyEntity;
     }
