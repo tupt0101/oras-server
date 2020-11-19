@@ -26,6 +26,11 @@ public class AccountController {
 
     HttpHeaders httpHeaders = new HttpHeaders();
 
+    public class Signup {
+        AccountEntity accountEntity;
+        CompanyEntity companyEntity;
+    }
+
     @RequestMapping(value = "/account", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<AccountEntity> createAccount(@RequestBody AccountEntity accountEntity) {
@@ -52,25 +57,25 @@ public class AccountController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<AccountEntity> signup(@RequestBody AccountEntity accountEntity, @RequestBody CompanyEntity companyEntity) {
-        if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
+    ResponseEntity<AccountEntity> signup(@RequestBody Signup signup) {
+        if (signup.accountEntity.getEmail() == null || signup.accountEntity.getEmail().isEmpty()) {
             httpHeaders.set("error", "Email is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
-        } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
+        } else if (signup.accountEntity.getFullname() == null || signup.accountEntity.getFullname().isEmpty()) {
             httpHeaders.set("error", "Fullname is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
-        } else if (accountEntity.getPassword() == null || accountEntity.getPassword().isEmpty()) {
+        } else if (signup.accountEntity.getPassword() == null || signup.accountEntity.getPassword().isEmpty()) {
             httpHeaders.set("error", "Password is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
-        } else if (accountService.findAccountByEmail(accountEntity.getEmail()) != null) {
+        } else if (accountService.findAccountByEmail(signup.accountEntity.getEmail()) != null) {
             httpHeaders.set("error", "This email is already registered");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
-        } else if (accountService.findAccountEntityById(accountEntity.getId()) != null) {
+        } else if (accountService.findAccountEntityById(signup.accountEntity.getId()) != null) {
             httpHeaders.set("error", "Account already exist");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else {
-            companyService.createCompany(companyEntity);
-            return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
+            companyService.createCompany(signup.companyEntity);
+            return new ResponseEntity<>(accountService.createAccount(signup.accountEntity), HttpStatus.OK);
         }
     }
 
