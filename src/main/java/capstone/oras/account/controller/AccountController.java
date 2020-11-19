@@ -1,7 +1,9 @@
 package capstone.oras.account.controller;
 
 import capstone.oras.account.service.IAccountService;
+import capstone.oras.company.service.ICompanyService;
 import capstone.oras.entity.AccountEntity;
+import capstone.oras.entity.CompanyEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +20,9 @@ public class AccountController {
 
     @Autowired
     private IAccountService accountService;
+
+    @Autowired
+    private ICompanyService companyService;
 
     HttpHeaders httpHeaders = new HttpHeaders();
 
@@ -44,6 +49,30 @@ public class AccountController {
         }
     }
 
+
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    @ResponseBody
+    ResponseEntity<AccountEntity> signup(@RequestBody AccountEntity accountEntity, @RequestBody CompanyEntity companyEntity) {
+        if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
+            httpHeaders.set("error", "Email is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
+            httpHeaders.set("error", "Fullname is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (accountEntity.getPassword() == null || accountEntity.getPassword().isEmpty()) {
+            httpHeaders.set("error", "Password is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (accountService.findAccountByEmail(accountEntity.getEmail()) != null) {
+            httpHeaders.set("error", "This email is already registered");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else if (accountService.findAccountEntityById(accountEntity.getId()) != null) {
+            httpHeaders.set("error", "Account already exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        } else {
+            companyService.createCompany(companyEntity);
+            return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
+        }
+    }
 
     @RequestMapping(value = "/account", method = RequestMethod.PUT)
     @ResponseBody
