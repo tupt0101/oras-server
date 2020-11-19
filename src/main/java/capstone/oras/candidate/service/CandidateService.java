@@ -34,4 +34,9 @@ public class CandidateService implements ICandidateService{
             return ICandidateRepository.findById(id).get();
         } else return null;
     }
+
+    @Override
+    public List<CandidateEntity> findCandidatesByJobId(int jobID) {
+        return null;
+    }
 }

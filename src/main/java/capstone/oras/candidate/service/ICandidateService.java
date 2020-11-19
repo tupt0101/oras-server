@@ -9,4 +9,5 @@ public interface ICandidateService {
     CandidateEntity updateCandidate (CandidateEntity candidateEntity);
     List<CandidateEntity> getAllCandidate();
     CandidateEntity findCandidateById(int id);
+    List<CandidateEntity> findCandidatesByJobId(int jobID);
 }

@@ -10,4 +10,5 @@ public interface IJobApplicationService {
     JobApplicationEntity updateJobApplication(JobApplicationEntity jobApplicationEntity);
     List<JobApplicationEntity> getAllJobApplication();
     JobApplicationEntity findJobApplicationById(int id);
+    List<JobApplicationEntity> findJobApplicationsByJobId(int id);
 }

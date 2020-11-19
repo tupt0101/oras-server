@@ -39,4 +39,11 @@ public class JobApplicationService implements IJobApplicationService{
             return IJobApplicationRepository.findById(id).get();
         } else return null;
     }
+
+    @Override
+    public List<JobApplicationEntity> findJobApplicationsByJobId(int id) {
+        if(IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id).isPresent()) {
+            return IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id).get();
+        } else return null;
+    }
 }

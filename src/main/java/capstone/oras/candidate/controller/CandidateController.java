@@ -3,12 +3,16 @@ package capstone.oras.candidate.controller;
 
 import capstone.oras.candidate.service.ICandidateService;
 import capstone.oras.entity.CandidateEntity;
+import capstone.oras.entity.JobApplicationEntity;
+import capstone.oras.job.service.IJobService;
+import capstone.oras.jobApplication.service.IJobApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,6 +21,12 @@ public class CandidateController {
 
     @Autowired
     private ICandidateService candidateService;
+
+    @Autowired
+    private IJobService jobService;
+
+    @Autowired
+    private IJobApplicationService jobApplicationService;
 
     HttpHeaders httpHeaders = new HttpHeaders();
 
@@ -74,4 +84,18 @@ public class CandidateController {
     ResponseEntity<CandidateEntity> getCandidateById(@PathVariable("id") int id) {
         return new ResponseEntity<CandidateEntity>(candidateService.findCandidateById(id), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/candidates-by-job/{jobID}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<CandidateEntity>> getAllCandidateByJobId(@PathVariable("jobID") int jobId) {
+        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobId(jobId);
+        List<CandidateEntity> candidateEntityList = new ArrayList<>();
+        for (int i = 0; i < jobApplicationEntityList.size(); i++) {
+            candidateEntityList.add(jobApplicationEntityList.get(i).getCandidateByCandidateId());
+        }
+
+        return new ResponseEntity<List<CandidateEntity>>(candidateEntityList, HttpStatus.OK);
+
+    }
+
 }
