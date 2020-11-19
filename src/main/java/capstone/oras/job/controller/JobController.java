@@ -195,6 +195,13 @@ public class JobController {
         return new ResponseEntity<List<JobEntity>>(jobService.getOpenJob(), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/job-by-creator-id/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
+        return new ResponseEntity<List<JobEntity>>(jobService.getJobByCreatorId(id), HttpStatus.OK);
+    }
+
+
     @PostMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<JobEntity> createJobMulti(@RequestBody JobEntity job) {

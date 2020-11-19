@@ -55,4 +55,11 @@ public class JobService implements IJobService {
         } else return null;
     }
 
+    @Override
+    public List<JobEntity> getJobByCreatorId(int id) {
+        if(IJobRepository.findAllByAccountByCreatorIdEquals(id).isPresent()) {
+            return IJobRepository.findAllByAccountByCreatorIdEquals(id).get();
+        } else return null;
+    }
+
 }
