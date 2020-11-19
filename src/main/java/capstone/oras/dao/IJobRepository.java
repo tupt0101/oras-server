@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface IJobRepository extends JpaRepository<JobEntity, Integer> {
     Optional<List<JobEntity>> findAllByStatus(String status);
-    Optional<List<JobEntity>> findAllByAccountByCreatorIdEquals(int creatorId);
+    Optional<List<JobEntity>> findJobEntitiesByCreatorIdEquals(int creatorId);
 }
