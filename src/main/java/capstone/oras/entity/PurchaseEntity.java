@@ -15,6 +15,7 @@ public class PurchaseEntity {
     private String payerId;
     private String token;
     private Integer amount;
+    @ApiModelProperty(example = "2020-09-28")
     private Date purchaseDate;
     private String status;
     private Integer accountId;

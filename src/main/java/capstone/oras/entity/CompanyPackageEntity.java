@@ -19,6 +19,7 @@ public class CompanyPackageEntity {
     private Integer purchaseId;
     @ApiModelProperty(hidden = true)
     private PurchaseEntity purchaseById;
+    @ApiModelProperty(example = "2020-09-28")
     private Date validTo;
 
     @Id

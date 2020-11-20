@@ -10,4 +10,6 @@ public interface ICandidateService {
     List<CandidateEntity> getAllCandidate();
     CandidateEntity findCandidateById(int id);
     List<CandidateEntity> findCandidatesByJobId(int jobID);
+    List<CandidateEntity> findCandidatesByEmail(String email);
+
 }

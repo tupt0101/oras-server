@@ -147,7 +147,7 @@ public class JobApplicationController {
         CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = "Bearer " + userDetailsService.getOpenJobToken();
         // post company to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + jobId;
+        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + jobService.getJobById(jobId).getOpenjobJobId();
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
@@ -165,27 +165,50 @@ public class JobApplicationController {
         for (int i = 0; i < jobApplicationEntityList.size(); i++) {
             OpenjobJobApplicationEntity openjobJobApplication = jobApplicationEntityList.get(i);
             JobApplicationEntity jobApplicationEntity = new JobApplicationEntity();
-            accountEntityList.add(openjobJobApplication.getAccountByAccountId());
-            jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
-            jobApplicationEntity.setCandidateId(openjobJobApplication.getAccountId());
-            jobApplicationEntity.setCv(openjobJobApplication.getCv());
-            jobApplicationEntity.setJobId(jobId);
-            jobApplicationEntity.setSource("openjob");
-            jobApplicationEntity.setTalentPoolId(talentPoolId);
-            jobApplicationEntity.setId(openjobJobApplication.getId());
-            jobApplicationEntity.setStatus("Applied");
-            jobApplicationsOras.add(jobApplicationEntity);
+            int candidateId;
+            // check to see if candidate already in system by email
+            if(candidateService.findCandidatesByEmail(openjobJobApplication.getAccountByAccountId().getEmail()) == null){
+                OpenjobAccountEntity openjobAccountEntity = openjobJobApplication.getAccountByAccountId();
+                CandidateEntity candidateEntity = new CandidateEntity();
+//                candidateEntity.setId(openjobAccountEntity.getId());
+                candidateEntity.setPhoneNo(openjobAccountEntity.getPhoneNo());
+                candidateEntity.setEmail(openjobAccountEntity.getEmail());
+                candidateEntity.setFullname(openjobAccountEntity.getFullname());
+                candidateEntity.setAddress(openjobAccountEntity.getAddress());
+                candidateId = candidateService.createCandidate(candidateEntity).getId();
+                jobApplicationEntity.setCandidateId(candidateId);
+            } else {
+                candidateId = candidateService.findCandidatesByEmail(openjobJobApplication.getAccountByAccountId().getEmail()).get(0).getId();
+                jobApplicationEntity.setCandidateId(candidateId);
+
+            }
+
+
+            //need to check if application already exist(check by candidateID and jobId if exist bot
+           if (jobApplicationService.findJobApplicationsByJobIdAndCandidateId(jobId, candidateId ) == null) {
+               jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
+//            jobApplicationEntity.setCandidateId(openjobJobApplication.getAccountId());
+               jobApplicationEntity.setCv(openjobJobApplication.getCv());
+               jobApplicationEntity.setJobId(jobId);
+               jobApplicationEntity.setSource("openjob");
+               jobApplicationEntity.setTalentPoolId(talentPoolId);
+//               jobApplicationEntity.setId(openjobJobApplication.getId());
+               jobApplicationEntity.setStatus("Applied");
+               jobApplicationsOras.add(jobApplicationEntity);
+           }
+
+
         }
-        for (int i = 0; i < accountEntityList.size(); i++) {
-            OpenjobAccountEntity openjobAccountEntity = accountEntityList.get(i);
-            CandidateEntity candidateEntity = new CandidateEntity();
-            candidateEntity.setId(openjobAccountEntity.getId());
-            candidateEntity.setPhoneNo(openjobAccountEntity.getPhoneNo());
-            candidateEntity.setEmail(openjobAccountEntity.getEmail());
-            candidateEntity.setFullname(openjobAccountEntity.getFullname());
-            candidateEntity.setAddress(openjobAccountEntity.getAddress());
-            candidateService.createCandidate(candidateEntity);
-        }
+//        for (int i = 0; i < accountEntityList.size(); i++) {
+//            OpenjobAccountEntity openjobAccountEntity = accountEntityList.get(i);
+//            CandidateEntity candidateEntity = new CandidateEntity();
+//            candidateEntity.setId(openjobAccountEntity.getId());
+//            candidateEntity.setPhoneNo(openjobAccountEntity.getPhoneNo());
+//            candidateEntity.setEmail(openjobAccountEntity.getEmail());
+//            candidateEntity.setFullname(openjobAccountEntity.getFullname());
+//            candidateEntity.setAddress(openjobAccountEntity.getAddress());
+//            candidateService.createCandidate(candidateEntity);
+//        }
 
 
 //        for (int i = 0; i < jobApplicationEntityList.size(); i++) {

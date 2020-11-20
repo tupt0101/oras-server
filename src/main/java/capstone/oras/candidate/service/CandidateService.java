@@ -39,4 +39,11 @@ public class CandidateService implements ICandidateService{
     public List<CandidateEntity> findCandidatesByJobId(int jobID) {
         return null;
     }
+
+    @Override
+    public List<CandidateEntity> findCandidatesByEmail(String email) {
+        if (ICandidateRepository.findCandidateEntitiesByEmailEquals(email).isPresent()) {
+            return ICandidateRepository.findCandidateEntitiesByEmailEquals(email).get();
+        } else return null;
+    }
 }

@@ -100,4 +100,12 @@ public class CandidateController {
 
     }
 
+    @RequestMapping(value = "/candidates-by-email/{email}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<CandidateEntity>> getAllCandidateByEmail(@PathVariable("email") String email) {
+
+        return new ResponseEntity<List<CandidateEntity>>(candidateService.findCandidatesByEmail(email), HttpStatus.OK);
+
+    }
+
 }

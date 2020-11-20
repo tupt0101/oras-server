@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface IJobApplicationRepository extends JpaRepository<JobApplicationEntity, Integer> {
     Optional<List<JobApplicationEntity>> findJobApplicationEntitiesByJobIdEquals(int jobId);
+    Optional<List<JobApplicationEntity>> findJobApplicationEntitiesByJobIdEqualsAndCandidateIdEquals(int jobId, int candidateId);
 }

@@ -11,4 +11,6 @@ public interface IJobApplicationService {
     List<JobApplicationEntity> getAllJobApplication();
     JobApplicationEntity findJobApplicationById(int id);
     List<JobApplicationEntity> findJobApplicationsByJobId(int id);
+    List<JobApplicationEntity> findJobApplicationsByJobIdAndCandidateId(int jobId,int candiateId);
+
 }
