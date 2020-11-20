@@ -2,24 +2,21 @@ package capstone.oras.jobApplication.controller;
 
 
 import capstone.oras.candidate.service.ICandidateService;
+import capstone.oras.jobApplication.service.IJobApplicationService;
+import capstone.oras.talentPool.service.ITalentPoolService;
 import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobAccountEntity;
 import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.job.service.IJobService;
-import capstone.oras.jobApplication.service.IJobApplicationService;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
-import capstone.oras.talentPool.service.ITalentPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/v1/job-application-management")
@@ -128,8 +125,9 @@ public class JobApplicationController {
     @RequestMapping(value = "/job-applications", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplication() {
-
-        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.getAllJobApplication(), HttpStatus.OK);
+        List<JobApplicationEntity> lst = jobApplicationService.getAllJobApplication();
+        lst.sort(Comparator.comparingInt(JobApplicationEntity::getId));
+        return new ResponseEntity<List<JobApplicationEntity>>(lst, HttpStatus.OK);
 
     }
 

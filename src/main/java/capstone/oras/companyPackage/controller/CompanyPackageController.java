@@ -3,15 +3,16 @@ package capstone.oras.companyPackage.controller;
 
 import capstone.oras.company.service.ICompanyService;
 import capstone.oras.companyPackage.service.ICompanyPackageService;
-import capstone.oras.entity.CompanyPackageEntity;
 import capstone.oras.packages.service.IPackageService;
 import capstone.oras.purchase.service.IPurchaseService;
+import capstone.oras.entity.CompanyPackageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -93,7 +94,9 @@ public class CompanyPackageController {
     @RequestMapping(value = "/company-packages", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<CompanyPackageEntity>> getAllCompanyPackage() {
-        return new ResponseEntity<List<CompanyPackageEntity>>(companyPackageService.getAllCompanyPackage(), HttpStatus.OK);
+        List<CompanyPackageEntity> lst = companyPackageService.getAllCompanyPackage();
+        lst.sort(Comparator.comparingInt(CompanyPackageEntity::getCompanyId));
+        return new ResponseEntity<List<CompanyPackageEntity>>(lst, HttpStatus.OK);
     }
 
 

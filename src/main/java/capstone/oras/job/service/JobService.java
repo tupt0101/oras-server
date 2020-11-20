@@ -1,8 +1,8 @@
 package capstone.oras.job.service;
 
+import capstone.oras.job.constant.JobStatus;
 import capstone.oras.dao.IJobRepository;
 import capstone.oras.entity.JobEntity;
-import capstone.oras.job.constant.JobStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,9 @@ public class PackageController {
     @RequestMapping(value = "/packages", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<PackageEntity>> getAllPackage() {
-        return new ResponseEntity<List<PackageEntity>>(packageService.getAllPackage(), HttpStatus.OK);
+        List<PackageEntity> lst = packageService.getAllPackage();
+        lst.sort(Comparator.comparingInt(PackageEntity::getId));
+        return new ResponseEntity<List<PackageEntity>>(lst, HttpStatus.OK);
     }
 
 
