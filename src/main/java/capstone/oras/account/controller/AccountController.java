@@ -4,13 +4,14 @@ import capstone.oras.account.service.IAccountService;
 import capstone.oras.company.service.ICompanyService;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.CompanyEntity;
+import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -76,6 +77,32 @@ public class AccountController {
             httpHeaders.set("error", "Account already exist");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else {
+
+
+            //get openjob token
+            CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
+            String token = "Bearer " + userDetailsService.getOpenJobToken();
+            // post company to openjob
+            String uri = "https://openjob-server.herokuapp.com/v1/company-management/company-by-name/" + signup.companyEntity.getName();
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+//        headers.setBearerAuth(token);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            HttpEntity entity = new HttpEntity(headers);
+            CompanyEntity openJobEntity = restTemplate.exchange(uri,HttpMethod.GET, entity, CompanyEntity.class).getBody();
+            if(openJobEntity == null) {
+                uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
+                HttpEntity<CompanyEntity> httpCompanyEntity = new HttpEntity<>(signup.companyEntity, headers);
+                openJobEntity = restTemplate.postForObject(uri, httpCompanyEntity, CompanyEntity.class);
+                signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
+            } else {
+                signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
+            }
+
+
+
             CompanyEntity companyEntity = companyService.createCompany(signup.companyEntity);
             signup.accountEntity.setCompanyId(companyEntity.getId());
             return new ResponseEntity<>(accountService.createAccount(signup.accountEntity), HttpStatus.OK);
