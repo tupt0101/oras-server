@@ -11,11 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/v1/account-mananagement")
+@RequestMapping(value = "/v1/account-management")
 public class AccountController {
 
     @Autowired
@@ -26,7 +27,7 @@ public class AccountController {
 
     HttpHeaders httpHeaders = new HttpHeaders();
 
-    static class Signup{
+    static class Signup {
         public AccountEntity accountEntity;
         public CompanyEntity companyEntity;
     }
@@ -39,7 +40,7 @@ public class AccountController {
             httpHeaders.set("error", "Email is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
-            httpHeaders.set("error", "Fullname is empty");
+            httpHeaders.set("error", "Full name is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else if (accountEntity.getPassword() == null || accountEntity.getPassword().isEmpty()) {
             httpHeaders.set("error", "Password is empty");
@@ -63,7 +64,7 @@ public class AccountController {
             httpHeaders.set("error", "Email is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else if (signup.accountEntity.getFullname() == null || signup.accountEntity.getFullname().isEmpty()) {
-            httpHeaders.set("error", "Fullname is empty");
+            httpHeaders.set("error", "Full name is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else if (signup.accountEntity.getPassword() == null || signup.accountEntity.getPassword().isEmpty()) {
             httpHeaders.set("error", "Password is empty");
@@ -75,7 +76,7 @@ public class AccountController {
             httpHeaders.set("error", "Account already exist");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else {
-            CompanyEntity companyEntity =  companyService.createCompany(signup.companyEntity);
+            CompanyEntity companyEntity = companyService.createCompany(signup.companyEntity);
             signup.accountEntity.setCompanyId(companyEntity.getId());
             return new ResponseEntity<>(accountService.createAccount(signup.accountEntity), HttpStatus.OK);
         }
@@ -89,13 +90,13 @@ public class AccountController {
             httpHeaders.set("error", "Email is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
-            httpHeaders.set("error", "Fullname is empty");
+            httpHeaders.set("error", "Full name is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else if (accountEntity.getPassword() == null || accountEntity.getPassword().isEmpty()) {
             httpHeaders.set("error", "Password is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else if (accountService.findAccountByEmail(accountEntity.getEmail()) == null) {
-            httpHeaders.set("error", "Can not find this account");
+            httpHeaders.set("error", "Cannot find this account");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         } else if (accountService.findAccountEntityById(accountEntity.getId()) == null) {
             httpHeaders.set("error", "Account doesn't exist");
@@ -103,19 +104,14 @@ public class AccountController {
         } else {
             return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
         }
-
     }
 
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<AccountEntity>> getAllAccount() {
-        return new ResponseEntity<List<AccountEntity>>(accountService.getAllAccount(), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    @ResponseBody
-    ResponseEntity<List<AccountEntity>> test() {
-        return new ResponseEntity<List<AccountEntity>>(accountService.getAllAccount(), HttpStatus.OK);
+        List<AccountEntity> lst = accountService.getAllAccount();
+        lst.sort(Comparator.comparingInt(AccountEntity::getId));
+        return new ResponseEntity<List<AccountEntity>>(lst, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/account/{id}", method = RequestMethod.GET)

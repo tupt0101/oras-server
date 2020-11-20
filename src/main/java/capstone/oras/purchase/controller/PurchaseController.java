@@ -1,13 +1,14 @@
 package capstone.oras.purchase.controller;
 
-import capstone.oras.entity.PurchaseEntity;
 import capstone.oras.purchase.service.IPurchaseService;
+import capstone.oras.entity.PurchaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,9 @@ public class PurchaseController {
     @RequestMapping(value = "/purchases", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<PurchaseEntity>> getAllPackage() {
-        return new ResponseEntity<List<PurchaseEntity>>(purchaseService.getAllPurchase(), HttpStatus.OK);
+        List<PurchaseEntity> lst = purchaseService.getAllPurchase();
+        lst.sort(Comparator.comparingInt(PurchaseEntity::getId));
+        return new ResponseEntity<List<PurchaseEntity>>(lst, HttpStatus.OK);
     }
 
 

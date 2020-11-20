@@ -1,13 +1,14 @@
 package capstone.oras.talentPool.controller;
 
-import capstone.oras.entity.TalentPoolEntity;
 import capstone.oras.talentPool.service.ITalentPoolService;
+import capstone.oras.entity.TalentPoolEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,9 @@ public class TalentPoolController {
     @RequestMapping(value = "/talentPools", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<TalentPoolEntity>> getAllTalentPool() {
-        return new ResponseEntity<List<TalentPoolEntity>>(talentPoolService.getAllTalentPool(), HttpStatus.OK);
+        List<TalentPoolEntity> lst = talentPoolService.getAllTalentPool();
+        lst.sort(Comparator.comparingInt(TalentPoolEntity::getId));
+        return new ResponseEntity<List<TalentPoolEntity>>(lst, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/talentPool/{id}", method = RequestMethod.GET)

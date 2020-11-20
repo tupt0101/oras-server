@@ -2,17 +2,18 @@ package capstone.oras.job.controller;
 
 import capstone.oras.account.service.IAccountService;
 import capstone.oras.company.service.ICompanyService;
+import capstone.oras.talentPool.service.ITalentPoolService;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.job.service.IJobService;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
-import capstone.oras.talentPool.service.ITalentPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,9 @@ public class JobController {
     @RequestMapping(value = "/jobs", method = RequestMethod.GET)
     @ResponseBody
     List<JobEntity> getAllJob() {
-        return jobService.getAllJob();
+        List<JobEntity> lst = jobService.getAllJob();
+        lst.sort(Comparator.comparingInt(JobEntity::getId));
+        return lst;
     }
 
     @PostMapping(value = "/job", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -392,5 +395,4 @@ public class JobController {
 //        jobService.updateJob(job);
         return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
     }
-
 }

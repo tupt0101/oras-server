@@ -2,10 +2,10 @@ package capstone.oras.candidate.controller;
 
 
 import capstone.oras.candidate.service.ICandidateService;
+import capstone.oras.jobApplication.service.IJobApplicationService;
 import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.job.service.IJobService;
-import capstone.oras.jobApplication.service.IJobApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -74,8 +75,9 @@ public class CandidateController {
     @RequestMapping(value = "/candidates", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<CandidateEntity>> getAllCandidate() {
-
-        return new ResponseEntity<List<CandidateEntity>>(candidateService.getAllCandidate(), HttpStatus.OK);
+        List<CandidateEntity> lst = candidateService.getAllCandidate();
+        lst.sort(Comparator.comparingInt(CandidateEntity::getId));
+        return new ResponseEntity<List<CandidateEntity>>(lst, HttpStatus.OK);
 
     }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -70,7 +71,9 @@ public class CompanyController {
     @RequestMapping(value = "/companies", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<CompanyEntity>> getAllCompany() {
-        return new ResponseEntity<List<CompanyEntity>>(companyService.getAllCompany(), HttpStatus.OK);
+        List<CompanyEntity> lst = companyService.getAllCompany();
+        lst.sort(Comparator.comparingInt(CompanyEntity::getId));
+        return new ResponseEntity<List<CompanyEntity>>(lst, HttpStatus.OK);
     }
 
 
