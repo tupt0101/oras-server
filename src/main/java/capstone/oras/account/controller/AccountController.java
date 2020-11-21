@@ -4,6 +4,7 @@ import capstone.oras.account.service.IAccountService;
 import capstone.oras.company.service.ICompanyService;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.CompanyEntity;
+import capstone.oras.entity.openjob.OpenjobCompanyEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -93,10 +94,22 @@ public class AccountController {
             HttpEntity entity = new HttpEntity(headers);
             CompanyEntity openJobEntity = restTemplate.exchange(uri,HttpMethod.GET, entity, CompanyEntity.class).getBody();
             if(openJobEntity == null) {
+                OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
+                openjobCompanyEntity.setAccountId(1);
+                openjobCompanyEntity.setAvatar(signup.companyEntity.getAvatar());
+                openjobCompanyEntity.setDescription(signup.companyEntity.getDescription());
+                openjobCompanyEntity.setEmail(signup.companyEntity.getEmail());
+                openjobCompanyEntity.setLocation(signup.companyEntity.getLocation());
+                openjobCompanyEntity.setName(signup.companyEntity.getName());
+                openjobCompanyEntity.setPhoneNo(signup.companyEntity.getPhoneNo());
+                openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
+
+
+
                 uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
-                HttpEntity<CompanyEntity> httpCompanyEntity = new HttpEntity<>(signup.companyEntity, headers);
-                openJobEntity = restTemplate.postForObject(uri, httpCompanyEntity, CompanyEntity.class);
-                signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
+                HttpEntity<OpenjobCompanyEntity> httpCompanyEntity = new HttpEntity<>(openjobCompanyEntity, headers);
+                openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
+                signup.companyEntity.setOpenjobCompanyId(openjobCompanyEntity.getId());
             } else {
                 signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
             }
