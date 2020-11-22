@@ -1,5 +1,7 @@
 package capstone.oras.entity.openjob;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.sql.Date;
 import java.util.Objects;
 
@@ -21,7 +23,16 @@ public class OpenjobJobEntity {
     private String skill;
     private String location;
     private Integer accountId;
+    @ApiModelProperty(hidden = true)
+    private OpenjobAccountEntity accountByAccountId;
 
+    public OpenjobAccountEntity getAccountByAccountId() {
+        return accountByAccountId;
+    }
+
+    public void setAccountByAccountId(OpenjobAccountEntity accountByAccountId) {
+        this.accountByAccountId = accountByAccountId;
+    }
 
     public Integer getId() {
         return id;

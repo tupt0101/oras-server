@@ -76,10 +76,6 @@ public class JobController {
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
-        if (job.getDescription() == null) {
-            httpHeaders.set("error", "Description Date is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
-        }
 
         if (job.getTalentPoolId() == null) {
             httpHeaders.set("error", "Talent Poll ID is empty");
@@ -100,7 +96,7 @@ public class JobController {
             httpHeaders.set("error", "Talent Pool ID is not exist");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
-
+        job.setCreateDate(userDetailsService.convertLocalDateTimeToDate(java.time.LocalDate.now()));
         return new ResponseEntity<>(jobService.createJob(job), HttpStatus.OK);
     }
 
@@ -119,7 +115,7 @@ public class JobController {
         }
 
         if (job.getCreatorId() == null) {
-            httpHeaders.set("error", "Creator ID is null");
+            httpHeaders.set("error", "CreatorId is null");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
@@ -146,18 +142,14 @@ public class JobController {
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
-        if (job.getDescription() == null) {
-            httpHeaders.set("error", "Description Date is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
-        }
 
         if (job.getTalentPoolId() == null) {
-            httpHeaders.set("error", "Talent Poll Id is empty");
+            httpHeaders.set("error", "Talent Poll ID is empty");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
-        if (jobService.getJobById(job.getId()) == null) {
-            httpHeaders.set("error", "Job ID doesn't exist");
+        if (jobService.getJobById(job.getId()) != null) {
+            httpHeaders.set("error", "Job ID already exist");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
@@ -165,7 +157,6 @@ public class JobController {
             httpHeaders.set("error", "Account is not exist");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
-
 
         if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
             httpHeaders.set("error", "Talent Pool ID is not exist");
@@ -182,6 +173,24 @@ public class JobController {
             httpHeaders.set("error", "Can not find job to update");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
+        int openjobJobId = jobService.getJobById(id).getOpenjobJobId();
+
+        //get openjob token
+//        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
+        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        // post job to openjob
+        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
+        System.out.println(uri);
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity entity = new HttpEntity(headers);
+        // close job on openjob
+        restTemplate.exchange(uri,HttpMethod.PUT,entity, OpenjobJobEntity.class);
+
+
         return new ResponseEntity<>(jobService.closeJob(id), HttpStatus.OK);
     }
 
@@ -202,6 +211,60 @@ public class JobController {
     @ResponseBody
     ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
         return new ResponseEntity<List<JobEntity>>(jobService.getJobByCreatorId(id), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/job/{id}/publish", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
+        if (jobService.getJobById(id) == null) {
+            httpHeaders.set("error", "Can not find job to publish");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        JobEntity job = jobService.getJobById(id);
+        job.setStatus("Published");
+        OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
+        openjobJobEntity.setApplyTo(job.getApplyTo());
+        openjobJobEntity.setAccountId(1);
+        openjobJobEntity.setCategory(job.getCategory());
+        // Get company id from openjob
+        int companyId = accountService.findAccountEntityById(job.getCreatorId()).getCompanyId();
+        System.out.println(accountService.findAccountEntityById(job.getCreatorId()).toString());
+        int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
+        openjobJobEntity.setCompanyId(openjobCompanyId);
+
+
+        openjobJobEntity.setCreateDate(job.getCreateDate());
+        openjobJobEntity.setCurrency(job.getCurrency());
+        openjobJobEntity.setDescription(job.getDescription());
+        openjobJobEntity.setJobType(job.getJobType());
+        openjobJobEntity.setLocation(job.getLocation());
+        openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
+        openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
+        openjobJobEntity.setSalaryTo(job.getSalaryTo());
+        openjobJobEntity.setStatus(job.getStatus());
+        openjobJobEntity.setTitle(job.getTitle());
+        openjobJobEntity.setVacancies(job.getVacancies());
+
+
+        //get openjob token
+//        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
+        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        // post job to openjob
+        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+
+        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
+        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        job.setOpenjobJobId(openJobEntity.getId());
+
+        return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
     }
 
 
