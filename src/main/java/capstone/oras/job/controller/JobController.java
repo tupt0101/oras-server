@@ -2,11 +2,12 @@ package capstone.oras.job.controller;
 
 import capstone.oras.account.service.IAccountService;
 import capstone.oras.company.service.ICompanyService;
-import capstone.oras.talentPool.service.ITalentPoolService;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.job.service.IJobService;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
+import capstone.oras.talentPool.service.ITalentPoolService;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +97,23 @@ public class JobController {
             httpHeaders.set("error", "Talent Pool ID is not exist");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
+
+        String uri = "http://127.0.0.1:5000/process/jd";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        class JobDesc{
+            String jd;
+        }
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        JobDesc jobDesc = new JobDesc();
+        jobDesc.jd = Jsoup.parse(job.getDescription()).text();
+        HttpEntity<JobDesc> entity = new HttpEntity(jobDesc,headers);
+        class PJD{
+            String prc_jd;
+        }
+        String processedJD = restTemplate.exchange(uri,HttpMethod.POST,entity, PJD.class).getBody().prc_jd;
+        job.setProcessedJd(processedJD);
         job.setCreateDate(userDetailsService.convertLocalDateTimeToDate(java.time.LocalDate.now()));
         return new ResponseEntity<>(jobService.createJob(job), HttpStatus.OK);
     }
@@ -458,4 +476,5 @@ public class JobController {
 //        jobService.updateJob(job);
         return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
     }
+
 }

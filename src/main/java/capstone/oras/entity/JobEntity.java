@@ -67,6 +67,7 @@ public class JobEntity implements Serializable {
     private String location;
     private Integer openjobJobId;
     private String category;
+    private String processedJd;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -155,7 +156,6 @@ public class JobEntity implements Serializable {
         return applyFrom;
     }
 
-
     public void setApplyFrom(Date applyFrom) {
         this.applyFrom = applyFrom;
     }
@@ -165,7 +165,6 @@ public class JobEntity implements Serializable {
     public Date getApplyTo() {
         return applyTo;
     }
-
 
     public void setApplyTo(Date applyTo) {
         this.applyTo = applyTo;
@@ -311,5 +310,15 @@ public class JobEntity implements Serializable {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    @Basic
+    @Column(name = "processed_jd")
+    public String getProcessedJd() {
+        return processedJd;
+    }
+
+    public void setProcessedJd(String processedJd) {
+        this.processedJd = processedJd;
     }
 }
