@@ -36,9 +36,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/oauth/token").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic()
+                .httpBasic();
 //                .and().csrf()
-                .and().cors();
+//                .and().cors();
     }
 
     /**

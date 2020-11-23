@@ -12,7 +12,6 @@ import java.util.Comparator;
 import java.util.List;
 
 @RestController
-@CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(value = "/v1/talent-pool-management")
 public class TalentPoolController {
     @Autowired
