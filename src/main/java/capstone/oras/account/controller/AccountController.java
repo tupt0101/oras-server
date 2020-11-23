@@ -163,6 +163,7 @@ public class AccountController {
     @RequestMapping(value = "/account-by-email", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<AccountEntity> getAccountByEmail(@RequestParam("email") String email) {
-        return new ResponseEntity<AccountEntity>(accountService.findAccountByEmail(email), HttpStatus.OK);
+        httpHeaders.set("Access-Control-Allow-Origin", "*");
+        return new ResponseEntity<AccountEntity>(accountService.findAccountByEmail(email),httpHeaders, HttpStatus.OK);
     }
 }
