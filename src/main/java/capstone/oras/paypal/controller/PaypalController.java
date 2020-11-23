@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(path = "/v1/paypal")
-@CrossOrigin(value = "http://localhost:4200")
+@CrossOrigin(value = "http://localhost:9527")
 public class PaypalController {
 
     public static final String URL_PAYPAL_SUCCESS = "pay/success";
