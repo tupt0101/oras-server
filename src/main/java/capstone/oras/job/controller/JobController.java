@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @RestController
+@CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(value = "/v1/job-management")
 public class JobController {
     @Autowired

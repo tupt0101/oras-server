@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 @RestController
+@CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(path = "/v1/job-application-management")
 public class JobApplicationController {
 

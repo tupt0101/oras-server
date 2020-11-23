@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @RestController
+@CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(path = "/v1/candidate-management")
 public class CandidateController {
 
