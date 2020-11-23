@@ -7,7 +7,6 @@ import capstone.oras.entity.CompanyEntity;
 import capstone.oras.entity.openjob.OpenjobCompanyEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -163,7 +162,7 @@ public class AccountController {
 
     @RequestMapping(value = "/account-by-email", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<AccountEntity> getAccountByEmail(@Param("email") String email) {
+    ResponseEntity<AccountEntity> getAccountByEmail(@RequestParam("email") String email) {
         return new ResponseEntity<AccountEntity>(accountService.findAccountByEmail(email), HttpStatus.OK);
     }
 }
