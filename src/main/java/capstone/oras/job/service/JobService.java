@@ -1,8 +1,10 @@
 package capstone.oras.job.service;
 
-import capstone.oras.job.constant.JobStatus;
+import capstone.oras.dao.ICategoryRepository;
 import capstone.oras.dao.IJobRepository;
+import capstone.oras.entity.CategoryEntity;
 import capstone.oras.entity.JobEntity;
+import capstone.oras.job.constant.JobStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ import java.util.List;
 public class JobService implements IJobService {
     @Autowired
     private IJobRepository IJobRepository;
+    @Autowired
+    private ICategoryRepository iCategoryRepository;
 
 
     @Override
@@ -60,6 +64,11 @@ public class JobService implements IJobService {
         if(IJobRepository.findJobEntitiesByCreatorIdEquals(id).isPresent()) {
             return IJobRepository.findJobEntitiesByCreatorIdEquals(id).get();
         } else return null;
+    }
+
+    @Override
+    public List<CategoryEntity> getAllCategories() {
+        return iCategoryRepository.findAll();
     }
 
 }
