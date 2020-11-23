@@ -225,11 +225,6 @@ public class JobController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
         }
 
-        if (jobService.getJobById(job.getId()) != null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
-        }
-
         if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
