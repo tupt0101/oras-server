@@ -18,7 +18,7 @@ import java.util.List;
 
 
 @RestController
-//@CrossOrigin(value = "http://localhost:9527")
+@CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(value = "/v1/account-management")
 public class AccountController {
 
