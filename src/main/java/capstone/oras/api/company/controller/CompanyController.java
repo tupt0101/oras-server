@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,20 +28,20 @@ public class CompanyController {
     @ResponseBody
     ResponseEntity<CompanyEntity> createCompany(@RequestBody CompanyEntity companyEntity) {
         if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
-            httpHeaders.set("error", "Email is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
         } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
-            httpHeaders.set("error", "Name is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
         } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
-            httpHeaders.set("error", "Tax Code is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is empty");
         } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
-            httpHeaders.set("error", "Phone Number is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
         } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
-            httpHeaders.set("error", "Location is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is empty");
         }
             return new ResponseEntity<>(companyService.createCompany(companyEntity), HttpStatus.OK);
 
@@ -50,20 +51,20 @@ public class CompanyController {
     @ResponseBody
     ResponseEntity<CompanyEntity> updateCompany(@RequestBody CompanyEntity companyEntity) {
         if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
-            httpHeaders.set("error", "Email is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
         } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
-            httpHeaders.set("error", "Name is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
         } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
-            httpHeaders.set("error", "Tax Code is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is empty");
         } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
-            httpHeaders.set("error", "Phone Number is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
         } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
-            httpHeaders.set("error", "Location is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is empty");
         }
         return new ResponseEntity<>(companyService.updateCompany(companyEntity), HttpStatus.OK);
 
@@ -90,20 +91,20 @@ public class CompanyController {
     @ResponseBody
     ResponseEntity<CompanyEntity> createCompanyMulti(@RequestBody CompanyEntity companyEntity) {
         if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
-            httpHeaders.set("error", "Email is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
         } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
-            httpHeaders.set("error", "Name is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
         } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
-            httpHeaders.set("error", "Tax Code is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is empty");
         } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
-            httpHeaders.set("error", "Phone Number is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
         } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
-            httpHeaders.set("error", "Location is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is empty");
         }
         //get openjob token
         CustomUserDetailsService userDetailsService = new CustomUserDetailsService();

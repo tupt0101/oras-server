@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Comparator;
 import java.util.List;
@@ -38,11 +39,11 @@ public class TalentPoolController {
     @ResponseBody
     ResponseEntity<TalentPoolEntity> createTalentPool(@RequestBody TalentPoolEntity talentPoolEntity) {
         if (talentPoolEntity.getName() == null || talentPoolEntity.getName().isEmpty()) {
-            httpHeaders.set("error", "Name is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
         } else if (talentPoolService.findTalentPoolEntityById(talentPoolEntity.getId()) != null) {
-            httpHeaders.set("error", "Talent Pool ID already exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID already exist");
         }
         return new ResponseEntity<>(talentPoolService.createTalentPool(talentPoolEntity), HttpStatus.OK);
     }
@@ -51,11 +52,11 @@ public class TalentPoolController {
     @ResponseBody
     ResponseEntity<TalentPoolEntity> updateTalentPool(@RequestBody TalentPoolEntity talentPoolEntity) {
         if (talentPoolEntity.getName() == null || talentPoolEntity.getName().isEmpty()) {
-            httpHeaders.set("error", "Name is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
         } else if (talentPoolService.findTalentPoolEntityById(talentPoolEntity.getId()) == null) {
-            httpHeaders.set("error", "Talent Pool ID is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
         }
         return new ResponseEntity<>(talentPoolService.updateTalentPool(talentPoolEntity), HttpStatus.OK);
     }

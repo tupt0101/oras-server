@@ -2,6 +2,7 @@ package capstone.oras.api.jobApplication.controller;
 
 
 import capstone.oras.api.candidate.service.ICandidateService;
+import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.IJobApplicationService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
 import capstone.oras.entity.CandidateEntity;
@@ -9,12 +10,12 @@ import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobAccountEntity;
 import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
-import capstone.oras.api.job.service.IJobService;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -41,32 +42,32 @@ public class JobApplicationController {
     @ResponseBody
     ResponseEntity<JobApplicationEntity> createJobApplication(@RequestBody JobApplicationEntity jobApplicationEntity) {
         if (jobApplicationEntity.getApplyDate() == null) {
-            httpHeaders.set("error", "Apply Date is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply Date is null");
         } else if (jobApplicationEntity.getCandidateId() == null) {
-            httpHeaders.set("error", "Candiate ID is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Candiate ID is null");
         } else if (jobApplicationEntity.getSource() == null) {
-            httpHeaders.set("error", "Source is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Source is null");
         } else if (jobApplicationEntity.getTalentPoolId() == null) {
-            httpHeaders.set("error", "Talent Pool ID is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is null");
         } else if (jobApplicationEntity.getStatus() == null) {
-            httpHeaders.set("error", "Status is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is null");
         } else if (jobApplicationEntity.getJobId() == null) {
-            httpHeaders.set("error", "Job ID is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID is null");
         } else if (jobService.getJobById(jobApplicationEntity.getJobId()) == null) {
-            httpHeaders.set("error", "Job ID doesn't exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID doesn't exist");
         } else if (talentPoolService.findTalentPoolEntityById(jobApplicationEntity.getTalentPoolId()) == null) {
-            httpHeaders.set("error", "Talent Pool Id doesn't exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool Id doesn't exist");
         } else if (candidateService.findCandidateById(jobApplicationEntity.getCandidateId()) == null) {
-            httpHeaders.set("error", "Candidate ID doesn't exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Candidate ID doesn't exist");
         } else
             return new ResponseEntity<>(jobApplicationService.createJobApplication(jobApplicationEntity), HttpStatus.OK);
     }
@@ -83,32 +84,32 @@ public class JobApplicationController {
     @ResponseBody
     ResponseEntity<JobApplicationEntity> updateJobApplication(@RequestBody JobApplicationEntity jobApplicationEntity) {
         if (jobApplicationEntity.getApplyDate() == null) {
-            httpHeaders.set("error", "Apply Date is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply Date is null");
         } else if (jobApplicationEntity.getCandidateId() == null) {
-            httpHeaders.set("error", "Candiate ID is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Candiate ID is null");
         } else if (jobApplicationEntity.getSource() == null) {
-            httpHeaders.set("error", "Source is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Source is null");
         } else if (jobApplicationEntity.getTalentPoolId() == null) {
-            httpHeaders.set("error", "Talent Pool ID is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is null");
         } else if (jobApplicationEntity.getStatus() == null) {
-            httpHeaders.set("error", "Status is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is null");
         } else if (jobApplicationEntity.getJobId() == null) {
-            httpHeaders.set("error", "Job ID is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID is null");
         } else if (jobService.getJobById(jobApplicationEntity.getJobId()) == null) {
-            httpHeaders.set("error", "Job ID doesn't exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID doesn't exist");
         } else if (talentPoolService.findTalentPoolEntityById(jobApplicationEntity.getTalentPoolId()) == null) {
-            httpHeaders.set("error", "Talent Pool Id doesn't exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool Id doesn't exist");
         } else if (candidateService.findCandidateById(jobApplicationEntity.getCandidateId()) == null) {
-            httpHeaders.set("error", "Candidate ID doesn't exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Candidate ID doesn't exist");
         }
         return new ResponseEntity<>(jobApplicationService.createJobApplication(jobApplicationEntity), HttpStatus.OK);
 

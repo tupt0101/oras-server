@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -40,20 +41,20 @@ public class AccountController {
     @ResponseBody
     ResponseEntity<AccountEntity> createAccount(@RequestBody AccountEntity accountEntity) {
         if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
-            httpHeaders.set("error", "Email is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
         } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
-            httpHeaders.set("error", "Full name is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is empty");
         } else if (accountEntity.getPassword() == null || accountEntity.getPassword().isEmpty()) {
-            httpHeaders.set("error", "Password is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is empty");
         } else if (accountService.findAccountByEmail(accountEntity.getEmail()) != null) {
-            httpHeaders.set("error", "This email is already registered");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered");
         } else if (accountService.findAccountEntityById(accountEntity.getId()) != null) {
-            httpHeaders.set("error", "Account already exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
             return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
         }
@@ -64,20 +65,20 @@ public class AccountController {
     @ResponseBody
     ResponseEntity<AccountEntity> signup(@RequestBody Signup signup) {
         if (signup.accountEntity.getEmail() == null || signup.accountEntity.getEmail().isEmpty()) {
-            httpHeaders.set("error", "Email is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
         } else if (signup.accountEntity.getFullname() == null || signup.accountEntity.getFullname().isEmpty()) {
-            httpHeaders.set("error", "Full name is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is empty");
         } else if (signup.accountEntity.getPassword() == null || signup.accountEntity.getPassword().isEmpty()) {
-            httpHeaders.set("error", "Password is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is empty");
         } else if (accountService.findAccountByEmail(signup.accountEntity.getEmail()) != null) {
-            httpHeaders.set("error", "This email is already registered");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered");
         } else if (accountService.findAccountEntityById(signup.accountEntity.getId()) != null) {
-            httpHeaders.set("error", "Account already exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
 
 
@@ -128,20 +129,20 @@ public class AccountController {
     ResponseEntity<AccountEntity> updateAccount(@RequestBody AccountEntity accountEntity) {
 
         if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
-            httpHeaders.set("error", "Email is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
         } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
-            httpHeaders.set("error", "Full name is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is empty");
         } else if (accountEntity.getPassword() == null || accountEntity.getPassword().isEmpty()) {
-            httpHeaders.set("error", "Password is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
-        } else if (accountService.findAccountByEmail(accountEntity.getEmail()) == null) {
-            httpHeaders.set("error", "Cannot find this account");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is empty");
+        } else if (accountService.findAccountByEmail(accountEntity.getEmail()) != null) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered");
         } else if (accountService.findAccountEntityById(accountEntity.getId()) == null) {
-            httpHeaders.set("error", "Account doesn't exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account doesn't exist");
         } else {
             return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
         }

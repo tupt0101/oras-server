@@ -53,52 +53,52 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> createJob(@RequestBody JobEntity job) {
         if (job.getCreatorId() == null) {
-            httpHeaders.set("error", "CreatorId is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
-            httpHeaders.set("error", "Title is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
         }
         if (job.getApplyFrom() == null) {
-            httpHeaders.set("error", "Apply from is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
         }
 
         if (job.getApplyTo() == null) {
-            httpHeaders.set("error", "Apply to is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply to is empty");
         }
 
         if (job.getCreateDate() == null) {
-            httpHeaders.set("error", "Create Date is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is empty");
         }
 
         if (job.getCurrency() == null) {
-            httpHeaders.set("error", "Currency is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is empty");
         }
 
 
         if (job.getTalentPoolId() == null) {
-            httpHeaders.set("error", "Talent Poll ID is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
         }
 
         if (jobService.getJobById(job.getId()) != null) {
-            httpHeaders.set("error", "Job ID already exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
         }
 
         if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
-            httpHeaders.set("error", "Account is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
         }
 
         if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
-            httpHeaders.set("error", "Talent Pool ID is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
         }
 
         job.setCreateDate(userDetailsService.convertLocalDateTimeToDate(java.time.LocalDate.now()));
@@ -109,52 +109,52 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> createJobForTu(@RequestBody JobEntity job) {
         if (job.getCreatorId() == null) {
-            httpHeaders.set("error", "CreatorId is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
-            httpHeaders.set("error", "Title is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
         }
         if (job.getApplyFrom() == null) {
-            httpHeaders.set("error", "Apply from is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
         }
 
         if (job.getApplyTo() == null) {
-            httpHeaders.set("error", "Apply to is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply to is empty");
         }
 
         if (job.getCreateDate() == null) {
-            httpHeaders.set("error", "Create Date is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is empty");
         }
 
         if (job.getCurrency() == null) {
-            httpHeaders.set("error", "Currency is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is empty");
         }
 
 
         if (job.getTalentPoolId() == null) {
-            httpHeaders.set("error", "Talent Poll ID is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
         }
 
         if (jobService.getJobById(job.getId()) != null) {
-            httpHeaders.set("error", "Job ID already exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
         }
 
         if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
-            httpHeaders.set("error", "Account is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
         }
 
         if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
-            httpHeaders.set("error", "Talent Pool ID is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
         }
 
         String uri = "http://127.0.0.1:5000/process/jd";
@@ -182,55 +182,62 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> updateJob(@RequestBody JobEntity job) {
         if (job.getId() == 0) {
-            httpHeaders.set("error", "JobId is 0");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "JobId is 0");
         }
         if (job.getId() != 0) {
             if (jobService.getJobById(job.getId()) == null) {
-                httpHeaders.set("error", "Can not find job to update");
-                return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to update");
             }
         }
         if (job.getCreatorId() == null) {
+
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
-            httpHeaders.set("error", "Title is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
         }
         if (job.getApplyFrom() == null) {
-            httpHeaders.set("error", "Apply from is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
         }
 
         if (job.getApplyTo() == null) {
-            httpHeaders.set("error", "Apply to is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply to is empty");
         }
 
         if (job.getCreateDate() == null) {
-            httpHeaders.set("error", "Create Date is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is empty");
         }
 
         if (job.getCurrency() == null) {
-            httpHeaders.set("error", "Currency is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is empty");
         }
 
+
         if (job.getTalentPoolId() == null) {
-            httpHeaders.set("error", "Talent Poll ID is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
+        }
+
+        if (jobService.getJobById(job.getId()) != null) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
         }
 
         if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
-            httpHeaders.set("error", "Account is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
         }
 
         if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
-            httpHeaders.set("error", "Talent Pool ID is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
         }
 
         return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
@@ -240,8 +247,8 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> closeJob(@PathVariable("id") int id) {
         if (jobService.getJobById(id) == null) {
-            httpHeaders.set("error", "Can not find job to update");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to update");
         }
         int openjobJobId = jobService.getJobById(id).getOpenjobJobId();
 
@@ -288,8 +295,8 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
         if (jobService.getJobById(id) == null) {
-            httpHeaders.set("error", "Can not find job to publish");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
         }
 
         JobEntity job = jobService.getJobById(id);
@@ -342,52 +349,52 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> createJobMulti(@RequestBody JobEntity job) {
         if (job.getCreatorId() == null) {
-            httpHeaders.set("error", "CreatorId is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
-            httpHeaders.set("error", "Title is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
         }
         if (job.getApplyFrom() == null) {
-            httpHeaders.set("error", "Apply from is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
         }
 
         if (job.getApplyTo() == null) {
-            httpHeaders.set("error", "Apply to is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply to is empty");
         }
 
         if (job.getCreateDate() == null) {
-            httpHeaders.set("error", "Create Date is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is empty");
         }
 
         if (job.getCurrency() == null) {
-            httpHeaders.set("error", "Currency is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is empty");
         }
 
 
         if (job.getTalentPoolId() == null) {
-            httpHeaders.set("error", "Talent Poll ID is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
         }
 
         if (jobService.getJobById(job.getId()) != null) {
-            httpHeaders.set("error", "Job ID already exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
         }
 
         if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
-            httpHeaders.set("error", "Account is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
         }
 
         if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
-            httpHeaders.set("error", "Talent Pool ID is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
         }
         job.setCreateDate(userDetailsService.convertLocalDateTimeToDate(java.time.LocalDate.now()));
         JobEntity jobEntity = jobService.createJob(job);
@@ -439,52 +446,52 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> updateJobMulti(@RequestBody JobEntity job) {
         if (job.getCreatorId() == null) {
-            httpHeaders.set("error", "CreatorId is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
-            httpHeaders.set("error", "Title is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
         }
         if (job.getApplyFrom() == null) {
-            httpHeaders.set("error", "Apply from is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
         }
 
         if (job.getApplyTo() == null) {
-            httpHeaders.set("error", "Apply to is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply to is empty");
         }
 
         if (job.getCreateDate() == null) {
-            httpHeaders.set("error", "Create Date is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is empty");
         }
 
         if (job.getCurrency() == null) {
-            httpHeaders.set("error", "Currency is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is empty");
         }
 
 
         if (job.getTalentPoolId() == null) {
-            httpHeaders.set("error", "Talent Poll ID is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
         }
 
-        if (jobService.getJobById(job.getId()) != null) {
-            httpHeaders.set("error", "Job ID already exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        if (jobService.getJobById(job.getId()) == null) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
         }
 
         if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
-            httpHeaders.set("error", "Account is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
         }
 
         if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
-            httpHeaders.set("error", "Talent Pool ID is not exist");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
         }
 
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();

@@ -2,15 +2,16 @@ package capstone.oras.api.candidate.controller;
 
 
 import capstone.oras.api.candidate.service.ICandidateService;
+import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.IJobApplicationService;
 import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
-import capstone.oras.api.job.service.IJobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,17 +37,17 @@ public class CandidateController {
     @ResponseBody
     ResponseEntity<CandidateEntity> createCandidate(@RequestBody CandidateEntity candidateEntity) {
         if (candidateEntity.getEmail() == null || candidateEntity.getEmail().isEmpty()) {
-            httpHeaders.set("error", "Email is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
         } else if (candidateEntity.getFullname() == null || candidateEntity.getFullname().isEmpty()) {
-            httpHeaders.set("error", "Fullname is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fullname is empty");
         } else if (candidateEntity.getPhoneNo() == null || candidateEntity.getPhoneNo().isEmpty()) {
-            httpHeaders.set("error", "Phone Number is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
         } else if (candidateEntity.getAddress() == null || candidateEntity.getAddress().isEmpty()) {
-            httpHeaders.set("error", "Address is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address is empty");
         }
             return new ResponseEntity<>(candidateService.createCandidate(candidateEntity), HttpStatus.OK);
 
@@ -57,17 +58,17 @@ public class CandidateController {
     @ResponseBody
     ResponseEntity<CandidateEntity> updateCandidate(@RequestBody CandidateEntity candidateEntity) {
         if (candidateEntity.getEmail() == null || candidateEntity.getEmail().isEmpty()) {
-            httpHeaders.set("error", "Email is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
         } else if (candidateEntity.getFullname() == null || candidateEntity.getFullname().isEmpty()) {
-            httpHeaders.set("error", "Fullname is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fullname is empty");
         } else if (candidateEntity.getPhoneNo() == null || candidateEntity.getPhoneNo().isEmpty()) {
-            httpHeaders.set("error", "Phone Number is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
         } else if (candidateEntity.getAddress() == null || candidateEntity.getAddress().isEmpty()) {
-            httpHeaders.set("error", "Address is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address is empty");
         }
         return new ResponseEntity<>(candidateService.createCandidate(candidateEntity), HttpStatus.OK);
 
