@@ -98,6 +98,62 @@ public class JobController {
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
+        job.setCreateDate(userDetailsService.convertLocalDateTimeToDate(java.time.LocalDate.now()));
+        return new ResponseEntity<>(jobService.createJob(job), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/job-for-tu", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    ResponseEntity<JobEntity> createJobForTu(@RequestBody JobEntity job) {
+        if (job.getCreatorId() == null) {
+            httpHeaders.set("error", "CreatorId is null");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+        if (job.getTitle() == null || job.getTitle().isEmpty()) {
+            httpHeaders.set("error", "Title is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+        if (job.getApplyFrom() == null) {
+            httpHeaders.set("error", "Apply from is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        if (job.getApplyTo() == null) {
+            httpHeaders.set("error", "Apply to is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        if (job.getCreateDate() == null) {
+            httpHeaders.set("error", "Create Date is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        if (job.getCurrency() == null) {
+            httpHeaders.set("error", "Currency is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+
+        if (job.getTalentPoolId() == null) {
+            httpHeaders.set("error", "Talent Poll ID is empty");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        if (jobService.getJobById(job.getId()) != null) {
+            httpHeaders.set("error", "Job ID already exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
+            httpHeaders.set("error", "Account is not exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
+            httpHeaders.set("error", "Talent Pool ID is not exist");
+            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+        }
+
         String uri = "http://127.0.0.1:5000/process/jd";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -117,6 +173,7 @@ public class JobController {
         job.setCreateDate(userDetailsService.convertLocalDateTimeToDate(java.time.LocalDate.now()));
         return new ResponseEntity<>(jobService.createJob(job), HttpStatus.OK);
     }
+
 
     @RequestMapping(value = "/job", method = RequestMethod.PUT)
     @ResponseBody
