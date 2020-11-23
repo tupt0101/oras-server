@@ -15,7 +15,7 @@ public class WebConfig  {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://oras-app.herokuapp.com")
+                        .allowedOrigins("https://oras-app.herokuapp.com", "http://localhost:9527")
                         .allowedMethods("GET", "POST", "OPTIONS", "PUT")
                 .allowCredentials(true);
             }
