@@ -141,6 +141,41 @@ public class JobApplicationController {
 
     }
 
+    @RequestMapping(value = "/job-application-rank-cv/{jobId}", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<Void> rankJobApplicationByJobId(@PathVariable("jobId")int jobId) {
+        if (jobService.getJobById(jobId) == null) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job doesn't exist");
+        }
+
+
+        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobId(jobId);
+
+
+        String uri = "http://127.0.0.1:5000/calc/similarity";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        class CustomApplicationModel{
+            String processed_jd;
+            int job_id;
+        }
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        CustomApplicationModel customApplicationModel = new CustomApplicationModel();
+        customApplicationModel.job_id = jobId;
+        customApplicationModel.processed_jd = jobService.getJobById(jobId).getProcessedJd();
+        HttpEntity<CustomApplicationModel> entity = new HttpEntity(customApplicationModel,headers);
+        ResponseEntity<Void> responseEntity = restTemplate.exchange(uri,HttpMethod.POST,entity, Void.class);
+
+        // Nếu mà thg void bị lỗi thi sài thg String ở dưới với lại sửa Response<Void> thành Response<String> trên function
+
+//        ResponseEntity<String> responseEntity = restTemplate.exchange(uri,HttpMethod.POST,entity, String.class);
+
+        return responseEntity;
+
+    }
+
 
     @RequestMapping(value = "/job-applications-openjob/{jobId}", method = RequestMethod.GET)
     @ResponseBody
