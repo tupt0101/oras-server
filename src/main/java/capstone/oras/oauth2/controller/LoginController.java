@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 @RestController
-@CrossOrigin(value = "http://localhost:9527")
+//@CrossOrigin(value = "http://localhost:9527")
 public class LoginController {
 
     HttpHeaders httpHeaders = new HttpHeaders();

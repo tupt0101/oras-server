@@ -11,13 +11,14 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 
 @RestController
-@CrossOrigin(value = "http://localhost:9527")
+//@CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(value = "/v1/account-management")
 public class AccountController {
 
@@ -162,8 +163,8 @@ public class AccountController {
 
     @RequestMapping(value = "/account-by-email", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<AccountEntity> getAccountByEmail(@RequestParam("email") String email) {
-        httpHeaders.set("Access-Control-Allow-Origin", "*");
-        return new ResponseEntity<AccountEntity>(accountService.findAccountByEmail(email),httpHeaders, HttpStatus.OK);
+    ResponseEntity<AccountEntity> getAccountByEmail(@RequestParam("email") String email, HttpServletResponse response) {
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        return new ResponseEntity<AccountEntity>(accountService.findAccountByEmail(email), HttpStatus.OK);
     }
 }
