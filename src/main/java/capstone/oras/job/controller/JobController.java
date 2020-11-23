@@ -2,6 +2,7 @@ package capstone.oras.job.controller;
 
 import capstone.oras.account.service.IAccountService;
 import capstone.oras.company.service.ICompanyService;
+import capstone.oras.entity.CategoryEntity;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.job.service.IJobService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -189,10 +191,8 @@ public class JobController {
                 return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
             }
         }
-
         if (job.getCreatorId() == null) {
-            httpHeaders.set("error", "CreatorId is null");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
             httpHeaders.set("error", "Title is empty");
@@ -218,14 +218,8 @@ public class JobController {
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
-
         if (job.getTalentPoolId() == null) {
             httpHeaders.set("error", "Talent Poll ID is empty");
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
-        }
-
-        if (jobService.getJobById(job.getId()) != null) {
-            httpHeaders.set("error", "Job ID already exist");
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
         }
 
@@ -535,4 +529,9 @@ public class JobController {
         return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/categories", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<CategoryEntity>> getAllCategories() {
+        return new ResponseEntity<List<CategoryEntity>>(jobService.getAllCategories(), HttpStatus.OK);
+    }
 }

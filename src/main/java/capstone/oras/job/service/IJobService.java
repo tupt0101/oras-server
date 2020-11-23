@@ -1,5 +1,6 @@
 package capstone.oras.job.service;
 
+import capstone.oras.entity.CategoryEntity;
 import capstone.oras.entity.JobEntity;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public interface IJobService {
     boolean checkJobEntityById(int id);
     List<JobEntity> getOpenJob();
     List<JobEntity> getJobByCreatorId(int id);
+    List<CategoryEntity> getAllCategories();
 }

@@ -48,7 +48,7 @@ public class JobEntity implements Serializable {
     @ApiModelProperty(example = "1", value = "should be a valid id")
     @JsonProperty("creatorId")
     private Integer creatorId;
-    @ApiModelProperty(example = "open")
+    @ApiModelProperty(example = "Draft")
     @JsonProperty("status")
     private String status;
     @ApiModelProperty(example = "2020-09-28")
