@@ -2,6 +2,7 @@ package capstone.oras.api.job.controller;
 
 import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.api.company.service.ICompanyService;
+import capstone.oras.api.job.constant.JobStatus;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
 import capstone.oras.entity.CategoryEntity;
