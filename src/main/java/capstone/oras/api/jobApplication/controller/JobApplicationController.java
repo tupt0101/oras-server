@@ -13,6 +13,7 @@ import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -223,7 +224,7 @@ public class JobApplicationController {
 
             //need to check if application already exist(check by candidateID and jobId if exist bot
            if (jobApplicationService.findJobApplicationsByJobIdAndCandidateId(jobId, candidateId ) == null) {
-               jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
+               jobApplicationEntity.setApplyDate(CustomUserDetailsService.convertToLocalDateTimeViaSqlTimestamp(openjobJobApplication.getApplyAt()));
 //            jobApplicationEntity.setCandidateId(openjobJobApplication.getAccountId());
                jobApplicationEntity.setCv(openjobJobApplication.getCv());
                jobApplicationEntity.setJobId(jobId);

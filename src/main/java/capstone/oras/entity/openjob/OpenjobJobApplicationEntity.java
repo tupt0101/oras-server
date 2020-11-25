@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class OpenjobJobApplicationEntity {
@@ -13,7 +12,7 @@ public class OpenjobJobApplicationEntity {
     private Integer accountId;
     @ApiModelProperty(hidden = true)
     private OpenjobAccountEntity accountByAccountId;
-    private LocalDateTime applyAt;
+    private Date applyAt;
     private String cv;
 
     @Id
@@ -64,12 +63,12 @@ public class OpenjobJobApplicationEntity {
 
     @Basic
     @Column(name = "apply_at")
-    public LocalDateTime getApplyAt() {
+    public Date getApplyAt() {
         return applyAt;
     }
 
 
-    public void setApplyAt(LocalDateTime applyAt) {
+    public void setApplyAt(Date applyAt) {
         this.applyAt = applyAt;
     }
 

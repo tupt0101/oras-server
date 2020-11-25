@@ -128,7 +128,7 @@ public class JobController {
         JobEntity job = jobService.getJobById(id);
         job.setStatus(JobStatus.OPEN.getValue());
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-        openjobJobEntity.setApplyTo(job.getApplyTo());
+        openjobJobEntity.setApplyTo(CustomUserDetailsService.convertToDateViaInstant(job.getApplyTo()));
         openjobJobEntity.setAccountId(1);
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
@@ -138,7 +138,7 @@ public class JobController {
         openjobJobEntity.setCompanyId(openjobCompanyId);
 
 
-        openjobJobEntity.setCreateDate(job.getCreateDate());
+        openjobJobEntity.setCreateDate(CustomUserDetailsService.convertToDateViaInstant(job.getCreateDate()));
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
@@ -226,7 +226,7 @@ public class JobController {
         JobEntity jobEntity = jobService.createJob(job);
 
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-        openjobJobEntity.setApplyTo(job.getApplyTo());
+        openjobJobEntity.setApplyTo(CustomUserDetailsService.convertToDateViaInstant(job.getApplyTo()));
         openjobJobEntity.setAccountId(1);
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
@@ -236,7 +236,7 @@ public class JobController {
         openjobJobEntity.setCompanyId(openjobCompanyId);
 
 
-        openjobJobEntity.setCreateDate(job.getCreateDate());
+        openjobJobEntity.setCreateDate(CustomUserDetailsService.convertToDateViaInstant(job.getCreateDate()));
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
@@ -321,7 +321,7 @@ public class JobController {
         }
 
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-        openjobJobEntity.setApplyTo(job.getApplyTo());
+        openjobJobEntity.setApplyTo(CustomUserDetailsService.convertToDateViaInstant(job.getApplyTo()));
         openjobJobEntity.setAccountId(1);
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
@@ -331,7 +331,7 @@ public class JobController {
         openjobJobEntity.setCompanyId(openjobCompanyId);
 
         // Set Attribute
-        openjobJobEntity.setCreateDate(job.getCreateDate());
+        openjobJobEntity.setCreateDate(CustomUserDetailsService.convertToDateViaInstant(job.getCreateDate()));
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());

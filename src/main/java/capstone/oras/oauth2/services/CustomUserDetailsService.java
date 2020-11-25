@@ -17,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * @author developer
@@ -56,5 +58,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public Date convertLocalDateTimeToDate(LocalDate localDate) {
         return  Date.valueOf(localDate);
+    }
+
+    public static Date convertToDateViaInstant(LocalDateTime dateToConvert) {
+        return (Date) java.util.Date
+                .from(dateToConvert.atZone(ZoneId.systemDefault())
+                        .toInstant());
+    }
+
+    public static LocalDateTime convertToLocalDateTimeViaSqlTimestamp(Date dateToConvert) {
+        return new java.sql.Timestamp(
+                dateToConvert.getTime()).toLocalDateTime();
     }
 }
