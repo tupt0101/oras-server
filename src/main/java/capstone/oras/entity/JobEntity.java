@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -38,10 +38,10 @@ public class JobEntity implements Serializable {
     private Integer vacancies;
     @ApiModelProperty(example = "2020-09-28")
     @JsonProperty("applyFrom")
-    private Date applyFrom;
+    private LocalDateTime applyFrom;
     @ApiModelProperty(example = "2020-10-28")
     @JsonProperty("applyTo")
-    private Date applyTo;
+    private LocalDateTime applyTo;
     @ApiModelProperty(example = "1", value = "should be a valid id")
     @JsonProperty("talentPoolId")
     private Integer talentPoolId;
@@ -53,7 +53,7 @@ public class JobEntity implements Serializable {
     private String status;
     @ApiModelProperty(example = "2020-09-28")
     @JsonProperty("createDate")
-    private Date createDate;
+    private LocalDateTime createDate;
     @ApiModelProperty(hidden = true)
     @JsonProperty("talentPoolByTalentPoolId")
     private TalentPoolEntity talentPoolByTalentPoolId;
@@ -152,21 +152,21 @@ public class JobEntity implements Serializable {
 
     @Basic
     @Column(name = "apply_from", nullable = true)
-    public Date getApplyFrom() {
+    public LocalDateTime getApplyFrom() {
         return applyFrom;
     }
 
-    public void setApplyFrom(Date applyFrom) {
+    public void setApplyFrom(LocalDateTime applyFrom) {
         this.applyFrom = applyFrom;
     }
 
     @Basic
     @Column(name = "apply_to", nullable = true)
-    public Date getApplyTo() {
+    public LocalDateTime getApplyTo() {
         return applyTo;
     }
 
-    public void setApplyTo(Date applyTo) {
+    public void setApplyTo(LocalDateTime applyTo) {
         this.applyTo = applyTo;
     }
 
@@ -202,11 +202,11 @@ public class JobEntity implements Serializable {
 
     @Basic
     @Column(name = "create_date", nullable = true)
-    public Date getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 

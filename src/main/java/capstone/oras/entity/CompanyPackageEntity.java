@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -20,7 +21,7 @@ public class CompanyPackageEntity {
     @ApiModelProperty(hidden = true)
     private PurchaseEntity purchaseById;
     @ApiModelProperty(example = "2020-09-28")
-    private Date validTo;
+    private LocalDateTime validTo;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -65,11 +66,11 @@ public class CompanyPackageEntity {
 
     @Basic
     @Column(name = "valid_to")
-    public Date getValidTo() {
+    public LocalDateTime getValidTo() {
         return validTo;
     }
 
-    public void setValidTo(Date validTo) {
+    public void setValidTo(LocalDateTime validTo) {
         this.validTo = validTo;
     }
 
