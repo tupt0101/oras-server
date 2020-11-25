@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -17,7 +17,7 @@ public class JobApplicationEntity implements Serializable {
     private Double matchingRate;
     private String cv;
     @ApiModelProperty(example = "2020-09-28")
-    private Date applyDate;
+    private LocalDateTime applyDate;
     @ApiModelProperty(example = "1")
     private Integer talentPoolId;
     @ApiModelProperty(example = "linkedin")
@@ -78,11 +78,11 @@ public class JobApplicationEntity implements Serializable {
 
     @Basic
     @Column(name = "apply_date", nullable = true)
-    public Date getApplyDate() {
+    public LocalDateTime getApplyDate() {
         return applyDate;
     }
 
-    public void setApplyDate(Date applyDate) {
+    public void setApplyDate(LocalDateTime applyDate) {
         this.applyDate = applyDate;
     }
 

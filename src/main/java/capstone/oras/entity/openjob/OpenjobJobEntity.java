@@ -2,15 +2,15 @@ package capstone.oras.entity.openjob;
 
 import io.swagger.annotations.ApiModelProperty;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class OpenjobJobEntity {
     private Integer id;
     private String title;
     private String description;
-    private Date applyTo;
-    private Date createDate;
+    private LocalDateTime applyTo;
+    private LocalDateTime createDate;
     private Integer companyId;
     private String currency;
     private Double salaryFrom;
@@ -58,19 +58,19 @@ public class OpenjobJobEntity {
         this.description = description;
     }
 
-    public Date getApplyTo() {
+    public LocalDateTime getApplyTo() {
         return applyTo;
     }
 
-    public void setApplyTo(Date applyTo) {
+    public void setApplyTo(LocalDateTime applyTo) {
         this.applyTo = applyTo;
     }
 
-    public Date getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 

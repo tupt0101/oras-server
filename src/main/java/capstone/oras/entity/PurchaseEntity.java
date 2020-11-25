@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -16,7 +16,7 @@ public class PurchaseEntity {
     private String token;
     private Integer amount;
     @ApiModelProperty(example = "2020-09-28")
-    private Date purchaseDate;
+    private LocalDateTime purchaseDate;
     private String status;
     private Integer accountId;
     @ApiModelProperty(hidden = true)
@@ -68,11 +68,11 @@ public class PurchaseEntity {
 
     @Basic
     @Column(name = "purchase_date")
-    public Date getPurchaseDate() {
+    public LocalDateTime getPurchaseDate() {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(Date purchaseDate) {
+    public void setPurchaseDate(LocalDateTime purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 
