@@ -52,9 +52,9 @@ public class JobController {
         return new ResponseEntity<>(jobService.createJob(job), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/job-for-tu", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/rank-application", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<String> createJobForTu(@RequestBody Integer id) {
+    ResponseEntity<String> rankApplication(@RequestBody Integer id) {
         return new ResponseEntity<>(jobService.calcSimilarity(id), HttpStatus.OK);
     }
 
@@ -125,7 +125,7 @@ public class JobController {
         }
 
         JobEntity job = jobService.getJobById(id);
-        job.setStatus("Published");
+        job.setStatus(JobStatus.OPEN.getValue());
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
         openjobJobEntity.setApplyTo(job.getApplyTo());
         openjobJobEntity.setAccountId(1);
