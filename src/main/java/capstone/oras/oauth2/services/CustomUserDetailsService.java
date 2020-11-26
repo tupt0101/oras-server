@@ -15,11 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
 /**
  * @author developer
  */
@@ -48,26 +43,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public String getOpenJobToken() {
         final String uri = "https://openjob-server.herokuapp.com/login?username=admin@gmail.com&password=password";
-
         //TODO: Autowire the RestTemplate in all the examples
         RestTemplate restTemplate = new RestTemplate();
-
         String result = restTemplate.getForObject(uri, TokenDto.class).getToken();
         return result;
-    }
-
-    public Date convertLocalDateTimeToDate(LocalDate localDate) {
-        return  Date.valueOf(localDate);
-    }
-
-    public static Date convertToDateViaInstant(LocalDateTime dateToConvert) {
-        return (Date) java.util.Date
-                .from(dateToConvert.atZone(ZoneId.systemDefault())
-                        .toInstant());
-    }
-
-    public static LocalDateTime convertToLocalDateTimeViaSqlTimestamp(Date dateToConvert) {
-        return new java.sql.Timestamp(
-                dateToConvert.getTime()).toLocalDateTime();
     }
 }

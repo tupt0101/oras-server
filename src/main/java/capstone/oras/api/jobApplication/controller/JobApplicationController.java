@@ -5,6 +5,7 @@ import capstone.oras.api.candidate.service.ICandidateService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.IJobApplicationService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
+import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
@@ -13,7 +14,6 @@ import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -142,39 +142,10 @@ public class JobApplicationController {
 
     }
 
-    @RequestMapping(value = "/job-application-rank-cv/{jobId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/job-application-rank-cv", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<Void> rankJobApplicationByJobId(@PathVariable("jobId")int jobId) {
-        if (jobService.getJobById(jobId) == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job doesn't exist");
-        }
-
-
-        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobId(jobId);
-
-
-        String uri = "http://127.0.0.1:5000/calc/similarity";
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        class CustomApplicationModel{
-            String processed_jd;
-            int job_id;
-        }
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        CustomApplicationModel customApplicationModel = new CustomApplicationModel();
-        customApplicationModel.job_id = jobId;
-        customApplicationModel.processed_jd = jobService.getJobById(jobId).getProcessedJd();
-        HttpEntity<CustomApplicationModel> entity = new HttpEntity(customApplicationModel,headers);
-        ResponseEntity<Void> responseEntity = restTemplate.exchange(uri,HttpMethod.POST,entity, Void.class);
-
-        // Nếu mà thg void bị lỗi thi sài thg String ở dưới với lại sửa Response<Void> thành Response<String> trên function
-
-//        ResponseEntity<String> responseEntity = restTemplate.exchange(uri,HttpMethod.POST,entity, String.class);
-
-        return responseEntity;
-
+    ResponseEntity<String> rankApplication(@RequestBody Integer id) {
+        return new ResponseEntity<>(jobApplicationService.calcSimilarity(id), HttpStatus.OK);
     }
 
 
@@ -224,7 +195,7 @@ public class JobApplicationController {
 
             //need to check if application already exist(check by candidateID and jobId if exist bot
            if (jobApplicationService.findJobApplicationsByJobIdAndCandidateId(jobId, candidateId ) == null) {
-               jobApplicationEntity.setApplyDate(CustomUserDetailsService.convertToLocalDateTimeViaSqlTimestamp(openjobJobApplication.getApplyAt()));
+               jobApplicationEntity.setApplyDate(CommonUtils.convertToLocalDateTimeViaSqlTimestamp(openjobJobApplication.getApplyAt()));
 //            jobApplicationEntity.setCandidateId(openjobJobApplication.getAccountId());
                jobApplicationEntity.setCv(openjobJobApplication.getCv());
                jobApplicationEntity.setJobId(jobId);

@@ -15,5 +15,4 @@ public interface IJobService {
     List<JobEntity> getOpenJob();
     List<JobEntity> getJobByCreatorId(int id);
     List<CategoryEntity> getAllCategories();
-    String calcSimilarity(Integer id);
 }

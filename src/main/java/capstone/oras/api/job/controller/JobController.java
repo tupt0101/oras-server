@@ -2,9 +2,9 @@ package capstone.oras.api.job.controller;
 
 import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.api.company.service.ICompanyService;
-import capstone.oras.api.job.constant.JobStatus;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
+import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.CategoryEntity;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
 
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
@@ -53,13 +55,6 @@ public class JobController {
         return new ResponseEntity<>(jobService.createJob(job), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/rank-application", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    ResponseEntity<String> rankApplication(@RequestBody Integer id) {
-        return new ResponseEntity<>(jobService.calcSimilarity(id), HttpStatus.OK);
-    }
-
-
     @RequestMapping(value = "/job", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<JobEntity> updateJob(@RequestBody JobEntity job) {
@@ -70,11 +65,9 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> closeJob(@PathVariable("id") int id) {
         if (jobService.getJobById(id) == null) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to update");
         }
         int openjobJobId = jobService.getJobById(id).getOpenjobJobId();
-
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = "Bearer " + userDetailsService.getOpenJobToken();
@@ -112,7 +105,6 @@ public class JobController {
     ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
         List<JobEntity> lst = jobService.getJobByCreatorId(id);
         lst.sort(Comparator.comparingInt(JobEntity::getId).reversed());
-
         return new ResponseEntity<List<JobEntity>>(jobService.getJobByCreatorId(id), HttpStatus.OK);
     }
 
@@ -121,14 +113,12 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
         if (jobService.getJobById(id) == null) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
         }
-
         JobEntity job = jobService.getJobById(id);
-        job.setStatus(JobStatus.OPEN.getValue());
+        job.setStatus(PUBLISHED);
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-        openjobJobEntity.setApplyTo(CustomUserDetailsService.convertToDateViaInstant(job.getApplyTo()));
+        openjobJobEntity.setApplyTo(CommonUtils.convertToDateViaInstant(job.getApplyTo()));
         openjobJobEntity.setAccountId(1);
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
@@ -136,9 +126,7 @@ public class JobController {
         System.out.println(accountService.findAccountEntityById(job.getCreatorId()).toString());
         int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
         openjobJobEntity.setCompanyId(openjobCompanyId);
-
-
-        openjobJobEntity.setCreateDate(CustomUserDetailsService.convertToDateViaInstant(job.getCreateDate()));
+        openjobJobEntity.setCreateDate(CommonUtils.convertToDateViaInstant(job.getCreateDate()));
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
@@ -149,8 +137,6 @@ public class JobController {
         openjobJobEntity.setStatus(job.getStatus());
         openjobJobEntity.setTitle(job.getTitle());
         openjobJobEntity.setVacancies(job.getVacancies());
-
-
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = "Bearer " + userDetailsService.getOpenJobToken();
@@ -161,12 +147,9 @@ public class JobController {
         headers.set("Authorization", token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
         OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
         job.setOpenjobJobId(openJobEntity.getId());
-
         return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
     }
 
@@ -226,7 +209,7 @@ public class JobController {
         JobEntity jobEntity = jobService.createJob(job);
 
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-        openjobJobEntity.setApplyTo(CustomUserDetailsService.convertToDateViaInstant(job.getApplyTo()));
+        openjobJobEntity.setApplyTo(CommonUtils.convertToDateViaInstant(job.getApplyTo()));
         openjobJobEntity.setAccountId(1);
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
@@ -236,7 +219,7 @@ public class JobController {
         openjobJobEntity.setCompanyId(openjobCompanyId);
 
 
-        openjobJobEntity.setCreateDate(CustomUserDetailsService.convertToDateViaInstant(job.getCreateDate()));
+        openjobJobEntity.setCreateDate(CommonUtils.convertToDateViaInstant(job.getCreateDate()));
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
@@ -321,7 +304,7 @@ public class JobController {
         }
 
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-        openjobJobEntity.setApplyTo(CustomUserDetailsService.convertToDateViaInstant(job.getApplyTo()));
+        openjobJobEntity.setApplyTo(CommonUtils.convertToDateViaInstant(job.getApplyTo()));
         openjobJobEntity.setAccountId(1);
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
@@ -331,7 +314,7 @@ public class JobController {
         openjobJobEntity.setCompanyId(openjobCompanyId);
 
         // Set Attribute
-        openjobJobEntity.setCreateDate(CustomUserDetailsService.convertToDateViaInstant(job.getCreateDate()));
+        openjobJobEntity.setCreateDate(CommonUtils.convertToDateViaInstant(job.getCreateDate()));
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
