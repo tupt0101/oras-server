@@ -69,6 +69,8 @@ public class JobEntity implements Serializable {
     private String category;
     private String processedJd;
 
+    private Integer totalApplication;
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -320,5 +322,13 @@ public class JobEntity implements Serializable {
 
     public void setProcessedJd(String processedJd) {
         this.processedJd = processedJd;
+    }
+
+    public Integer getTotalApplication() {
+        return totalApplication;
+    }
+
+    public void setTotalApplication(Integer totalApplication) {
+        this.totalApplication = totalApplication;
     }
 }

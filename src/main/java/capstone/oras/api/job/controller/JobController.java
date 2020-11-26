@@ -103,8 +103,6 @@ public class JobController {
     @RequestMapping(value = "/job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
-        List<JobEntity> lst = jobService.getJobByCreatorId(id);
-        lst.sort(Comparator.comparingInt(JobEntity::getId).reversed());
         return new ResponseEntity<List<JobEntity>>(jobService.getJobByCreatorId(id), HttpStatus.OK);
     }
 
