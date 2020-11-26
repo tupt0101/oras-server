@@ -28,7 +28,7 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer> {
             "       where ja.job_id = j.id) as total_application " +
             "from job j " +
             "where j.status = 'Published'" +
-            "and j.id = creatorId " +
+            "and j.creator_id = ?1 " +
             "group by j.id " +
             "order by j.id;",
             nativeQuery = true)

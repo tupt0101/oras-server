@@ -122,6 +122,8 @@ public class JobService implements IJobService {
         for (JobEntity job : lstJob) {
             job.setTotalApplication(lstNoApp.get(i++)[1]);
         }
+
+
         return lstJob;
     }
 

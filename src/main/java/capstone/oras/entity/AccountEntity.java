@@ -33,6 +33,8 @@ public class AccountEntity implements Serializable {
     private CompanyEntity companyById;
     @ApiModelProperty(hidden = true)
     private Collection<PurchaseEntity> purchasesById;
+    @ApiModelProperty(hidden = true)
+    private Collection<ActivityEntity> activitiesById;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -180,5 +182,15 @@ public class AccountEntity implements Serializable {
 
     public void setPurchasesById(Collection<PurchaseEntity> purchasesById) {
         this.purchasesById = purchasesById;
+    }
+
+    @OneToMany(mappedBy = "accountById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference (value = "account-activity")
+    public Collection<ActivityEntity> getActivitiesById() {
+        return activitiesById;
+    }
+
+    public void setActivitiesById(Collection<ActivityEntity> activitiesById) {
+        this.activitiesById = activitiesById;
     }
 }
