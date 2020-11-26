@@ -75,9 +75,9 @@ public class JobApplicationService implements IJobApplicationService{
 
     @Override
     public String calcSimilarity(Integer id) {
-        if (!iJobRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job does not exist");
-        }
+//        if (!iJobRepository.existsById(id)) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job does not exist");
+//        }
         String uri = AI_PROCESS_HOST + "/calc/similarity";
         // Create HttpEntity
         HttpHeaders headers = new HttpHeaders();
@@ -85,8 +85,8 @@ public class JobApplicationService implements IJobApplicationService{
         headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
         Optional<JobEntity> job = iJobRepository.findById(id);
         String jd = job.get().getProcessedJd();
-        Integer ojId = job.get().getOpenjobJobId();
-        CalcSimilarityRequest request = new CalcSimilarityRequest(ojId, jd);
+        Integer job_id = job.get().getId();
+        CalcSimilarityRequest request = new CalcSimilarityRequest(job_id, jd);
         HttpEntity entity = new HttpEntity(request, headers);
         // Call process
         try {

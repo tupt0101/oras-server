@@ -144,8 +144,11 @@ public class JobApplicationController {
 
     @RequestMapping(value = "/job-application-rank-cv", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<String> rankApplication(@RequestBody Integer id) {
-        return new ResponseEntity<>(jobApplicationService.calcSimilarity(id), HttpStatus.OK);
+    ResponseEntity<List<JobApplicationEntity>> rankApplication(@RequestBody Integer id) {
+        jobApplicationService.calcSimilarity(id);
+        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobId(id);
+        jobApplicationEntityList.sort(Comparator.comparingDouble(JobApplicationEntity::getMatchingRate).reversed());
+        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationEntityList, HttpStatus.OK);
     }
 
 

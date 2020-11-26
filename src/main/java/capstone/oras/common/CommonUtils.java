@@ -9,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,9 +19,7 @@ public class CommonUtils {
     }
 
     public static Date convertToDateViaInstant(LocalDateTime dateToConvert) {
-        return (Date) java.util.Date
-                .from(dateToConvert.atZone(ZoneId.systemDefault())
-                        .toInstant());
+        return java.sql.Date.valueOf(dateToConvert.toLocalDate());
     }
 
     public static LocalDateTime convertToLocalDateTimeViaSqlTimestamp(Date dateToConvert) {

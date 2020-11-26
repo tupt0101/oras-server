@@ -6,7 +6,6 @@ import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
 import capstone.oras.common.CommonUtils;
-import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.CategoryEntity;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
@@ -58,11 +57,11 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> createJob(@RequestBody JobEntity job) {
         JobEntity jobEntity = jobService.createJob(job);
-        ActivityEntity activityEntity = new ActivityEntity();
-        activityEntity.setCreatorId(job.getCreatorId());
-        activityEntity.setTime(java.time.LocalDateTime.now());
-        activityEntity.setTitle("Create Job Draft");
-        activityService.createActivity(activityEntity);
+//        ActivityEntity activityEntity = new ActivityEntity();
+//        activityEntity.setCreatorId(job.getCreatorId());
+//        activityEntity.setTime(java.time.LocalDateTime.now());
+//        activityEntity.setTitle("Create Job Draft");
+//        activityService.createActivity(activityEntity);
         return new ResponseEntity<>(jobEntity, HttpStatus.OK);
     }
 
