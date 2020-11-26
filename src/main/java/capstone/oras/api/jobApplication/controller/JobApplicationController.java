@@ -156,7 +156,11 @@ public class JobApplicationController {
         CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = "Bearer " + userDetailsService.getOpenJobToken();
         // post company to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + jobService.getJobById(jobId).getOpenjobJobId();
+        Integer ojId = jobService.getJobById(jobId).getOpenjobJobId();
+        if (ojId == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This job have not published yet");
+        }
+        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + ojId;
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);

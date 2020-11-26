@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
@@ -96,16 +97,32 @@ public class JobService implements IJobService {
 
     @Override
     public List<JobEntity> getOpenJob() {
-        if (IJobRepository.findAllByStatus(PUBLISHED).isPresent()) {
-            return IJobRepository.findAllByStatus(PUBLISHED).get();
-        } else return null;
+        List<Integer[]> lstNoApp = IJobRepository.findEntityAndTotalApplication();
+        if (lstNoApp.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
+        }
+        List<JobEntity> lstJob = IJobRepository.findAllByStatus(PUBLISHED).get();
+        lstJob.sort(Comparator.comparingInt(JobEntity::getId));
+        int i = 0;
+        for (JobEntity job : lstJob) {
+            job.setTotalApplication(lstNoApp.get(i++)[1]);
+        }
+        return lstJob;
     }
 
     @Override
     public List<JobEntity> getJobByCreatorId(int id) {
-        if(IJobRepository.findJobEntitiesByCreatorIdEquals(id).isPresent()) {
-            return IJobRepository.findJobEntitiesByCreatorIdEquals(id).get();
-        } else return null;
+        List<Integer[]> lstNoApp = IJobRepository.findEntityAndTotalApplication(id);
+        if (lstNoApp.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
+        }
+        List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEquals(id).get();
+        lstJob.sort(Comparator.comparingInt(JobEntity::getId));
+        int i = 0;
+        for (JobEntity job : lstJob) {
+            job.setTotalApplication(lstNoApp.get(i++)[1]);
+        }
+        return lstJob;
     }
 
     @Override
@@ -127,7 +144,7 @@ public class JobService implements IJobService {
         return processedJD == null ? "" : processedJD.getPrc_jd();
     }
 
-    private void jobValidation(JobEntity job){
+    private void jobValidation(JobEntity job) {
         if (job.getCreatorId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
         }
