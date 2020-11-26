@@ -1,17 +1,35 @@
 package capstone.oras.api.jobApplication.service;
 
+import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.IJobApplicationRepository;
+import capstone.oras.dao.IJobRepository;
 import capstone.oras.entity.JobApplicationEntity;
+import capstone.oras.entity.JobEntity;
+import capstone.oras.model.oras_ai.CalcSimilarityRequest;
+import capstone.oras.model.oras_ai.CalcSimilarityResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
+import static capstone.oras.common.Constant.AI_PROCESS_HOST;
 
 @Service
 public class JobApplicationService implements IJobApplicationService{
 
     @Autowired
     private IJobApplicationRepository IJobApplicationRepository;
+    @Autowired
+    private IJobRepository iJobRepository;
+    RestTemplate restTemplate = CommonUtils.initRestTemplate();
 
     @Override
     public JobApplicationEntity createJobApplication(JobApplicationEntity jobApplicationEntity) {
@@ -52,4 +70,30 @@ public class JobApplicationService implements IJobApplicationService{
         if(IJobApplicationRepository.findJobApplicationEntitiesByJobIdEqualsAndCandidateIdEquals(jobId, candiateId).isPresent()) {
             return IJobApplicationRepository.findJobApplicationEntitiesByJobIdEqualsAndCandidateIdEquals(jobId, candiateId).get();
         } else return null;    }
+
+
+
+    @Override
+    public String calcSimilarity(Integer id) {
+        if (!iJobRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job does not exist");
+        }
+        String uri = AI_PROCESS_HOST + "/calc/similarity";
+        // Create HttpEntity
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
+        Optional<JobEntity> job = iJobRepository.findById(id);
+        String jd = job.get().getProcessedJd();
+        Integer ojId = job.get().getOpenjobJobId();
+        CalcSimilarityRequest request = new CalcSimilarityRequest(ojId, jd);
+        HttpEntity entity = new HttpEntity(request, headers);
+        // Call process
+        try {
+            CalcSimilarityResponse ret = restTemplate.postForEntity(uri, entity, CalcSimilarityResponse.class).getBody();
+            return ret.getMessage();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No applications to process");
+        }
+    }
 }
