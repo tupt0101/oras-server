@@ -116,7 +116,7 @@ public class JobService implements IJobService {
         if (lstNoApp.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
         }
-        List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEquals(id).get();
+        List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(id, PUBLISHED).get();
         lstJob.sort(Comparator.comparingInt(JobEntity::getId));
         int i = 0;
         for (JobEntity job : lstJob) {
