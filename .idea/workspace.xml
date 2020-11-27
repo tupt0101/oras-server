@@ -37,7 +37,14 @@
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/9d65121b-188a-462b-a7e9-d61a635c6d46.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9d65121b-188a-462b-a7e9-d61a635c6d46.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/oras.iml" beforeDir="false" afterPath="$PROJECT_DIR$/oras.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/api/job/controller/JobController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/api/job/controller/JobController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/dao/IJobRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/dao/IJobRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/oauth2/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/oauth2/controller/LoginController.java" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,6 +202,7 @@
       <workItem from="1603594664864" duration="3851000" />
       <workItem from="1603617570602" duration="5457000" />
       <workItem from="1603661058596" duration="72000" />
+<<<<<<< Updated upstream
       <workItem from="1603759688317" duration="882000" />
       <workItem from="1603816338069" duration="590000" />
       <workItem from="1603932577996" duration="152000" />
@@ -202,6 +210,15 @@
       <workItem from="1603981886307" duration="897000" />
       <workItem from="1604038667604" duration="666000" />
       <workItem from="1604311403436" duration="3396000" />
+=======
+      <workItem from="1604389002294" duration="47000" />
+      <workItem from="1604476490308" duration="2382000" />
+      <workItem from="1604502365619" duration="89000" />
+      <workItem from="1604942971146" duration="249000" />
+      <workItem from="1606396368909" duration="1265000" />
+      <workItem from="1606403909805" duration="4628000" />
+      <workItem from="1606464471272" duration="4540000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
@@ -264,6 +281,7 @@
     <state x="463" y="118" key="FileChooserDialogImpl" timestamp="1604327402978">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
+<<<<<<< Updated upstream
     <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1602590481625" />
     <state width="1323" height="420" key="GridCell.Tab.0.bottom" timestamp="1603661130683">
       <screen x="0" y="0" width="1366" height="728" />
@@ -298,21 +316,57 @@
     </state>
     <state width="1323" height="420" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1603661130683" />
     <state width="1323" height="229" key="GridCell.Tab.2.bottom" timestamp="1603523133048">
+=======
+    <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1604477116412" />
+    <state width="1323" height="190" key="GridCell.Tab.0.bottom" timestamp="1606468511519">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="229" key="GridCell.Tab.2.bottom/0.0.1366.728@0.0.1366.728" timestamp="1603523133048" />
-    <state width="1323" height="229" key="GridCell.Tab.2.center" timestamp="1603523133048">
+    <state width="1323" height="190" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1606468511519" />
+    <state width="1323" height="190" key="GridCell.Tab.0.center" timestamp="1606468511519">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="229" key="GridCell.Tab.2.center/0.0.1366.728@0.0.1366.728" timestamp="1603523133048" />
-    <state width="1323" height="229" key="GridCell.Tab.2.left" timestamp="1603523133048">
+    <state width="1323" height="190" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1606468511519" />
+    <state width="1323" height="190" key="GridCell.Tab.0.left" timestamp="1606468511519">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="229" key="GridCell.Tab.2.left/0.0.1366.728@0.0.1366.728" timestamp="1603523133048" />
-    <state width="1323" height="229" key="GridCell.Tab.2.right" timestamp="1603523133048">
+    <state width="1323" height="190" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1606468511519" />
+    <state width="1323" height="190" key="GridCell.Tab.0.right" timestamp="1606468511519">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="229" key="GridCell.Tab.2.right/0.0.1366.728@0.0.1366.728" timestamp="1603523133048" />
+    <state width="1323" height="190" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1606468511519" />
+    <state width="0" height="0" key="GridCell.Tab.1.bottom" timestamp="1606468511455">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1606468511455" />
+    <state width="0" height="0" key="GridCell.Tab.1.center" timestamp="1606468511455">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1606468511455" />
+    <state width="0" height="0" key="GridCell.Tab.1.left" timestamp="1606468511455">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1606468511455" />
+    <state width="0" height="0" key="GridCell.Tab.1.right" timestamp="1606468511455">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1606468511455" />
+    <state width="0" height="0" key="GridCell.Tab.2.bottom" timestamp="1606468511456">
+>>>>>>> Stashed changes
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.2.bottom/0.0.1366.728@0.0.1366.728" timestamp="1606468511456" />
+    <state width="0" height="0" key="GridCell.Tab.2.center" timestamp="1606468511455">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.2.center/0.0.1366.728@0.0.1366.728" timestamp="1606468511455" />
+    <state width="0" height="0" key="GridCell.Tab.2.left" timestamp="1606468511455">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.2.left/0.0.1366.728@0.0.1366.728" timestamp="1606468511455" />
+    <state width="0" height="0" key="GridCell.Tab.2.right" timestamp="1606468511455">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.2.right/0.0.1366.728@0.0.1366.728" timestamp="1606468511455" />
     <state x="213" y="18" key="Maven.ArtifactSearchDialog" timestamp="1603647152075">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -393,6 +447,14 @@
           <url>file://$PROJECT_DIR$/src/main/java/capstone/oras/account/validator/AccountValidator.java</url>
           <line>23</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/capstone/oras/api/job/controller/JobController.java</url>
+          <line>114</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
