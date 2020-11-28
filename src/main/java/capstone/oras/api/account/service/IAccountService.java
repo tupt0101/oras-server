@@ -11,4 +11,5 @@ public interface IAccountService {
     List<AccountEntity> getAllAccount();
     AccountEntity findAccountByEmail(String email);
     AccountEntity findAccountEntityById(int id);
+    AccountEntity findAccountByCompanyId(int id);
 }

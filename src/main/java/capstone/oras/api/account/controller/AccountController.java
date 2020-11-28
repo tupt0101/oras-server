@@ -94,8 +94,8 @@ public class AccountController {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             HttpEntity entity = new HttpEntity(headers);
-            CompanyEntity openJobEntity = restTemplate.exchange(uri,HttpMethod.GET, entity, CompanyEntity.class).getBody();
-            if(openJobEntity == null) {
+            CompanyEntity openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+            if (openJobEntity == null) {
                 OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
                 openjobCompanyEntity.setAccountId(1);
                 openjobCompanyEntity.setAvatar(signup.companyEntity.getAvatar());
@@ -107,7 +107,6 @@ public class AccountController {
                 openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
 
 
-
                 uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
                 HttpEntity<OpenjobCompanyEntity> httpCompanyEntity = new HttpEntity<>(openjobCompanyEntity, headers);
                 openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
@@ -117,12 +116,32 @@ public class AccountController {
             }
 
 
-
+            signup.companyEntity.setVerified(false);
             CompanyEntity companyEntity = companyService.createCompany(signup.companyEntity);
             signup.accountEntity.setCompanyId(companyEntity.getId());
+            signup.accountEntity.setActive(false);
             return new ResponseEntity<>(accountService.createAccount(signup.accountEntity), HttpStatus.OK);
         }
     }
+
+    @RequestMapping(value = "/activate-account/{id}", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<AccountEntity> activeAccountViaCompany(@PathVariable("id") int companyId) {
+
+        if (companyId == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id is empty");
+        } else if(companyService.findCompanyById(companyId) == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company doesn't exist");
+        }
+        // refactor code de update 1 field thoi dung native query nang cao hieu suat
+        CompanyEntity companyEntity = companyService.findCompanyById(companyId);
+        companyEntity.setVerified(true);
+        companyService.updateCompany(companyEntity);
+        AccountEntity accountEntity = accountService.findAccountByCompanyId(companyId);
+        accountEntity.setActive(true);
+        return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/account", method = RequestMethod.PUT)
     @ResponseBody

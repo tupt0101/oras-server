@@ -37,7 +37,6 @@ public class AccountService implements IAccountService {
 
     @Override
     public AccountEntity createAccount(AccountEntity accountEntity) {
-        accountEntity.setActive(true);
         accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
         return IAccountRepository.save(accountEntity);
     }
@@ -66,6 +65,12 @@ public class AccountService implements IAccountService {
             return IAccountRepository.findById(id).get();
         } else return null;
     }
+
+    @Override
+    public AccountEntity findAccountByCompanyId(int id) {
+        if (IAccountRepository.findAccountEntityByCompanyIdEquals(id).isPresent()) {
+            return IAccountRepository.findAccountEntityByCompanyIdEquals(id).get();
+        } else return null;    }
 
 
 //    @Override
