@@ -1,5 +1,7 @@
 package capstone.oras.entity;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -13,8 +15,11 @@ public class AccountPackageEntity {
     private Integer purchaseId;
     private LocalDateTime validTo;
     private Integer numOfPost;
+    @ApiModelProperty(hidden = true)
     private AccountEntity accountById;
+    @ApiModelProperty(hidden = true)
     private PackageEntity packageById;
+    @ApiModelProperty(hidden = true)
     private PurchaseEntity purchaseById;
 
     @Id

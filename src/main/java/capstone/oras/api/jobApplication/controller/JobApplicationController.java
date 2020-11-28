@@ -137,8 +137,9 @@ public class JobApplicationController {
     @RequestMapping(value = "/job-applications-by-job-id/{jobId}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@PathVariable("jobId") int jobId) {
-
-        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.findJobApplicationsByJobId(jobId), HttpStatus.OK);
+        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobId(jobId);
+        jobApplicationEntityList.sort(Comparator.comparingDouble(JobApplicationEntity::getMatchingRate).reversed());
+        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationEntityList, HttpStatus.OK);
 
     }
 

@@ -35,6 +35,7 @@ public class AccountEntity implements Serializable {
     private Collection<PurchaseEntity> purchasesById;
     @ApiModelProperty(hidden = true)
     private Collection<ActivityEntity> activitiesById;
+    @ApiModelProperty(hidden = true)
     private Collection<AccountPackageEntity> accountPackageById;
 
     @Id

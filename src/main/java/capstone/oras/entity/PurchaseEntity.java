@@ -22,6 +22,7 @@ public class PurchaseEntity {
     private AccountEntity accountById;
     @ApiModelProperty(hidden = true)
     private AccountPackageEntity accountPackageById;
+    @ApiModelProperty(hidden = true)
     private AccountEntity accountByAccountId;
 
     @Id

@@ -1,5 +1,7 @@
 package capstone.oras.entity;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -11,8 +13,10 @@ public class ActivityEntity {
     private String title;
     private int creatorId;
     private LocalDateTime time;
+    @ApiModelProperty(hidden = true)
     private AccountEntity accountById;
     private int jobId;
+    @ApiModelProperty(hidden = true)
     private JobEntity jobById;
 
     @Id
