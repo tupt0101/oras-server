@@ -149,7 +149,7 @@ public class JobController {
         LocalDateTime expireDate = job.getExpireDate();
         expireDate.plusDays(date);
         job.setExpireDate(expireDate);
-        return new ResponseEntity<JobEntity>( this.jobService.updateJob(job);, HttpStatus.OK);
+        return new ResponseEntity<JobEntity>( this.jobService.updateJob(job), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job/{id}/publish", method = RequestMethod.PUT)
