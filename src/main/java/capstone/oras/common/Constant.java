@@ -8,5 +8,8 @@ public class Constant {
         public static final String PUBLISHED = "Published";
         public static final String CLOSED = "Closed";
     }
+    public static class ApplicantStatus {
+        public static final String HIRED = "Hired";
+    }
 }
 

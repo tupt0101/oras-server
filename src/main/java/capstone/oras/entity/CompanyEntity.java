@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -21,7 +20,6 @@ public class CompanyEntity {
     @ApiModelProperty(hidden = true)
     private AccountEntity accountById;
     @ApiModelProperty(hidden = true)
-    private Collection<CompanyPackageEntity> companyPackagesById;
     private Integer openjobCompanyId;
 
     @Id
@@ -136,15 +134,7 @@ public class CompanyEntity {
         this.accountById = accountById;
     }
 
-    @OneToMany(mappedBy = "companyById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference (value = "company-company_package")
-    public Collection<CompanyPackageEntity> getCompanyPackagesById() {
-        return companyPackagesById;
-    }
 
-    public void setCompanyPackagesById(Collection<CompanyPackageEntity> companyPackagesById) {
-        this.companyPackagesById = companyPackagesById;
-    }
 
     @Basic
     @Column(name = "openjob_company_id")

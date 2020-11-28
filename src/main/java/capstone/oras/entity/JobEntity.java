@@ -36,10 +36,10 @@ public class JobEntity implements Serializable {
     private Boolean salaryHidden;
     @JsonProperty("vacancies")
     private Integer vacancies;
-    @ApiModelProperty(example = "2020-09-28")
+    @ApiModelProperty(example = "2020-12-23T17:00:00")
     @JsonProperty("applyFrom")
     private LocalDateTime applyFrom;
-    @ApiModelProperty(example = "2020-10-28")
+    @ApiModelProperty(example = "2020-12-23T17:00:00")
     @JsonProperty("applyTo")
     private LocalDateTime applyTo;
     @ApiModelProperty(example = "1", value = "should be a valid id")
@@ -51,7 +51,7 @@ public class JobEntity implements Serializable {
     @ApiModelProperty(example = "Draft")
     @JsonProperty("status")
     private String status;
-    @ApiModelProperty(example = "2020-09-28")
+    @ApiModelProperty(example = "2020-12-23T17:00:00")
     @JsonProperty("createDate")
     private LocalDateTime createDate;
     @ApiModelProperty(hidden = true)
@@ -68,8 +68,8 @@ public class JobEntity implements Serializable {
     private Integer openjobJobId;
     private String category;
     private String processedJd;
-
     private Integer totalApplication;
+    private LocalDateTime expireDate;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -158,6 +158,7 @@ public class JobEntity implements Serializable {
         return applyFrom;
     }
 
+
     public void setApplyFrom(LocalDateTime applyFrom) {
         this.applyFrom = applyFrom;
     }
@@ -171,6 +172,7 @@ public class JobEntity implements Serializable {
     public void setApplyTo(LocalDateTime applyTo) {
         this.applyTo = applyTo;
     }
+
 
     @Basic
     @Column(name = "talent_pool_id", nullable = true)
@@ -207,6 +209,7 @@ public class JobEntity implements Serializable {
     public LocalDateTime getCreateDate() {
         return createDate;
     }
+
 
     public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
@@ -255,7 +258,6 @@ public class JobEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
-//    @JsonManagedReference (value =  "job-creator")
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }
@@ -324,11 +326,23 @@ public class JobEntity implements Serializable {
         this.processedJd = processedJd;
     }
 
+    @Basic
+    @Column(name = "total_application")
     public Integer getTotalApplication() {
         return totalApplication;
     }
 
     public void setTotalApplication(Integer totalApplication) {
         this.totalApplication = totalApplication;
+    }
+
+    @Basic
+    @Column(name = "expire_date")
+    public LocalDateTime getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(LocalDateTime expireDate) {
+        this.expireDate = expireDate;
     }
 }

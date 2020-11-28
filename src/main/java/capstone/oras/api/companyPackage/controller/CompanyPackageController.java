@@ -5,7 +5,9 @@ import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.companyPackage.service.ICompanyPackageService;
 import capstone.oras.api.packages.service.IPackageService;
 import capstone.oras.api.purchase.service.IPurchaseService;
-import capstone.oras.entity.CompanyPackageEntity;
+import capstone.oras.entity.AccountPackageEntity;
+import capstone.oras.entity.PurchaseEntity;
+import capstone.oras.entity.model.PurchaseCompanyPagkage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,74 +39,66 @@ public class CompanyPackageController {
 
     @RequestMapping(value = "/company-package", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<CompanyPackageEntity> createCompanyPackage(@RequestBody CompanyPackageEntity companyPackageEntity) {
-        if (companyPackageEntity.getPackageId() == null) {
-
+    ResponseEntity<AccountPackageEntity> createCompanyPackage(@RequestBody PurchaseCompanyPagkage purchaseCompanyPagkage) {
+        if (purchaseCompanyPagkage.getAccountPackageEntity().getPackageId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Package Id is empty");
-        } else if (companyPackageEntity.getCompanyId() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id is empty");
-        } else if (companyPackageEntity.getPurchaseId() == null) {
+        } else if (purchaseCompanyPagkage.getAccountPackageEntity().getPurchaseId() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase Id is empty");
-        } else if (companyPackageEntity.getValidTo() == null) {
+        } else if (purchaseCompanyPagkage.getAccountPackageEntity().getValidTo() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valid To is empty");
-        } else if (purchaseService.findPurchaseById(companyPackageEntity.getPurchaseId()) == null) {
+        } else if (purchaseService.findPurchaseById(purchaseCompanyPagkage.getAccountPackageEntity().getPurchaseId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase Id doesn't exist");
-        } else if (companyService.findCompanyById(companyPackageEntity.getCompanyId()) == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id doesn't exist");
-        } else if (packageService.findPackageById(companyPackageEntity.getPackageId()) == null) {
+        } else if (packageService.findPackageById(purchaseCompanyPagkage.getAccountPackageEntity().getPackageId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Package Id doesn't exist");
         }
-        return new ResponseEntity<>(companyPackageService.createCompanyPackage(companyPackageEntity), HttpStatus.OK);
-
+        PurchaseEntity purchaseEntity = purchaseService.createPurchase(purchaseCompanyPagkage.getPurchaseEntity());
+        AccountPackageEntity companyPackage = new AccountPackageEntity();
+        companyPackage = purchaseCompanyPagkage.getAccountPackageEntity();
+        companyPackage.setPurchaseId(purchaseEntity.getId());
+        companyPackage = companyPackageService.createCompanyPackage(companyPackage);
+        return new ResponseEntity<>(companyPackage, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/company-package", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<CompanyPackageEntity> updateCompanyPackage(@RequestBody CompanyPackageEntity companyPackageEntity) {
-        if (companyPackageEntity.getPackageId() == null) {
+    ResponseEntity<AccountPackageEntity> updateCompanyPackage(@RequestBody AccountPackageEntity accountPackageEntity) {
+        if (accountPackageEntity.getPackageId() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Package Id is empty");
-        } else if (companyPackageEntity.getCompanyId() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id is empty");
-        } else if (companyPackageEntity.getPurchaseId() == null) {
+        } else if (accountPackageEntity.getPurchaseId() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase Id is empty");
-        } else if (companyPackageEntity.getValidTo() == null) {
+        } else if (accountPackageEntity.getValidTo() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valid To is empty");
-        } else if (purchaseService.findPurchaseById(companyPackageEntity.getPurchaseId()) == null) {
+        } else if (purchaseService.findPurchaseById(accountPackageEntity.getPurchaseId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase Id doesn't exist");
-        } else if (companyService.findCompanyById(companyPackageEntity.getCompanyId()) == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id doesn't exist");
-        } else if (packageService.findPackageById(companyPackageEntity.getPackageId()) == null) {
+        } else if (packageService.findPackageById(accountPackageEntity.getPackageId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Package Id doesn't exist");
         }
-        return new ResponseEntity<>(companyPackageService.updateCompanyPackage(companyPackageEntity), HttpStatus.OK);
+        return new ResponseEntity<>(companyPackageService.updateCompanyPackage(accountPackageEntity), HttpStatus.OK);
 
     }
 
     @RequestMapping(value = "/company-packages", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<CompanyPackageEntity>> getAllCompanyPackage() {
-        List<CompanyPackageEntity> lst = companyPackageService.getAllCompanyPackage();
-        lst.sort(Comparator.comparingInt(CompanyPackageEntity::getCompanyId));
-        return new ResponseEntity<List<CompanyPackageEntity>>(lst, HttpStatus.OK);
+    ResponseEntity<List<AccountPackageEntity>> getAllCompanyPackage() {
+        List<AccountPackageEntity> lst = companyPackageService.getAllCompanyPackage();
+        lst.sort(Comparator.comparingInt(AccountPackageEntity::getAccountId));
+        return new ResponseEntity<List<AccountPackageEntity>>(lst, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/company-package/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<CompanyPackageEntity> getCompanyPackageById(@PathVariable("id") int id) {
-        return new ResponseEntity<CompanyPackageEntity>(companyPackageService.findCompanyPackageById(id), HttpStatus.OK);
+    ResponseEntity<AccountPackageEntity> getCompanyPackageById(@PathVariable("id") int id) {
+        return new ResponseEntity<AccountPackageEntity>(companyPackageService.findCompanyPackageById(id), HttpStatus.OK);
     }
+
 }

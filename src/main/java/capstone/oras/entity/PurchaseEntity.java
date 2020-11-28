@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -15,14 +14,15 @@ public class PurchaseEntity {
     private String payerId;
     private String token;
     private Integer amount;
-    @ApiModelProperty(example = "2020-09-28")
+    @ApiModelProperty(example = "2020-12-23T17:00:00")
     private LocalDateTime purchaseDate;
     private String status;
     private Integer accountId;
     @ApiModelProperty(hidden = true)
     private AccountEntity accountById;
     @ApiModelProperty(hidden = true)
-    private Collection<CompanyPackageEntity> companyPackagesById;
+    private AccountPackageEntity accountPackageById;
+    private AccountEntity accountByAccountId;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -76,7 +76,6 @@ public class PurchaseEntity {
         this.purchaseDate = purchaseDate;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -126,14 +125,14 @@ public class PurchaseEntity {
         this.accountById = accountById;
     }
 
-
-    @OneToMany(mappedBy = "companyById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference(value = "purchase-company_package")
-    public Collection<CompanyPackageEntity> getCompanyPackagesById() {
-        return companyPackagesById;
+    @OneToOne(mappedBy = "purchaseById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "purchase-accountpackage")
+    public AccountPackageEntity getAccountPackageById() {
+        return accountPackageById;
     }
 
-    public void setCompanyPackagesById(Collection<CompanyPackageEntity> companyPackagesById) {
-        this.companyPackagesById = companyPackagesById;
+    public void setAccountPackageById(AccountPackageEntity accountPackagesById) {
+        this.accountPackageById = accountPackageById;
     }
+
 }

@@ -16,7 +16,7 @@ public class JobApplicationEntity implements Serializable {
     private Integer candidateId;
     private Double matchingRate;
     private String cv;
-    @ApiModelProperty(example = "2020-09-28")
+    @ApiModelProperty(example = "2020-12-23T17:00:00")
     private LocalDateTime applyDate;
     @ApiModelProperty(example = "1")
     private Integer talentPoolId;

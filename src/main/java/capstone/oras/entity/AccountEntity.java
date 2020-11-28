@@ -35,6 +35,7 @@ public class AccountEntity implements Serializable {
     private Collection<PurchaseEntity> purchasesById;
     @ApiModelProperty(hidden = true)
     private Collection<ActivityEntity> activitiesById;
+    private Collection<AccountPackageEntity> accountPackageById;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -192,5 +193,16 @@ public class AccountEntity implements Serializable {
 
     public void setActivitiesById(Collection<ActivityEntity> activitiesById) {
         this.activitiesById = activitiesById;
+    }
+
+
+    @OneToMany(mappedBy = "accountById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "account-accountpackage")
+    public Collection<AccountPackageEntity> getAccountPackageById() {
+        return accountPackageById;
+    }
+
+    public void setAccountPackageById(Collection<AccountPackageEntity> accountPackageById) {
+        this.accountPackageById = accountPackageById;
     }
 }

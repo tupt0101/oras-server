@@ -18,7 +18,7 @@ public class PackageEntity {
     private String currency;
     private String description;
     @ApiModelProperty(hidden = true)
-    private Collection<CompanyPackageEntity> companyPackagesById;
+    private Collection<AccountPackageEntity> accountPackagesById;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -111,13 +111,13 @@ public class PackageEntity {
     }
 
 
-    @OneToMany(mappedBy = "companyById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference(value = "package-company_package")
-    public Collection<CompanyPackageEntity> getCompanyPackagesById() {
-        return companyPackagesById;
+    @OneToMany(mappedBy = "accountById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "package-accountpackage")
+    public Collection<AccountPackageEntity> getAccountPackagesById() {
+        return accountPackagesById;
     }
 
-    public void setCompanyPackagesById(Collection<CompanyPackageEntity> companyPackagesById) {
-        this.companyPackagesById = companyPackagesById;
+    public void setAccountPackagesById(Collection<AccountPackageEntity> accountPackagesById) {
+        this.accountPackagesById = accountPackagesById;
     }
 }

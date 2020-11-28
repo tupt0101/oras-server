@@ -24,10 +24,8 @@ public class PurchaseController {
 
     @RequestMapping(value = "/purchase", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<PurchaseEntity> createPackage(@RequestBody PurchaseEntity purchaseEntity) {
-
+    ResponseEntity<PurchaseEntity> createPurchase(@RequestBody PurchaseEntity purchaseEntity) {
         return new ResponseEntity<>(purchaseService.createPurchase(purchaseEntity), HttpStatus.OK);
-
     }
 
     @RequestMapping(value = "/purchase", method = RequestMethod.PUT)

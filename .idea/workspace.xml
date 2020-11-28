@@ -35,11 +35,32 @@
   <component name="ChangeListManager">
     <list default="true" id="a626e92b-47d1-4c0d-91d5-d4c351b17ac3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/oras.iml" beforeDir="false" afterPath="$PROJECT_DIR$/oras.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/META-INF/persistence.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/api/companyPackage/controller/CompanyPackageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/api/companyPackage/controller/CompanyPackageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/api/companyPackage/service/CompanyPackageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/api/companyPackage/service/CompanyPackageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/api/companyPackage/service/ICompanyPackageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/api/companyPackage/service/ICompanyPackageService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/api/job/controller/JobController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/api/job/controller/JobController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/api/purchase/controller/PurchaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/api/purchase/controller/PurchaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/common/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/common/Constant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/dao/ICompanyPackageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/dao/ICompanyPackageRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/AccountEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/AccountEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/CompanyEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/CompanyEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/CompanyPackageEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/AccountPackageEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobApplicationEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobApplicationEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/JobEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/PackageEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/PackageEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/PurchaseEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/PurchaseEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/oauth2/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/oauth2/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/oras-0.0.1-SNAPSHOT-spring-boot.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/oras-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/oras-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/oras-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/oras-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-capstone.oras.OrasApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-capstone.oras.OrasApplicationTests.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/capstone.oras.OrasApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/capstone.oras.OrasApplicationTests.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +69,11 @@
   </component>
   <component name="CodeInsightWorkspaceSettings">
     <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="DatabaseLocalColorSettings">
+    <colors>
+      <entry key="ee224efd-a13e-45d8-b657-7b22db2d883a" value="Blue" />
+    </colors>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -69,7 +95,7 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="C:\Users\Admin\.m2\wrapper\dists\apache-maven-3.6.3-bin\1iopthnavndlasol9gbrbg6bf2\apache-maven-3.6.3" />
+        <option name="mavenHome" value="C:\Users\dell\.m2\wrapper\dists\apache-maven-3.6.3-bin\1iopthnavndlasol9gbrbg6bf2\apache-maven-3.6.3" />
       </MavenGeneralSettings>
     </option>
   </component>
@@ -83,7 +109,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="postgresql" />
-    <property name="JPA.DatabaseSchemaImportDialog" value="dcd30c10-1cfe-4ba1-aa39-164bb7c31926" />
+    <property name="JPA.DatabaseSchemaImportDialog" value="ee224efd-a13e-45d8-b657-7b22db2d883a" />
     <property name="RequestMappingsPanelOrder0" value="0" />
     <property name="RequestMappingsPanelOrder1" value="1" />
     <property name="RequestMappingsPanelOrder2" value="2" />
@@ -96,7 +122,7 @@
     <property name="com.intellij.database.dataSource.DataSourceTemplate" value="SQL Server (Microsoft)" />
     <property name="database.data.extractors.current.id" value="HTML Table" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/capstone/oras" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../db67ot35cl90oe_public_job.tsv" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/capstone/oras/entity" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
@@ -110,21 +136,23 @@
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="capstone.oras.oauth2" />
+    </key>
+    <key name="ImportMappingsDialog.RecentPackages">
+      <recent name="" />
+      <recent name="capstone.oras.entity" />
+      <recent name="capstone.oras" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="capstone.oras.dao" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\fpt\capstone\code\oras\oras-server\src\main\java\capstone\oras\entity" />
       <recent name="D:\fpt\capstone\code\oras-server\src\main\java\capstone\oras\oauth2" />
       <recent name="D:\fpt\capstone\code\oras-server\src\main\resources" />
       <recent name="D:\fpt\capstone\code\oras-server\src\main\java\capstone\oras" />
       <recent name="D:\fpt\capstone\code\oras-server\src\main\java\META-INF" />
-    </key>
-    <key name="ImportMappingsDialog.RecentPackages">
-      <recent name="" />
-      <recent name="capstone.oras" />
-    </key>
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="capstone.oras.oauth2" />
     </key>
   </component>
   <component name="RunManager">
@@ -158,35 +186,12 @@
       </method>
     </configuration>
   </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:oras@ec2-54-84-98-18.compute-1.amazonaws.com" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-              </path>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:oras@ec2-54-84-98-18.compute-1.amazonaws.com" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="com.intellij.database.console.session.MessageBusSession@6b8ecb8" type="9fbbdea:ServiceModel$ServiceNode" />
-              </path>
-            </expand>
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
-  </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f34921ba-fcea-4d33-a896-ca9998b78d52" name="Default Changelist" comment="" />
       <created>1600699345462</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -236,132 +241,135 @@
       <workItem from="1604476490308" duration="2382000" />
       <workItem from="1604502365619" duration="89000" />
       <workItem from="1606378165524" duration="4799000" />
+      <workItem from="1606475106500" duration="27655000" />
+      <workItem from="1606558958552" duration="465000" />
+      <workItem from="1606559503417" duration="2808000" />
+      <workItem from="1606562380077" duration="9692000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="309" y="42" key="#Inspections" timestamp="1601980007797">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="309" y="42" key="#Inspections/0.0.1366.728@0.0.1366.728" timestamp="1601980007797" />
-    <state x="308" y="25" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606310760622">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="274" y="22" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1603513950734" />
-    <state x="308" y="25" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1606310760622" />
-    <state x="549" y="89" key="#com.intellij.ide.util.MemberChooser" timestamp="1606382998971">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1603177327737" />
-    <state x="549" y="89" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1606382998971" />
-    <state x="444" y="92" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1600722050963">
+    <state x="274" y="22" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606568235721">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="444" y="92" key="#com.intellij.ide.util.PackageChooserDialog/0.0.1366.728@0.0.1366.728" timestamp="1600722050963" />
+    <state x="274" y="22" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1606568235721" />
+    <state x="308" y="25" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1606310760622" />
+    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser" timestamp="1606566247205">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1606566247205" />
+    <state x="549" y="89" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1606382998971" />
+    <state x="444" y="92" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1606559339454">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="444" y="92" key="#com.intellij.ide.util.PackageChooserDialog/0.0.1366.728@0.0.1366.728" timestamp="1606559339454" />
     <state x="413" y="154" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1603513938291">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="413" y="154" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1366.728@0.0.1366.728" timestamp="1603513938291" />
-    <state x="397" y="0" width="794" height="756" key="#com.intellij.jpa.generation.ui.DatabaseSchemaImportDialog" timestamp="1606382779686">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="353" y="0" width="794" height="756" key="#com.intellij.jpa.generation.ui.DatabaseSchemaImportDialog" timestamp="1606568240891">
+      <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="353" y="0" width="722" height="634" key="#com.intellij.jpa.generation.ui.DatabaseSchemaImportDialog/0.0.1366.728@0.0.1366.728" timestamp="1600975060607" />
+    <state x="353" y="0" width="722" height="634" key="#com.intellij.jpa.generation.ui.DatabaseSchemaImportDialog/0.0.1366.728@0.0.1366.728" timestamp="1606568240891" />
     <state x="397" y="0" width="794" height="756" key="#com.intellij.jpa.generation.ui.DatabaseSchemaImportDialog/0.0.1536.824@0.0.1536.824" timestamp="1606382779686" />
     <state x="466" y="232" width="433" height="269" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1601827856599">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="466" y="232" width="433" height="269" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1366.728@0.0.1366.728" timestamp="1601827856599" />
-    <state x="396" y="66" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1600875014225">
+    <state x="349" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1606558245074">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="396" y="66" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1366.728@0.0.1366.728" timestamp="1600875014225" />
+    <state x="349" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1366.728@0.0.1366.728" timestamp="1606558245074" />
     <state x="413" y="110" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1601856352462">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="413" y="110" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728@0.0.1366.728" timestamp="1601856352462" />
-    <state x="303" y="110" key="#xdebugger.evaluate" timestamp="1602717776467">
+    <state x="85" y="97" width="490" height="581" key="#xdebugger.evaluate" timestamp="1606476702112">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="303" y="110" key="#xdebugger.evaluate/0.0.1366.728@0.0.1366.728" timestamp="1602717776467" />
-    <state x="624" y="175" key="FileChooserDialogImpl" timestamp="1606385284243">
-      <screen x="0" y="0" width="1842" height="1080" />
+    <state x="85" y="97" width="490" height="581" key="#xdebugger.evaluate/0.0.1366.728@0.0.1366.728" timestamp="1606476702112" />
+    <state x="463" y="118" key="FileChooserDialogImpl" timestamp="1606567166023">
+      <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1604477116412" />
-    <state width="1493" height="218" key="GridCell.Tab.0.bottom" timestamp="1606322053622">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1606567166023" />
+    <state width="1323" height="267" key="GridCell.Tab.0.bottom" timestamp="1606570688529">
+      <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="202" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1604919864410" />
+    <state width="1323" height="267" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1606570688529" />
     <state width="1493" height="218" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
-    <state width="1493" height="218" key="GridCell.Tab.0.center" timestamp="1606322053622">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1323" height="202" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1604919864409" />
-    <state width="1493" height="218" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
-    <state width="1493" height="218" key="GridCell.Tab.0.left" timestamp="1606322053622">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1323" height="202" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1604919864409" />
-    <state width="1493" height="218" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
-    <state width="1493" height="218" key="GridCell.Tab.0.right" timestamp="1606322053622">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1323" height="202" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1604919864410" />
-    <state width="1493" height="218" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
-    <state width="1493" height="218" key="GridCell.Tab.1.bottom" timestamp="1606322053623">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1323" height="202" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1604919864410" />
-    <state width="1493" height="218" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
-    <state width="1493" height="218" key="GridCell.Tab.1.center" timestamp="1606322053622">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1323" height="202" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1604919864410" />
-    <state width="1493" height="218" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
-    <state width="1493" height="218" key="GridCell.Tab.1.left" timestamp="1606322053622">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1323" height="202" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1604919864410" />
-    <state width="1493" height="218" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
-    <state width="1493" height="218" key="GridCell.Tab.1.right" timestamp="1606322053622">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1323" height="202" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1604919864410" />
-    <state width="1493" height="218" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
-    <state width="1323" height="229" key="GridCell.Tab.2.bottom" timestamp="1603523133048">
+    <state width="1323" height="267" key="GridCell.Tab.0.center" timestamp="1606570688529">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="229" key="GridCell.Tab.2.bottom/0.0.1366.728@0.0.1366.728" timestamp="1603523133048" />
+    <state width="1323" height="267" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1606570688529" />
+    <state width="1493" height="218" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
+    <state width="1323" height="267" key="GridCell.Tab.0.left" timestamp="1606570688529">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="267" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1606570688529" />
+    <state width="1493" height="218" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
+    <state width="1323" height="267" key="GridCell.Tab.0.right" timestamp="1606570688529">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="267" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1606570688529" />
+    <state width="1493" height="218" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
+    <state width="1323" height="321" key="GridCell.Tab.1.bottom" timestamp="1606567230845">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="321" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1606567230845" />
+    <state width="1493" height="218" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
+    <state width="1323" height="321" key="GridCell.Tab.1.center" timestamp="1606567230845">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="321" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1606567230845" />
+    <state width="1493" height="218" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
+    <state width="1323" height="321" key="GridCell.Tab.1.left" timestamp="1606567230845">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="321" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1606567230845" />
+    <state width="1493" height="218" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
+    <state width="1323" height="321" key="GridCell.Tab.1.right" timestamp="1606567230845">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="321" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1606567230845" />
+    <state width="1493" height="218" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1606322053622" />
+    <state width="1323" height="2" key="GridCell.Tab.2.bottom" timestamp="1606558890066">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="2" key="GridCell.Tab.2.bottom/0.0.1366.728@0.0.1366.728" timestamp="1606558890066" />
     <state width="1799" height="366" key="GridCell.Tab.2.bottom/0.0.1842.1080@0.0.1842.1080" timestamp="1606398591330" />
-    <state width="1799" height="366" key="GridCell.Tab.2.center" timestamp="1606398591330">
-      <screen x="0" y="0" width="1842" height="1080" />
+    <state width="1323" height="2" key="GridCell.Tab.2.center" timestamp="1606558890065">
+      <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="229" key="GridCell.Tab.2.center/0.0.1366.728@0.0.1366.728" timestamp="1603523133048" />
+    <state width="1323" height="2" key="GridCell.Tab.2.center/0.0.1366.728@0.0.1366.728" timestamp="1606558890065" />
     <state width="1799" height="366" key="GridCell.Tab.2.center/0.0.1842.1080@0.0.1842.1080" timestamp="1606398591330" />
-    <state width="1799" height="366" key="GridCell.Tab.2.left" timestamp="1606398591330">
-      <screen x="0" y="0" width="1842" height="1080" />
+    <state width="1323" height="2" key="GridCell.Tab.2.left" timestamp="1606558890065">
+      <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="229" key="GridCell.Tab.2.left/0.0.1366.728@0.0.1366.728" timestamp="1603523133048" />
+    <state width="1323" height="2" key="GridCell.Tab.2.left/0.0.1366.728@0.0.1366.728" timestamp="1606558890065" />
     <state width="1799" height="366" key="GridCell.Tab.2.left/0.0.1842.1080@0.0.1842.1080" timestamp="1606398591330" />
-    <state width="1799" height="366" key="GridCell.Tab.2.right" timestamp="1606398591330">
-      <screen x="0" y="0" width="1842" height="1080" />
+    <state width="1323" height="2" key="GridCell.Tab.2.right" timestamp="1606558890066">
+      <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="229" key="GridCell.Tab.2.right/0.0.1366.728@0.0.1366.728" timestamp="1603523133048" />
+    <state width="1323" height="2" key="GridCell.Tab.2.right/0.0.1366.728@0.0.1366.728" timestamp="1606558890066" />
     <state width="1799" height="366" key="GridCell.Tab.2.right/0.0.1842.1080@0.0.1842.1080" timestamp="1606398591330" />
     <state x="213" y="18" key="Maven.ArtifactSearchDialog" timestamp="1603647152075">
       <screen x="0" y="0" width="1366" height="728" />
@@ -408,14 +416,11 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="92" y="92" width="1182" height="544" key="dock-window-2/0.0.1366.728@0.0.1366.728" timestamp="1602783621716" />
-    <state x="437" y="110" width="661" height="671" key="find.popup" timestamp="1606380396234">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
     <state x="651" y="306" key="extract.method.dialog/0.0.1842.1080@0.0.1842.1080" timestamp="1606375845022" />
-    <state x="828" y="130" width="792" height="879" key="find.popup" timestamp="1606381432451">
-      <screen x="0" y="0" width="1842" height="1080" />
+    <state x="389" y="97" width="587" height="592" key="find.popup" timestamp="1606558878199">
+      <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="389" y="97" width="587" height="592" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1602783998681" />
+    <state x="389" y="97" width="587" height="592" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1606558878199" />
     <state x="437" y="110" width="661" height="671" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1606380396234" />
     <state x="462" y="76" key="git4idea.branch.GitSmartOperationDialog" timestamp="1603601314267">
       <screen x="0" y="0" width="1366" height="728" />
@@ -458,11 +463,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/capstone/oras/account/validator/AccountValidator.java</url>
           <line>23</line>
           <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/capstone/oras/api/job/service/JobService.java</url>
-          <line>120</line>
-          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
