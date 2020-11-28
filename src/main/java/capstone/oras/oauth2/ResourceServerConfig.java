@@ -25,6 +25,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/","/home","/register","/login"
                         ,"/swagger-ui**","/v2/api-docs", "/webjars/**"
                         ,"/swagger-resources/**","/configuration/**"
+                        ,"/v1/account-management/account"
                         ,"/linkedin/**"
                         ,"**"
                         ,"/v1/paypal/pay/**","/pay/**").permitAll()
