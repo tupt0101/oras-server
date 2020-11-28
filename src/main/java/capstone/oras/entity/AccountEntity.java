@@ -37,6 +37,7 @@ public class AccountEntity implements Serializable {
     private Collection<ActivityEntity> activitiesById;
     @ApiModelProperty(hidden = true)
     private Collection<AccountPackageEntity> accountPackageById;
+    private String phoneNo;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -95,10 +96,6 @@ public class AccountEntity implements Serializable {
         return role;
     }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
-
 //    @Override
 //    public boolean equals(Object o) {
 //        if (this == o) return true;
@@ -116,6 +113,9 @@ public class AccountEntity implements Serializable {
 //        return Objects.hash(id, email, password, fullname, active);
 //    }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -142,10 +142,6 @@ public class AccountEntity implements Serializable {
         return jobsById;
     }
 
-    public void setJobsById(Collection<JobEntity> jobsById) {
-        this.jobsById = jobsById;
-    }
-
 //    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @JsonBackReference (value = "mail-creator")
 //    public Collection<MailTemplateEntity> getMailTemplatesById() {
@@ -155,6 +151,10 @@ public class AccountEntity implements Serializable {
 //    public void setMailTemplatesById(Collection<MailTemplateEntity> mailTemplatesById) {
 //        this.mailTemplatesById = mailTemplatesById;
 //    }
+
+    public void setJobsById(Collection<JobEntity> jobsById) {
+        this.jobsById = jobsById;
+    }
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", referencedColumnName = "id", insertable=false, updatable=false)
@@ -196,7 +196,6 @@ public class AccountEntity implements Serializable {
         this.activitiesById = activitiesById;
     }
 
-
     @OneToMany(mappedBy = "accountById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference(value = "account-accountpackage")
     public Collection<AccountPackageEntity> getAccountPackageById() {
@@ -205,5 +204,15 @@ public class AccountEntity implements Serializable {
 
     public void setAccountPackageById(Collection<AccountPackageEntity> accountPackageById) {
         this.accountPackageById = accountPackageById;
+    }
+
+    @Basic
+    @Column(name = "phone_no")
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 }

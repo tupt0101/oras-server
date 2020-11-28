@@ -21,6 +21,7 @@ public class CompanyEntity {
     private AccountEntity accountById;
     @ApiModelProperty(hidden = true)
     private Integer openjobCompanyId;
+    private Boolean verified;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -134,8 +135,6 @@ public class CompanyEntity {
         this.accountById = accountById;
     }
 
-
-
     @Basic
     @Column(name = "openjob_company_id")
     public Integer getOpenjobCompanyId() {
@@ -144,5 +143,15 @@ public class CompanyEntity {
 
     public void setOpenjobCompanyId(Integer openjobCompanyId) {
         this.openjobCompanyId = openjobCompanyId;
+    }
+
+    @Basic
+    @Column(name = "verified")
+    public Boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
     }
 }
