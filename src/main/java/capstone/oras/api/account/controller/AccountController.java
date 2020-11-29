@@ -98,13 +98,27 @@ public class AccountController {
             if (openJobEntity == null) {
                 OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
                 openjobCompanyEntity.setAccountId(1);
-                openjobCompanyEntity.setAvatar(signup.companyEntity.getAvatar());
-                openjobCompanyEntity.setDescription(signup.companyEntity.getDescription());
-                openjobCompanyEntity.setEmail(signup.companyEntity.getEmail());
-                openjobCompanyEntity.setLocation(signup.companyEntity.getLocation());
-                openjobCompanyEntity.setName(signup.companyEntity.getName());
-                openjobCompanyEntity.setPhoneNo(signup.companyEntity.getPhoneNo());
-                openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
+                if(!signup.companyEntity.getAvatar().isEmpty() || signup.companyEntity.getAvatar() != null) {
+                    openjobCompanyEntity.setAvatar(signup.companyEntity.getAvatar());
+                }
+                if(!signup.companyEntity.getDescription().isEmpty() || signup.companyEntity.getDescription() != null) {
+                    openjobCompanyEntity.setDescription(signup.companyEntity.getDescription());
+                }
+                if(!signup.companyEntity.getEmail().isEmpty() || signup.companyEntity.getEmail() != null) {
+                    openjobCompanyEntity.setEmail(signup.companyEntity.getEmail());
+                }
+                if(!signup.companyEntity.getLocation().isEmpty() || signup.companyEntity.getLocation() != null) {
+                    openjobCompanyEntity.setLocation(signup.companyEntity.getLocation());
+                }
+                if(!signup.companyEntity.getName().isEmpty() || signup.companyEntity.getName() != null) {
+                    openjobCompanyEntity.setName(signup.companyEntity.getName());
+                }
+                if(!signup.companyEntity.getPhoneNo().isEmpty() || signup.companyEntity.getPhoneNo() != null) {
+                    openjobCompanyEntity.setPhoneNo(signup.companyEntity.getPhoneNo());
+                }
+                if(!signup.companyEntity.getTaxCode().isEmpty() || signup.companyEntity.getTaxCode() != null) {
+                    openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
+                }
 
 
                 uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
