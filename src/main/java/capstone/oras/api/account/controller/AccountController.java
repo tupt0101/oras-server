@@ -64,6 +64,7 @@ public class AccountController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<AccountEntity> signup(@RequestBody Signup signup) {
+        System.out.println(signup);
         if (signup.accountEntity.getEmail() == null || signup.accountEntity.getEmail().isEmpty()) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
