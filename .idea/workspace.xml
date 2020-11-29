@@ -46,6 +46,9 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/dao/IJobApplicationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/dao/IJobApplicationRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/openjob/OpenjobJobApplicationEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/openjob/OpenjobJobApplicationEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/openjob/OpenjobJobEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/entity/openjob/OpenjobJobEntity.java" afterDir="false" />
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -233,7 +236,13 @@
       <workItem from="1606559503417" duration="2808000" />
       <workItem from="1606562380077" duration="10411000" />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       <workItem from="1606587626871" duration="441000" />
+=======
+      <workItem from="1606620213655" duration="1880000" />
+      <workItem from="1606622186258" duration="94000" />
+      <workItem from="1606637584630" duration="13909000" />
+>>>>>>> Stashed changes
 =======
       <workItem from="1606620213655" duration="1880000" />
       <workItem from="1606622186258" duration="94000" />
