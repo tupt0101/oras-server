@@ -5,7 +5,6 @@ import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
-import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.*;
 import capstone.oras.entity.model.Statistic;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
@@ -17,11 +16,14 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
 import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
+import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
 
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
@@ -168,7 +170,7 @@ public class JobController {
         accountPackageEntity.setNumOfPost(numOfPost - 1);
         job.setStatus(PUBLISHED);
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-        openjobJobEntity.setApplyTo(CommonUtils.convertToDateViaInstant(job.getApplyTo()));
+        openjobJobEntity.setApplyTo(job.getApplyTo());
         openjobJobEntity.setAccountId(1);
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
@@ -176,7 +178,7 @@ public class JobController {
         System.out.println(accountService.findAccountEntityById(job.getCreatorId()).toString());
         int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
         openjobJobEntity.setCompanyId(openjobCompanyId);
-        openjobJobEntity.setCreateDate(CommonUtils.convertToDateViaInstant(job.getCreateDate()));
+        openjobJobEntity.setCreateDate(job.getCreateDate());
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
@@ -258,7 +260,7 @@ public class JobController {
         JobEntity jobEntity = jobService.createJob(job);
 
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-        openjobJobEntity.setApplyTo(CommonUtils.convertToDateViaInstant(job.getApplyTo()));
+        openjobJobEntity.setApplyTo(job.getApplyTo());
         openjobJobEntity.setAccountId(1);
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
@@ -268,7 +270,7 @@ public class JobController {
         openjobJobEntity.setCompanyId(openjobCompanyId);
 
 
-        openjobJobEntity.setCreateDate(CommonUtils.convertToDateViaInstant(job.getCreateDate()));
+        openjobJobEntity.setCreateDate(job.getCreateDate());
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
@@ -353,7 +355,7 @@ public class JobController {
         }
 
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-        openjobJobEntity.setApplyTo(CommonUtils.convertToDateViaInstant(job.getApplyTo()));
+        openjobJobEntity.setApplyTo(job.getApplyTo());
         openjobJobEntity.setAccountId(1);
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
@@ -363,7 +365,7 @@ public class JobController {
         openjobJobEntity.setCompanyId(openjobCompanyId);
 
         // Set Attribute
-        openjobJobEntity.setCreateDate(CommonUtils.convertToDateViaInstant(job.getCreateDate()));
+        openjobJobEntity.setCreateDate(job.getCreateDate());
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
