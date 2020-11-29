@@ -2,51 +2,24 @@
 <project version="4">
   <component name="dataSourceStorageLocal">
     <data-source name="ORAS@oras.cdntglzasifp.ap-southeast-1.rds.amazonaws.com" uuid="9d65121b-188a-462b-a7e9-d61a635c6d46">
-      <database-info product="Microsoft SQL Server" version="14.00.3281" jdbc-version="4.2" driver-name="Microsoft JDBC Driver 7.4 for SQL Server" driver-version="7.4.1.0" dbms="MSSQL" exact-version="14.0.3281">
-        <extra-name-characters>$#@</extra-name-characters>
-        <identifier-quote-string>&quot;</identifier-quote-string>
-      </database-info>
-      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
-      <secret-storage>master_key</secret-storage>
-      <user-name>admin</user-name>
-      <schema-mapping>
-        <introspection-scope>
-          <node kind="database" qname="ORAS">
-            <node kind="schema" qname="@" />
-          </node>
-        </introspection-scope>
-      </schema-mapping>
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MSSQL" exact-version="0" />
+      <schema-mapping />
     </data-source>
     <data-source name="NewPersistenceUnit/Hibernate" uuid="2ef5a72c-87d0-415e-b1d5-ba85b7a741c3">
-      <database-info product="Microsoft SQL Server" version="14.00.3281" jdbc-version="4.2" driver-name="Microsoft JDBC Driver 8.2 for SQL Server" driver-version="8.2.2.0" dbms="MSSQL" exact-version="14.0.3281" exact-driver-version="8.2">
-        <extra-name-characters>$#@</extra-name-characters>
-        <identifier-quote-string>&quot;</identifier-quote-string>
-      </database-info>
-      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
-      <user-name>admin</user-name>
-      <schema-mapping>
-        <introspection-scope>
-          <node kind="database" qname="@">
-            <node kind="schema" qname="@" />
-          </node>
-        </introspection-scope>
-      </schema-mapping>
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MSSQL" exact-version="0" />
+      <schema-mapping />
     </data-source>
     <data-source name="db67ot35cl90oe@ec2-54-84-98-18.compute-1.amazonaws.com [2]" uuid="ee224efd-a13e-45d8-b657-7b22db2d883a">
       <database-info product="PostgreSQL" version="12.4 (Ubuntu 12.4-1.pgdg16.04+1)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.2.5" dbms="POSTGRES" exact-version="12.4" exact-driver-version="42.2">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
       <user-name>ornphnuodjuqxc</user-name>
       <schema-mapping>
         <introspection-scope>
-          <node negative="1">
-            <node kind="database" qname="@">
-              <node kind="schema" qname="@" />
-            </node>
-            <node kind="database" qname="db67ot35cl90oe">
-              <node kind="schema" negative="1" />
-            </node>
+          <node kind="database" qname="@">
+            <node kind="schema" qname="@" />
           </node>
         </introspection-scope>
       </schema-mapping>
