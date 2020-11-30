@@ -1,6 +1,7 @@
 package capstone.oras.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
@@ -9,13 +10,14 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "account", schema = "dbo", catalog = "ORAS")
+@Table(name = "account", schema = "public", catalog = "db67ot35cl90oe")
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class AccountEntity implements Serializable {
     private int id;
     @ApiModelProperty(example = "example@mail.com")
     private String email;
     @ApiModelProperty(example = "123456")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @ApiModelProperty(example = "Nguyen Nhan Cu")
     private String fullname;
@@ -24,10 +26,18 @@ public class AccountEntity implements Serializable {
     private String role;
     @ApiModelProperty(hidden = true)
     private Collection<JobEntity> jobsById;
+//    @ApiModelProperty(hidden = true)
+//    private Collection<MailTemplateEntity> mailTemplatesById;
+    private Integer companyId;
     @ApiModelProperty(hidden = true)
-    private Collection<MailTemplateEntity> mailTemplatesById;
-
-
+    private CompanyEntity companyById;
+    @ApiModelProperty(hidden = true)
+    private Collection<PurchaseEntity> purchasesById;
+    @ApiModelProperty(hidden = true)
+    private Collection<ActivityEntity> activitiesById;
+    @ApiModelProperty(hidden = true)
+    private Collection<AccountPackageEntity> accountPackageById;
+    private String phoneNo;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -86,6 +96,23 @@ public class AccountEntity implements Serializable {
         return role;
     }
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        AccountEntity that = (AccountEntity) o;
+//        return id == that.id &&
+//                Objects.equals(email, that.email) &&
+//                Objects.equals(password, that.password) &&
+//                Objects.equals(fullname, that.fullname) &&
+//                Objects.equals(active, that.active);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(id, email, password, fullname, active);
+//    }
+
     public void setRole(String role) {
         this.role = role;
     }
@@ -99,12 +126,14 @@ public class AccountEntity implements Serializable {
                 Objects.equals(email, that.email) &&
                 Objects.equals(password, that.password) &&
                 Objects.equals(fullname, that.fullname) &&
-                Objects.equals(active, that.active);
+                Objects.equals(active, that.active) &&
+                Objects.equals(role, that.role) &&
+                Objects.equals(companyId, that.companyId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, fullname, active);
+        return Objects.hash(id, email, password, fullname, active, role, companyId);
     }
 
     @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -113,17 +142,77 @@ public class AccountEntity implements Serializable {
         return jobsById;
     }
 
+//    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JsonBackReference (value = "mail-creator")
+//    public Collection<MailTemplateEntity> getMailTemplatesById() {
+//        return mailTemplatesById;
+//    }
+//
+//    public void setMailTemplatesById(Collection<MailTemplateEntity> mailTemplatesById) {
+//        this.mailTemplatesById = mailTemplatesById;
+//    }
+
     public void setJobsById(Collection<JobEntity> jobsById) {
         this.jobsById = jobsById;
     }
 
-    @OneToMany(mappedBy = "accountByCreatorId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference (value = "mail-creator")
-    public Collection<MailTemplateEntity> getMailTemplatesById() {
-        return mailTemplatesById;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_id", referencedColumnName = "id", insertable=false, updatable=false)
+    public CompanyEntity getCompanyById() {
+        return companyById;
     }
 
-    public void setMailTemplatesById(Collection<MailTemplateEntity> mailTemplatesById) {
-        this.mailTemplatesById = mailTemplatesById;
+    public void setCompanyById(CompanyEntity companyById) {
+        this.companyById = companyById;
+    }
+
+    @Basic
+    @Column(name = "company_id")
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
+
+    @OneToMany(mappedBy = "accountById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference (value = "account-purchase")
+    public Collection<PurchaseEntity> getPurchasesById() {
+        return purchasesById;
+    }
+
+    public void setPurchasesById(Collection<PurchaseEntity> purchasesById) {
+        this.purchasesById = purchasesById;
+    }
+
+    @OneToMany(mappedBy = "accountById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference (value = "account-activity")
+    public Collection<ActivityEntity> getActivitiesById() {
+        return activitiesById;
+    }
+
+    public void setActivitiesById(Collection<ActivityEntity> activitiesById) {
+        this.activitiesById = activitiesById;
+    }
+
+    @OneToMany(mappedBy = "accountById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "account-accountpackage")
+    public Collection<AccountPackageEntity> getAccountPackageById() {
+        return accountPackageById;
+    }
+
+    public void setAccountPackageById(Collection<AccountPackageEntity> accountPackageById) {
+        this.accountPackageById = accountPackageById;
+    }
+
+    @Basic
+    @Column(name = "phone_no")
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 }

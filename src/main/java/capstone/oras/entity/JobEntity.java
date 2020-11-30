@@ -1,50 +1,75 @@
 package capstone.oras.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "job", schema = "dbo", catalog = "ORAS")
+@Table(name = "job", schema = "public", catalog = "db67ot35cl90oe")
 //@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class JobEntity implements Serializable {
     @ApiModelProperty()
+    @JsonProperty("id")
     private int id;
     @ApiModelProperty(example = "Coder")
+    @JsonProperty("title")
     private String title;
     @ApiModelProperty(example = "Code a lot")
+    @JsonProperty("description")
     private String description;
     @ApiModelProperty(example = "500")
+    @JsonProperty("salaryFrom")
     private Double salaryFrom;
     @ApiModelProperty(example = "1500")
+    @JsonProperty("salaryTo")
     private Double salaryTo;
     @ApiModelProperty(example = "$")
+    @JsonProperty("currency")
     private String currency;
+    @JsonProperty("salaryHidden")
     private Boolean salaryHidden;
+    @JsonProperty("vacancies")
     private Integer vacancies;
-    @ApiModelProperty(example = "2020-09-28")
-    private Date applyFrom;
-    @ApiModelProperty(example = "2020-10-28")
-    private Date applyTo;
+    @ApiModelProperty(example = "2020-12-23T17:00:00")
+    @JsonProperty("applyFrom")
+    private LocalDateTime applyFrom;
+    @ApiModelProperty(example = "2020-12-23T17:00:00")
+    @JsonProperty("applyTo")
+    private LocalDateTime applyTo;
     @ApiModelProperty(example = "1", value = "should be a valid id")
+    @JsonProperty("talentPoolId")
     private Integer talentPoolId;
     @ApiModelProperty(example = "1", value = "should be a valid id")
+    @JsonProperty("creatorId")
     private Integer creatorId;
-    @ApiModelProperty(example = "open")
+    @ApiModelProperty(example = "Draft")
+    @JsonProperty("status")
     private String status;
-    @ApiModelProperty(example = "2020-09-28")
-    private Date createDate;
+    @ApiModelProperty(example = "2020-12-23T17:00:00")
+    @JsonProperty("createDate")
+    private LocalDateTime createDate;
     @ApiModelProperty(hidden = true)
+    @JsonProperty("talentPoolByTalentPoolId")
     private TalentPoolEntity talentPoolByTalentPoolId;
+    @JsonProperty("accountByCreatorId")
     @ApiModelProperty(hidden = true)
     private AccountEntity accountByCreatorId;
     @ApiModelProperty(hidden = true)
+    @JsonProperty("jobApplicationsById")
     private Collection<JobApplicationEntity> jobApplicationsById;
+    private String jobType;
+    private String location;
+    private Integer openjobJobId;
+    private String category;
+    private String processedJd;
+    private Integer totalApplication;
+    private LocalDateTime expireDate;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -129,23 +154,25 @@ public class JobEntity implements Serializable {
 
     @Basic
     @Column(name = "apply_from", nullable = true)
-    public Date getApplyFrom() {
+    public LocalDateTime getApplyFrom() {
         return applyFrom;
     }
 
-    public void setApplyFrom(Date applyFrom) {
+
+    public void setApplyFrom(LocalDateTime applyFrom) {
         this.applyFrom = applyFrom;
     }
 
     @Basic
     @Column(name = "apply_to", nullable = true)
-    public Date getApplyTo() {
+    public LocalDateTime getApplyTo() {
         return applyTo;
     }
 
-    public void setApplyTo(Date applyTo) {
+    public void setApplyTo(LocalDateTime applyTo) {
         this.applyTo = applyTo;
     }
+
 
     @Basic
     @Column(name = "talent_pool_id", nullable = true)
@@ -179,11 +206,12 @@ public class JobEntity implements Serializable {
 
     @Basic
     @Column(name = "create_date", nullable = true)
-    public Date getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
@@ -205,12 +233,16 @@ public class JobEntity implements Serializable {
                 Objects.equals(talentPoolId, jobEntity.talentPoolId) &&
                 Objects.equals(creatorId, jobEntity.creatorId) &&
                 Objects.equals(status, jobEntity.status) &&
-                Objects.equals(createDate, jobEntity.createDate);
+                Objects.equals(createDate, jobEntity.createDate) &&
+                Objects.equals(jobType, jobEntity.jobType) &&
+                Objects.equals(location, jobEntity.location) &&
+                Objects.equals(openjobJobId, jobEntity.openjobJobId) &&
+                Objects.equals(category, jobEntity.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, talentPoolId, creatorId, status, createDate);
+        return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, talentPoolId, creatorId, status, createDate, jobType, location, openjobJobId, category);
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -226,7 +258,6 @@ public class JobEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)
-//    @JsonManagedReference (value =  "job-creator")
     public AccountEntity getAccountByCreatorId() {
         return accountByCreatorId;
     }
@@ -243,5 +274,75 @@ public class JobEntity implements Serializable {
 
     public void setJobApplicationsById(Collection<JobApplicationEntity> jobApplicationsById) {
         this.jobApplicationsById = jobApplicationsById;
+    }
+
+    @Basic
+    @Column(name = "job_type")
+    public String getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(String jobType) {
+        this.jobType = jobType;
+    }
+
+    @Basic
+    @Column(name = "location")
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    @Basic
+    @Column(name = "openjob_job_id")
+    public Integer getOpenjobJobId() {
+        return openjobJobId;
+    }
+
+    public void setOpenjobJobId(Integer openjobJobId) {
+        this.openjobJobId = openjobJobId;
+    }
+
+    @Basic
+    @Column(name = "category")
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    @Basic
+    @Column(name = "processed_jd")
+    public String getProcessedJd() {
+        return processedJd;
+    }
+
+    public void setProcessedJd(String processedJd) {
+        this.processedJd = processedJd;
+    }
+
+    @Basic
+    @Column(name = "total_application")
+    public Integer getTotalApplication() {
+        return totalApplication;
+    }
+
+    public void setTotalApplication(Integer totalApplication) {
+        this.totalApplication = totalApplication;
+    }
+
+    @Basic
+    @Column(name = "expire_date")
+    public LocalDateTime getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(LocalDateTime expireDate) {
+        this.expireDate = expireDate;
     }
 }

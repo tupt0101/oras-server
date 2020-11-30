@@ -22,13 +22,8 @@ public class LoginController {
 //    @ResponseBody
 //    @CrossOrigin(origins = "http://localhost:8088")
     ResponseEntity<String>  login(@RequestParam("username") String email, @RequestParam("password") String password) throws Exception {
-<<<<<<< Updated upstream
-//        String url = "http://localhost:8088/oauth/token";
+//        String url = "http://localhost:8080/oauth/token";
         String url = "https://oras-api.herokuapp.com/oauth/token";
-=======
-        String url = "http://localhost:8080/oauth/token";
-//        String url = "https://oras-api.herokuapp.com/oauth/token";
->>>>>>> Stashed changes
         URL obj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
 //        HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
@@ -57,4 +52,5 @@ public class LoginController {
         String access_token = jsonObject.getString("access_token");
         return new ResponseEntity<>(access_token, HttpStatus.OK);
     }
+
 }

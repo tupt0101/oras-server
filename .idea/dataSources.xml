@@ -17,5 +17,11 @@ D:/fpt/capstone/code/oras-server/src/main/java/META-INF/persistence.xml</remarks
       <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
       <jdbc-url>jdbc:sqlserver://oras.cdntglzasifp.ap-southeast-1.rds.amazonaws.com\oras:1433;database=ORAS</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="db67ot35cl90oe@ec2-54-84-98-18.compute-1.amazonaws.com [2]" uuid="ee224efd-a13e-45d8-b657-7b22db2d883a">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ec2-54-84-98-18.compute-1.amazonaws.com:5432/db67ot35cl90oe</jdbc-url>
+    </data-source>
   </component>
 </project>

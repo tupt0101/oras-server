@@ -7,10 +7,13 @@
         <class>capstone.oras.entity.JobApplicationEntity</class>
         <class>capstone.oras.entity.MailTemplateEntity</class>
         <class>capstone.oras.entity.TalentPoolEntity</class>
+        <class>capstone.oras.entity.AccountPackageEntity</class>
+        <class>capstone.oras.entity.CompanyEntity</class>
+        <class>capstone.oras.entity.PurchaseEntity</class>
         <properties>
             <property name="hibernate.connection.url"
-                      value="jdbc:sqlserver://oras.cdntglzasifp.ap-southeast-1.rds.amazonaws.com\oras:1433;database=ORAS"/>
-            <property name="hibernate.connection.driver_class" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+                      value="jdbc:postgresql://ec2-54-84-98-18.compute-1.amazonaws.com:5432/db67ot35cl90oe"/>
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
         </properties>
     </persistence-unit>
 </persistence>
