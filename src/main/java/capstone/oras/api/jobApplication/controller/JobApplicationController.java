@@ -5,7 +5,6 @@ import capstone.oras.api.candidate.service.ICandidateService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.IJobApplicationService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
-import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
@@ -202,17 +201,24 @@ public class JobApplicationController {
 
 
             //need to check if application already exist(check by candidateID and jobId if exist bot
-           if (jobApplicationService.findJobApplicationsByJobIdAndCandidateId(jobId, candidateId ) == null) {
-               jobApplicationEntity.setApplyDate(CommonUtils.convertToLocalDateTimeViaSqlTimestamp(openjobJobApplication.getApplyAt()));
+            JobApplicationEntity tempJobApplication = jobApplicationService.findJobApplicationByJobIdAndCandidateId(jobId, candidateId );
+           if (tempJobApplication == null) {
+               jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
 //            jobApplicationEntity.setCandidateId(openjobJobApplication.getAccountId());
                jobApplicationEntity.setCv(openjobJobApplication.getCv());
                jobApplicationEntity.setJobId(jobId);
                jobApplicationEntity.setSource("openjob");
+               jobApplicationEntity.setMatchingRate(0.0);
                jobApplicationEntity.setTalentPoolId(talentPoolId);
 //               jobApplicationEntity.setId(openjobJobApplication.getId());
                jobApplicationEntity.setStatus("Applied");
                jobApplicationsOras.add(jobApplicationEntity);
-           }
+           } else if(!tempJobApplication.getApplyDate().isEqual(openjobJobApplication.getApplyAt()) ) {
+               tempJobApplication.setApplyDate(openjobJobApplication.getApplyAt());
+               tempJobApplication.setCv(openjobJobApplication.getCv());
+               tempJobApplication.setMatchingRate(0.0);
+               jobApplicationsOras.add(tempJobApplication);
+          }
 
 
         }

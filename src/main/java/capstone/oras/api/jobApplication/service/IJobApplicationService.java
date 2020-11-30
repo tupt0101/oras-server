@@ -13,4 +13,6 @@ public interface IJobApplicationService {
     List<JobApplicationEntity> findJobApplicationsByJobId(int id);
     List<JobApplicationEntity> findJobApplicationsByJobIdAndCandidateId(int jobId,int candiateId);
     String calcSimilarity(Integer id);
+    JobApplicationEntity findJobApplicationByJobIdAndCandidateId(int jobId,int candidateId);
+
 }

@@ -23,7 +23,7 @@ import java.util.Optional;
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
 
 @Service
-public class JobApplicationService implements IJobApplicationService{
+public class JobApplicationService implements IJobApplicationService {
 
     @Autowired
     private IJobApplicationRepository IJobApplicationRepository;
@@ -60,17 +60,17 @@ public class JobApplicationService implements IJobApplicationService{
 
     @Override
     public List<JobApplicationEntity> findJobApplicationsByJobId(int id) {
-        if(IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id).isPresent()) {
+        if (IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id).isPresent()) {
             return IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id).get();
         } else return null;
     }
 
     @Override
     public List<JobApplicationEntity> findJobApplicationsByJobIdAndCandidateId(int jobId, int candiateId) {
-        if(IJobApplicationRepository.findJobApplicationEntitiesByJobIdEqualsAndCandidateIdEquals(jobId, candiateId).isPresent()) {
+        if (IJobApplicationRepository.findJobApplicationEntitiesByJobIdEqualsAndCandidateIdEquals(jobId, candiateId).isPresent()) {
             return IJobApplicationRepository.findJobApplicationEntitiesByJobIdEqualsAndCandidateIdEquals(jobId, candiateId).get();
-        } else return null;    }
-
+        } else return null;
+    }
 
 
     @Override
@@ -96,4 +96,10 @@ public class JobApplicationService implements IJobApplicationService{
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No applications to process");
         }
     }
+
+    @Override
+    public JobApplicationEntity findJobApplicationByJobIdAndCandidateId(int jobId, int candidateId) {
+        if (IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId).isPresent()) {
+            return IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId).get();
+        } else return null;    }
 }
