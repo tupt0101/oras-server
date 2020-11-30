@@ -13,7 +13,7 @@ public class PurchaseEntity {
     private int id;
     private String payerId;
     private String token;
-    private Integer amount;
+    private Double amount;
     @ApiModelProperty(example = "2020-12-23T17:00:00")
     private LocalDateTime purchaseDate;
     private String status;
@@ -22,8 +22,9 @@ public class PurchaseEntity {
     private AccountEntity accountById;
     @ApiModelProperty(hidden = true)
     private AccountPackageEntity accountPackageById;
-    @ApiModelProperty(hidden = true)
-    private AccountEntity accountByAccountId;
+//    @ApiModelProperty(hidden = true)
+//    private AccountEntity accountByAccountId;
+    private String paymentId;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -59,11 +60,11 @@ public class PurchaseEntity {
 
     @Basic
     @Column(name = "amount")
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -75,6 +76,16 @@ public class PurchaseEntity {
 
     public void setPurchaseDate(LocalDateTime purchaseDate) {
         this.purchaseDate = purchaseDate;
+    }
+
+    @Basic
+    @Column(name = "payment_id")
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
     }
 
     @Override
@@ -135,5 +146,8 @@ public class PurchaseEntity {
     public void setAccountPackageById(AccountPackageEntity accountPackagesById) {
         this.accountPackageById = accountPackageById;
     }
+
+
+
 
 }

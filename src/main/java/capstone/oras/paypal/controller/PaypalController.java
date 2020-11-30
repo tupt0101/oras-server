@@ -1,5 +1,10 @@
 package capstone.oras.paypal.controller;
 
+import capstone.oras.api.companyPackage.service.ICompanyPackageService;
+import capstone.oras.api.packages.service.IPackageService;
+import capstone.oras.api.purchase.service.IPurchaseService;
+import capstone.oras.entity.AccountPackageEntity;
+import capstone.oras.entity.PurchaseEntity;
 import capstone.oras.paypal.config.PaypalPaymentIntent;
 import capstone.oras.paypal.config.PaypalPaymentMethod;
 import capstone.oras.paypal.service.PaypalService;
@@ -14,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 
 
 @Controller
@@ -27,6 +33,15 @@ public class PaypalController {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
+    private IPurchaseService purchaseService;
+
+    @Autowired
+    private ICompanyPackageService accountPackageService;
+
+    @Autowired
+    private IPackageService packageService;
+
+    @Autowired
     private PaypalService paypalService;
 
     @GetMapping("/")
@@ -35,9 +50,9 @@ public class PaypalController {
     }
 
     @RequestMapping(value = "/pay/{price}", method = RequestMethod.GET)
-    public String pay(HttpServletRequest request,@PathVariable("price") double price ){
+    public String pay(HttpServletRequest request,@PathVariable("price") double price, @RequestParam(value = "accountId", required = true) int accountId, @RequestParam(value = "packageId", required = true) int packageId ){
         String cancelUrl = Utils.getBaseURL(request) + "/v1/paypal/" + URL_PAYPAL_CANCEL;
-        String successUrl = Utils.getBaseURL(request) + "/v1/paypal/" + URL_PAYPAL_SUCCESS;
+        String successUrl = Utils.getBaseURL(request) + "/v1/paypal/" + URL_PAYPAL_SUCCESS + "/" + accountId + "/" + packageId;
         try {
             Payment payment = paypalService.createPayment(
                     price,
@@ -64,13 +79,34 @@ public class PaypalController {
         return "cancel";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/pay/success")
+    @RequestMapping(method = RequestMethod.GET, value = "/pay/success/{accountId}/{packageId}")
     @ResponseBody
-    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId){
+    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId,@RequestParam("token") String token,  @PathVariable("accountId") int accountId, @PathVariable("packageId") int packageId){
         try {
             Payment payment = paypalService.executePayment(paymentId, payerId);
             if(payment.getState().equals("approved")){
-                return "success";
+                PurchaseEntity purchaseEntity = new PurchaseEntity();
+                purchaseEntity.setAccountId(accountId);
+                purchaseEntity.setAmount(Double.parseDouble(payment.getTransactions().get(0).getAmount().getTotal()));
+                purchaseEntity.setPayerId(payerId);
+                purchaseEntity.setPurchaseDate(LocalDateTime.now());
+                purchaseEntity.setStatus("success");
+                purchaseEntity.setToken(token);
+                purchaseEntity.setPaymentId(paymentId);
+                purchaseEntity = purchaseService.createPurchase(purchaseEntity);
+
+                AccountPackageEntity accountPackageEntity = new AccountPackageEntity();
+                accountPackageEntity.setAccountId(accountId);
+                accountPackageEntity.setPackageId(packageId);
+                accountPackageEntity.setPurchaseId(purchaseEntity.getId());
+                accountPackageEntity.setValidTo(LocalDateTime.now().plusMonths(1));
+                accountPackageEntity.setNumOfPost(packageService.findPackageById(packageId).getNumOfPost());
+                accountPackageService.createCompanyPackage(accountPackageEntity);
+
+
+
+
+                return "<HTML><body> <a href=\"http://localhost:9527/#\">Payment Successful (Click to go back)</a></body></HTML>";
             }
         } catch (PayPalRESTException e) {
             log.error(e.getMessage());
