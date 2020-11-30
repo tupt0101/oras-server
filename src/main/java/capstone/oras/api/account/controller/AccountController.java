@@ -2,12 +2,16 @@ package capstone.oras.api.account.controller;
 
 import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.api.company.service.ICompanyService;
+import capstone.oras.api.email.service.EmailSenderService;
+import capstone.oras.dao.IConfirmationTokenRepository;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.CompanyEntity;
+import capstone.oras.entity.ConfirmationToken;
 import capstone.oras.entity.openjob.OpenjobCompanyEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,6 +26,12 @@ import java.util.List;
 @CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(value = "/v1/account-management")
 public class AccountController {
+
+    @Autowired
+    IConfirmationTokenRepository confirmationTokenRepository;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     @Autowired
     private IAccountService accountService;
@@ -99,25 +109,25 @@ public class AccountController {
             if (openJobEntity == null) {
                 OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
                 openjobCompanyEntity.setAccountId(1);
-                if(!signup.companyEntity.getAvatar().isEmpty() || signup.companyEntity.getAvatar() != null) {
+                if (!signup.companyEntity.getAvatar().isEmpty() || signup.companyEntity.getAvatar() != null) {
                     openjobCompanyEntity.setAvatar(signup.companyEntity.getAvatar());
                 }
-                if(!signup.companyEntity.getDescription().isEmpty() || signup.companyEntity.getDescription() != null) {
+                if (!signup.companyEntity.getDescription().isEmpty() || signup.companyEntity.getDescription() != null) {
                     openjobCompanyEntity.setDescription(signup.companyEntity.getDescription());
                 }
-                if(!signup.companyEntity.getEmail().isEmpty() || signup.companyEntity.getEmail() != null) {
+                if (!signup.companyEntity.getEmail().isEmpty() || signup.companyEntity.getEmail() != null) {
                     openjobCompanyEntity.setEmail(signup.companyEntity.getEmail());
                 }
-                if(!signup.companyEntity.getLocation().isEmpty() || signup.companyEntity.getLocation() != null) {
+                if (!signup.companyEntity.getLocation().isEmpty() || signup.companyEntity.getLocation() != null) {
                     openjobCompanyEntity.setLocation(signup.companyEntity.getLocation());
                 }
-                if(!signup.companyEntity.getName().isEmpty() || signup.companyEntity.getName() != null) {
+                if (!signup.companyEntity.getName().isEmpty() || signup.companyEntity.getName() != null) {
                     openjobCompanyEntity.setName(signup.companyEntity.getName());
                 }
-                if(!signup.companyEntity.getPhoneNo().isEmpty() || signup.companyEntity.getPhoneNo() != null) {
+                if (!signup.companyEntity.getPhoneNo().isEmpty() || signup.companyEntity.getPhoneNo() != null) {
                     openjobCompanyEntity.setPhoneNo(signup.companyEntity.getPhoneNo());
                 }
-                if(!signup.companyEntity.getTaxCode().isEmpty() || signup.companyEntity.getTaxCode() != null) {
+                if (!signup.companyEntity.getTaxCode().isEmpty() || signup.companyEntity.getTaxCode() != null) {
                     openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
                 }
 
@@ -129,12 +139,23 @@ public class AccountController {
             } else {
                 signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
             }
-
-
             signup.companyEntity.setVerified(false);
             CompanyEntity companyEntity = companyService.createCompany(signup.companyEntity);
             signup.accountEntity.setCompanyId(companyEntity.getId());
             signup.accountEntity.setActive(false);
+            signup.accountEntity.setConfirmMail(false);
+            ConfirmationToken confirmationToken = new ConfirmationToken(signup.accountEntity);
+
+            confirmationTokenRepository.save(confirmationToken);
+            // send email
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(signup.accountEntity.getEmail());
+            mailMessage.setSubject("Complete Registration!");
+            mailMessage.setFrom("chand312902@gmail.com");
+            mailMessage.setText("To confirm your account, please click here : "
+                    + "http://localhost:8080/v1/account-management/confirm-account?token=" + confirmationToken.getConfirmationToken());
+
+            emailSenderService.sendEmail(mailMessage);
             return new ResponseEntity<>(accountService.createAccount(signup.accountEntity), HttpStatus.OK);
         }
     }
@@ -145,7 +166,7 @@ public class AccountController {
 
         if (companyId == 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id is empty");
-        } else if(companyService.findCompanyById(companyId) == null) {
+        } else if (companyService.findCompanyById(companyId) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company doesn't exist");
         }
         // refactor code de update 1 field thoi dung native query nang cao hieu suat
@@ -201,5 +222,21 @@ public class AccountController {
     ResponseEntity<AccountEntity> getAccountByEmail(@RequestParam("email") String email, HttpServletResponse response) {
         response.addHeader("Access-Control-Allow-Origin", "*");
         return new ResponseEntity<AccountEntity>(accountService.findAccountByEmail(email), HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
+    public String confirmUserAccount(@RequestParam("token")String confirmationToken)
+    {
+        ConfirmationToken token = confirmationTokenRepository.findConfirmationTokenByConfirmationToken(confirmationToken);
+
+        if(token != null)
+        {
+            AccountEntity user = accountService.findAccountByEmail(token.getUser().getEmail());
+            user.setConfirmMail(true);
+            accountService.updateAccount(user);
+            return "redirect:http://localhost:8080//confirm_success";
+        } else {
+            return "redirect:http://localhost:8080//confirm_error";
+        }
     }
 }

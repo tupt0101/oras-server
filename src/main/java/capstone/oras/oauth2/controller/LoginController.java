@@ -19,11 +19,11 @@ public class LoginController {
     HttpHeaders httpHeaders = new HttpHeaders();
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-//    @ResponseBody
-//    @CrossOrigin(origins = "http://localhost:8088")
+    @ResponseBody
+    @CrossOrigin(origins = "http://localhost:8088")
     ResponseEntity<String>  login(@RequestParam("username") String email, @RequestParam("password") String password) throws Exception {
-//        String url = "http://localhost:8080/oauth/token";
-        String url = "https://oras-api.herokuapp.com/oauth/token";
+        String url = "http://localhost:8080/oauth/token";
+//        String url = "https://oras-api.herokuapp.com/oauth/token";
         URL obj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
 //        HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();

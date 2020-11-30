@@ -21,6 +21,7 @@ public class AccountEntity implements Serializable {
     private String password;
     @ApiModelProperty(example = "Nguyen Nhan Cu")
     private String fullname;
+    private Boolean confirmMail;
     private Boolean active;
     @ApiModelProperty(example = "admin")
     private String role;
@@ -88,6 +89,16 @@ public class AccountEntity implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    @Basic
+    @Column(name = "confirm_mail", nullable = true)
+    public Boolean getConfirmMail() {
+        return confirmMail;
+    }
+
+    public void setConfirmMail(Boolean confirmMail) {
+        this.confirmMail = confirmMail;
     }
 
     @Basic

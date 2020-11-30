@@ -6,6 +6,7 @@
 package capstone.oras.oauth2.services;
 
 import capstone.oras.dao.IAccountRepository;
+import capstone.oras.entity.AccountEntity;
 import capstone.oras.oauth2.controller.TokenDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -27,12 +28,19 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        AccountEntity accountEntity = repo.findAccountEntitiesByEmailEquals(username).get();
+        boolean active = false;
+
+        if ( accountEntity.getActive() == true && accountEntity.getConfirmMail() == true ) {
+            active = true;
+        }
+        boolean finalActive = active;
         return repo
                 .findAccountEntitiesByEmailEquals(username)
                 .map(u -> new org.springframework.security.core.userdetails.User(
                         u.getEmail(),
                         u.getPassword(),
-                        u.getActive(),
+                        finalActive,
                         true,
                         true,
                         true,
