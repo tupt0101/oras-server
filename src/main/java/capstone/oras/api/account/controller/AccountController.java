@@ -153,7 +153,7 @@ public class AccountController {
             mailMessage.setSubject("Complete Registration!");
             mailMessage.setFrom("chand312902@gmail.com");
             mailMessage.setText("To confirm your account, please click here : "
-                    + "http://localhost:8080/v1/account-management/confirm-account?token=" + confirmationToken.getConfirmationToken());
+                    + "https://oras-api.herokuapp.com/v1/account-management/confirm-account?token=" + confirmationToken.getConfirmationToken());
 
             emailSenderService.sendEmail(mailMessage);
             return new ResponseEntity<>(accountService.createAccount(signup.accountEntity), HttpStatus.OK);
