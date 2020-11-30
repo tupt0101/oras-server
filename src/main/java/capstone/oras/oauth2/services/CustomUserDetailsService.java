@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(u -> new org.springframework.security.core.userdetails.User(
                         u.getEmail(),
                         u.getPassword(),
-                        true,
+                        u.getActive(),
                         true,
                         true,
                         true,
