@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
 
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
@@ -123,6 +124,20 @@ public class JobApplicationController {
         return new ResponseEntity<JobApplicationEntity>(jobApplicationService.findJobApplicationById(id), HttpStatus.OK);
 
     }
+
+    @RequestMapping(value = "/job-application/hire/{id}", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<JobApplicationEntity> hireJobApplication(@PathVariable("id") int id) {
+        JobApplicationEntity applicationEntity = jobApplicationService.findJobApplicationById(id);
+        if (applicationEntity != null) {
+            applicationEntity.setStatus(HIRED);
+            this.jobApplicationService.updateJobApplication(applicationEntity);
+            return new ResponseEntity<JobApplicationEntity>(this.jobApplicationService.updateJobApplication(applicationEntity), HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Cannot find this job");
+        }
+    }
+
 
     @RequestMapping(value = "/job-applications", method = RequestMethod.GET)
     @ResponseBody
