@@ -18,6 +18,7 @@ public class JobApplicationEntity implements Serializable {
     private String cv;
     @ApiModelProperty(example = "2020-12-23T17:00:00")
     private LocalDateTime applyDate;
+    private LocalDateTime hiredDate;
     @ApiModelProperty(example = "1")
     private Integer talentPoolId;
     @ApiModelProperty(example = "linkedin")
@@ -84,6 +85,16 @@ public class JobApplicationEntity implements Serializable {
 
     public void setApplyDate(LocalDateTime applyDate) {
         this.applyDate = applyDate;
+    }
+
+    @Basic
+    @Column(name = "hired_date", nullable = true)
+    public LocalDateTime getHiredDate() {
+        return hiredDate;
+    }
+
+    public void setHiredDate(LocalDateTime hiredDate) {
+        this.hiredDate = hiredDate;
     }
 
     @Basic
