@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +41,7 @@ public class ReportController {
                     timeToHire.setHiredCandidate(application.getCandidateByCandidateId());
                     timeToHire.setApplyDate(application.getApplyDate());
                     timeToHire.setHiredDate(application.getHiredDate());
-                    timeToHire.setTimeToHired(Period.between(application.getApplyDate().toLocalDate(), application.getHiredDate().toLocalDate()));
+                    timeToHire.setTimeToHired(ChronoUnit.DAYS.between(application.getApplyDate().toLocalDate(), application.getHiredDate().toLocalDate()));
                     timeToHires.add(timeToHire);
                 }
             }
