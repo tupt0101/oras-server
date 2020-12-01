@@ -60,7 +60,7 @@ public class ReportController {
             CandidateOfJob candidateOfJob = new CandidateOfJob();
             candidateOfJob.setHired(hiredList.size());
             candidateOfJob.setTotalApplication(listJob.size());
-            candidateOfJob.setJobTitle(jobEntity.getTitle());
+            candidateOfJob.setJob(jobEntity);
             candidateOfJobList.add(candidateOfJob);
         }
         return new ResponseEntity<List<CandidateOfJob>>(candidateOfJobList, HttpStatus.OK);
