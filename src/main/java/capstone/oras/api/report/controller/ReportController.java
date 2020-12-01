@@ -59,7 +59,7 @@ public class ReportController {
             List<JobApplicationEntity> hiredList = jobEntity.getJobApplicationsById().stream().filter(s -> HIRED.equals(s.getStatus())).collect(Collectors.toList());
             CandidateOfJob candidateOfJob = new CandidateOfJob();
             candidateOfJob.setHired(hiredList.size());
-            candidateOfJob.setTotalApplication(listJob.size());
+            candidateOfJob.setTotalApplication(jobEntity.getJobApplicationsById().size());
             candidateOfJob.setJob(jobEntity);
             candidateOfJobList.add(candidateOfJob);
         }
