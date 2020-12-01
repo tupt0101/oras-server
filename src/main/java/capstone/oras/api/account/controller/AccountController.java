@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,6 +30,9 @@ import java.util.List;
 @CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(value = "/v1/account-management")
 public class AccountController {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     IConfirmationTokenRepository confirmationTokenRepository;
@@ -150,7 +154,9 @@ public class AccountController {
             signup.accountEntity.setCompanyId(companyEntity.getId());
 //            signup.accountEntity.setActive(false);
             signup.accountEntity.setConfirmMail(false);
-            ConfirmationToken confirmationToken = new ConfirmationToken(signup.accountEntity);
+            signup.accountEntity.setPassword(passwordEncoder.encode(signup.accountEntity.getPassword()));
+            AccountEntity accountEntity = accountService.createAccount(signup.accountEntity);
+            ConfirmationToken confirmationToken = new ConfirmationToken(accountEntity);
 
             confirmationTokenRepository.save(confirmationToken);
 
@@ -340,7 +346,7 @@ public class AccountController {
                     "\n" +
                     "</html>", true);
             javaMailSender.send(message);
-            return new ResponseEntity<>(accountService.createAccount(signup.accountEntity), HttpStatus.OK);
+            return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
         }
     }
 
@@ -377,9 +383,6 @@ public class AccountController {
         } else if (accountEntity.getPassword() == null || accountEntity.getPassword().isEmpty()) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is empty");
-        } else if (accountService.findAccountByEmail(accountEntity.getEmail()) != null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered");
         } else if (accountService.findAccountEntityById(accountEntity.getId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account doesn't exist");

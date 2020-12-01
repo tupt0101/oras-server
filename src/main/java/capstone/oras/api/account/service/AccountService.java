@@ -37,13 +37,13 @@ public class AccountService implements IAccountService {
 
     @Override
     public AccountEntity createAccount(AccountEntity accountEntity) {
-        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
+//        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
         return IAccountRepository.save(accountEntity);
     }
 
     @Override
     public AccountEntity updateAccount(AccountEntity accountEntity) {
-        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
+//        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
         return IAccountRepository.save(accountEntity);
     }
 
