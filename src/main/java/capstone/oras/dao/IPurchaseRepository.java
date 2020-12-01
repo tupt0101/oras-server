@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IPurchaseRepository extends JpaRepository<PurchaseEntity, Integer> {
+    PurchaseEntity findPurchaseEntitiesByAccountIdEquals(int accountId);
 }

@@ -35,4 +35,9 @@ public class PurchaseService implements IPurchaseService {
             return IPurchaseRepository.findById(id).get();
         } else return null;
     }
+
+    @Override
+    public PurchaseEntity findPurchaseEntityByAccountID(int id) {
+        return IPurchaseRepository.findPurchaseEntitiesByAccountIdEquals(id);
+    }
 }
