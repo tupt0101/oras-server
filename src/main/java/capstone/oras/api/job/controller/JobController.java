@@ -224,7 +224,7 @@ public class JobController {
 
         if (job.getApplyTo() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply to is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is empty");
         }
 
         if (job.getCreateDate() == null) {
@@ -322,7 +322,7 @@ public class JobController {
 
         if (job.getApplyTo() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply to is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is empty");
         }
 
         if (job.getCreateDate() == null) {
@@ -416,7 +416,7 @@ public class JobController {
 //
 //        if (job.getApplyTo() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply to is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is empty");
 //        }
 //
 //        if (job.getCreateDate() == null) {
@@ -513,7 +513,7 @@ public class JobController {
 //
 //        if (job.getApplyTo() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply to is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is empty");
 //        }
 //
 //        if (job.getCreateDate() == null) {

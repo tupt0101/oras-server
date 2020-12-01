@@ -156,7 +156,7 @@ public class JobService implements IJobService {
         }
 
         if (job.getApplyTo() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply to is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is empty");
         }
 
         if (job.getCreateDate() == null) {
@@ -169,6 +169,22 @@ public class JobService implements IJobService {
 
         if (job.getTalentPoolId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
+        }
+
+        if (job.getVacancies()  ==  null || job.getVacancies() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vacancies must be greater than 0");
+        }
+
+        if (StringUtils.isEmpty(job.getJobType())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job Type is empty");
+        }
+
+        if (StringUtils.isEmpty(job.getCategory())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category is empty");
+        }
+
+        if (job.getSalaryFrom()  ==  null ||job.getSalaryTo()  ==  null ||job.getSalaryFrom() <= 0 || job.getSalaryTo() < job.getSalaryFrom() ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary range is invalid");
         }
 
         if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
