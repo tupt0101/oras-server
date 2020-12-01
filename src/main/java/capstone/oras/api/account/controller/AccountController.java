@@ -145,10 +145,10 @@ public class AccountController {
             } else {
                 signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
             }
-            signup.companyEntity.setVerified(false);
+//            signup.companyEntity.setVerified(false);
             CompanyEntity companyEntity = companyService.createCompany(signup.companyEntity);
             signup.accountEntity.setCompanyId(companyEntity.getId());
-            signup.accountEntity.setActive(false);
+//            signup.accountEntity.setActive(false);
             signup.accountEntity.setConfirmMail(false);
             ConfirmationToken confirmationToken = new ConfirmationToken(signup.accountEntity);
 
