@@ -2,6 +2,7 @@ package capstone.oras.api.report.controller;
 
 import capstone.oras.api.job.service.JobService;
 import capstone.oras.api.jobApplication.service.JobApplicationService;
+import capstone.oras.api.report.model.CandidateOfJob;
 import capstone.oras.api.report.model.TimeToHire;
 import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
@@ -29,7 +30,7 @@ public class ReportController {
 
     @RequestMapping(value = "/time-to-hire/{account-id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity< List<TimeToHire>> createPurchase(@PathVariable("account-id") int accountId) {
+    ResponseEntity< List<TimeToHire>> getTimeToHire(@PathVariable("account-id") int accountId) {
         List<JobEntity> listJob = jobService.getJobByCreatorId(accountId);
         List<TimeToHire> timeToHires = new ArrayList<>();
         for (JobEntity jobEntity: listJob) {
@@ -47,6 +48,22 @@ public class ReportController {
             }
         }
         return new ResponseEntity< List<TimeToHire>>(timeToHires, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/candidate-of-job/{account-id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity< List<CandidateOfJob>> getCandidateOfJob(@PathVariable("account-id") int accountId) {
+        List<JobEntity> listJob = jobService.getJobByCreatorId(accountId);
+        List<CandidateOfJob> candidateOfJobList = new ArrayList<>();
+        for (JobEntity jobEntity: listJob) {
+            List<JobApplicationEntity> hiredList = jobEntity.getJobApplicationsById().stream().filter(s -> HIRED.equals(s.getStatus())).collect(Collectors.toList());
+            CandidateOfJob candidateOfJob = new CandidateOfJob();
+            candidateOfJob.setHired(hiredList.size());
+            candidateOfJob.setTotalApplication(listJob.size());
+            candidateOfJob.setJobTitle(jobEntity.getTitle());
+            candidateOfJobList.add(candidateOfJob);
+        }
+        return new ResponseEntity<List<CandidateOfJob>>(candidateOfJobList, HttpStatus.OK);
     }
 
 }
