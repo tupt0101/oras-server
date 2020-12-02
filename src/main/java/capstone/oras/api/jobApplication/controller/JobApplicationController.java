@@ -166,9 +166,9 @@ public class JobApplicationController {
     }
 
 
-    @RequestMapping(value = "/job-applications-by-job-id/{jobId}/{numOfElement}/{page}", method = RequestMethod.GET)
+    @RequestMapping(value = "/job-applications-by-job-id", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@PathVariable("jobId") int jobId, @PathVariable("numOfElement") int numOfElement, @PathVariable("page") int page) {
+    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@RequestParam(value = "jobId") int jobId, @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
         Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("matchingRate").descending());
         List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId,pageable);
         return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationEntityList, HttpStatus.OK);
