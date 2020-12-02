@@ -146,7 +146,7 @@ public class JobController {
     }
 
 
-    @RequestMapping(value = "/job/{id}/extend/{date}")
+    @RequestMapping(value = "/job/{id}/extend/{date}", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id, @PathVariable("date")int date) {
         if (jobService.getJobById(id) == null) {

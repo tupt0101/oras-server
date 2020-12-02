@@ -12,6 +12,9 @@ import capstone.oras.entity.openjob.OpenjobAccountEntity;
 import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -153,6 +156,16 @@ public class JobApplicationController {
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@PathVariable("jobId") int jobId) {
         List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobId(jobId);
         jobApplicationEntityList.sort(Comparator.comparingDouble(JobApplicationEntity::getMatchingRate).reversed());
+        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationEntityList, HttpStatus.OK);
+
+    }
+
+
+    @RequestMapping(value = "/job-applications-by-job-id/{jobId}/{numOfElement}/{page}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@PathVariable("jobId") int jobId, @PathVariable("numOfElement") int numOfElement, @PathVariable("page") int page) {
+        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("matchingRate").descending());
+        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId,pageable);
         return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationEntityList, HttpStatus.OK);
 
     }

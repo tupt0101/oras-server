@@ -8,6 +8,7 @@ import capstone.oras.entity.JobEntity;
 import capstone.oras.model.oras_ai.CalcSimilarityRequest;
 import capstone.oras.model.oras_ai.CalcSimilarityResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -101,5 +102,11 @@ public class JobApplicationService implements IJobApplicationService {
     public JobApplicationEntity findJobApplicationByJobIdAndCandidateId(int jobId, int candidateId) {
         if (IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId).isPresent()) {
             return IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId).get();
+        } else return null;    }
+
+    @Override
+    public List<JobApplicationEntity> findJobApplicationsByJobIdWithPaging(int id, Pageable pageable) {
+        if (IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id,pageable).isPresent()) {
+            return IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id,pageable).get();
         } else return null;    }
 }
