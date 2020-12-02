@@ -9,4 +9,6 @@ public interface ICompanyPackageService {
     AccountPackageEntity updateCompanyPackage(AccountPackageEntity accountPackageEntity);
     List<AccountPackageEntity> getAllCompanyPackage();
     AccountPackageEntity findCompanyPackageById(int id);
+    AccountPackageEntity findAccountPackageByAccountId(int id);
+
 }

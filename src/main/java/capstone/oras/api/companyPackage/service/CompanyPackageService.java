@@ -34,4 +34,11 @@ public class CompanyPackageService implements ICompanyPackageService {
             return ICompanyPackageRepository.findById(id).get();
         } else return null;
     }
+
+    @Override
+    public AccountPackageEntity findAccountPackageByAccountId(int id) {
+        if (ICompanyPackageRepository.findAccountPackageEntityByAccountIdEqualsAndExpiredFalse(id).isPresent()) {
+            return ICompanyPackageRepository.findAccountPackageEntityByAccountIdEqualsAndExpiredFalse(id).get();
+        } else return null;
+    }
 }

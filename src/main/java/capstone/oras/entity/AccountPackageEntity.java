@@ -21,6 +21,7 @@ public class AccountPackageEntity {
     private PackageEntity packageById;
     @ApiModelProperty(hidden = true)
     private PurchaseEntity purchaseById;
+    private boolean isExpired;
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -81,6 +82,16 @@ public class AccountPackageEntity {
 
     public void setNumOfPost(Integer numOfPost) {
         this.numOfPost = numOfPost;
+    }
+
+    @Basic
+    @Column(name = "is_expired")
+    public boolean isExpired() {
+        return isExpired;
+    }
+
+    public void setExpired(boolean expired) {
+        isExpired = expired;
     }
 
     @Override

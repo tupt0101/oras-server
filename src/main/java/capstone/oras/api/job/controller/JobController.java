@@ -4,6 +4,7 @@ import capstone.oras.api.account.service.IAccountService;
 
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.company.service.ICompanyService;
+import capstone.oras.api.companyPackage.service.ICompanyPackageService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
 import capstone.oras.entity.*;
@@ -35,6 +36,9 @@ public class JobController {
 
     @Autowired
     private IAccountService accountService;
+
+    @Autowired
+    private ICompanyPackageService accountPackageService;
 
     @Autowired
     private ICompanyService companyService;
@@ -162,13 +166,13 @@ public class JobController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
         }
         JobEntity job = jobService.getJobById(id);
-        Collection<PurchaseEntity> purchaseEntities = job.getAccountByCreatorId().getPurchasesById();
-        AccountPackageEntity accountPackageEntity = purchaseEntities.stream().filter(s -> s.getAccountPackageById().getNumOfPost() > 0).map(s -> s.getAccountPackageById()).findFirst().get();
-        if (accountPackageEntity == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Out of num of post");
-        }
+        AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(job.getCreatorId());
         int numOfPost = accountPackageEntity.getNumOfPost();
-        accountPackageEntity.setNumOfPost(numOfPost - 1);
+        if (numOfPost > 0) {
+            accountPackageEntity.setNumOfPost(numOfPost - 1);
+        } else {
+            throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
+        }
         job.setStatus(PUBLISHED);
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
         openjobJobEntity.setApplyTo(job.getApplyTo());
@@ -176,8 +180,8 @@ public class JobController {
         openjobJobEntity.setCategory(job.getCategory());
         // Get company id from openjob
         int companyId = accountService.findAccountEntityById(job.getCreatorId()).getCompanyId();
-        System.out.println(accountService.findAccountEntityById(job.getCreatorId()).toString());
         int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
+        System.out.println(openjobCompanyId);
         openjobJobEntity.setCompanyId(openjobCompanyId);
         openjobJobEntity.setCreateDate(job.getCreateDate());
         openjobJobEntity.setCurrency(job.getCurrency());
