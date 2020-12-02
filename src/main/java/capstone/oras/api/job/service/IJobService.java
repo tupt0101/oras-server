@@ -14,5 +14,6 @@ public interface IJobService {
     boolean checkJobEntityById(int id);
     List<JobEntity> getOpenJob();
     List<JobEntity> getJobByCreatorId(int id);
+    List<JobEntity> getAllJobByCreatorId(int id);
     List<CategoryEntity> getAllCategories();
 }

@@ -23,3 +23,5 @@
 hs_err_pid*
 .idea
 .mvn
+
+target/classes/META-INF/oras\.kotlin_module

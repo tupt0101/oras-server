@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -78,7 +79,9 @@ public class CandidateController {
     @ResponseBody
     ResponseEntity<List<CandidateEntity>> getAllCandidate() {
         List<CandidateEntity> lst = candidateService.getAllCandidate();
-        lst.sort(Comparator.comparingInt(CandidateEntity::getId));
+        if (!CollectionUtils.isEmpty(lst)) {
+            lst.sort(Comparator.comparingInt(CandidateEntity::getId));
+        }
         return new ResponseEntity<List<CandidateEntity>>(lst, HttpStatus.OK);
 
     }

@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
 import static capstone.oras.common.Constant.JobStatus.CLOSED;
@@ -120,9 +121,18 @@ public class JobService implements IJobService {
         for (JobEntity job : lstJob) {
             job.setTotalApplication(lstNoApp.get(i++)[1]);
         }
-
-
         return lstJob;
+    }
+
+    @Override
+    public List<JobEntity> getAllJobByCreatorId(int id) {
+        Optional<List<JobEntity>> lstJob = IJobRepository.findJobEntitiesByCreatorIdEquals(id);
+        if(!lstJob.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
+        }
+        List<JobEntity> ret = lstJob.get();
+        ret.sort(Comparator.comparingInt(JobEntity::getId));
+        return ret;
     }
 
     @Override
@@ -150,6 +160,9 @@ public class JobService implements IJobService {
         }
         if (StringUtils.isEmpty(job.getTitle())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
+        }
+        if (IJobRepository.existsByCreatorIdEqualsAndTitleEquals(job.getCreatorId(), job.getTitle())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This job title already exists");
         }
         if (job.getApplyFrom() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
