@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface IJobRepository extends JpaRepository<JobEntity, Integer> {
     Optional<List<JobEntity>> findAllByStatus(String status);
+    boolean existsByCreatorIdEqualsAndTitleEquals(int creatorId, String title);
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEquals(int creatorId);
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEqualsAndStatusEquals(int creatorId, String status);
     @Query(value = "select j.id, " +

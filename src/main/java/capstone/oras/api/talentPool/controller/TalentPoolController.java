@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,7 +26,9 @@ public class TalentPoolController {
     @ResponseBody
     ResponseEntity<List<TalentPoolEntity>> getAllTalentPool() {
         List<TalentPoolEntity> lst = talentPoolService.getAllTalentPool();
-        lst.sort(Comparator.comparingInt(TalentPoolEntity::getId));
+        if (!CollectionUtils.isEmpty(lst)) {
+            lst.sort(Comparator.comparingInt(TalentPoolEntity::getId));
+        }
         return new ResponseEntity<List<TalentPoolEntity>>(lst, HttpStatus.OK);
     }
 

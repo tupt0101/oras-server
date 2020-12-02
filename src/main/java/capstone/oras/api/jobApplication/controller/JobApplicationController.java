@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -146,7 +147,9 @@ public class JobApplicationController {
     @ResponseBody
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplication() {
         List<JobApplicationEntity> lst = jobApplicationService.getAllJobApplication();
-        lst.sort(Comparator.comparingInt(JobApplicationEntity::getId));
+        if (!CollectionUtils.isEmpty(lst)) {
+            lst.sort(Comparator.comparingInt(JobApplicationEntity::getId));
+        }
         return new ResponseEntity<List<JobApplicationEntity>>(lst, HttpStatus.OK);
 
     }
@@ -155,7 +158,9 @@ public class JobApplicationController {
     @ResponseBody
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@PathVariable("jobId") int jobId) {
         List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobId(jobId);
-        jobApplicationEntityList.sort(Comparator.comparingDouble(JobApplicationEntity::getMatchingRate).reversed());
+        if (!CollectionUtils.isEmpty(jobApplicationEntityList)) {
+            jobApplicationEntityList.sort(Comparator.comparingDouble(JobApplicationEntity::getMatchingRate).reversed());
+        }
         return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationEntityList, HttpStatus.OK);
 
     }
@@ -175,7 +180,9 @@ public class JobApplicationController {
     ResponseEntity<List<JobApplicationEntity>> rankApplication(@RequestBody Integer id) {
         jobApplicationService.calcSimilarity(id);
         List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobId(id);
-        jobApplicationEntityList.sort(Comparator.comparingDouble(JobApplicationEntity::getMatchingRate).reversed());
+        if (!CollectionUtils.isEmpty(jobApplicationEntityList)) {
+            jobApplicationEntityList.sort(Comparator.comparingDouble(JobApplicationEntity::getMatchingRate).reversed());
+        }
         return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationEntityList, HttpStatus.OK);
     }
 
@@ -200,9 +207,10 @@ public class JobApplicationController {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<String>(headers);
         ResponseEntity<OpenjobJobApplicationEntity[]> jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
+        if (jobApplicationsList.getBody() == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No application");
+        }
         List<OpenjobJobApplicationEntity> jobApplicationEntityList = Arrays.asList(jobApplicationsList.getBody());
-        List<OpenjobAccountEntity> accountEntityList = new ArrayList<>();
-        List<CandidateEntity> candidateEntityList = new ArrayList<>();
         List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
         JobEntity jobEntity = jobService.getJobById(jobId);
         int talentPoolId = jobEntity.getTalentPoolId();

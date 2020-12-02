@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -90,7 +91,9 @@ public class AccountPackageController {
     @ResponseBody
     ResponseEntity<List<AccountPackageEntity>> getAllAccountPackage() {
         List<AccountPackageEntity> lst = accountPackageService.getAllAccountPackage();
-        lst.sort(Comparator.comparingInt(AccountPackageEntity::getAccountId));
+        if (!CollectionUtils.isEmpty(lst)) {
+            lst.sort(Comparator.comparingInt(AccountPackageEntity::getAccountId));
+        }
         return new ResponseEntity<List<AccountPackageEntity>>(lst, HttpStatus.OK);
     }
 
