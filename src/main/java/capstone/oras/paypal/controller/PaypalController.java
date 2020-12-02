@@ -1,6 +1,6 @@
 package capstone.oras.paypal.controller;
 
-import capstone.oras.api.companyPackage.service.ICompanyPackageService;
+import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.packages.service.IPackageService;
 import capstone.oras.api.purchase.service.IPurchaseService;
 import capstone.oras.entity.AccountPackageEntity;
@@ -36,7 +36,7 @@ public class PaypalController {
     private IPurchaseService purchaseService;
 
     @Autowired
-    private ICompanyPackageService accountPackageService;
+    private IAccountPackageService accountPackageService;
 
     @Autowired
     private IPackageService packageService;
@@ -51,6 +51,7 @@ public class PaypalController {
 
     @RequestMapping(value = "/pay/{price}", method = RequestMethod.GET)
     public String pay(HttpServletRequest request,@PathVariable("price") double price, @RequestParam(value = "accountId", required = true) int accountId, @RequestParam(value = "packageId", required = true) int packageId ){
+//        if(accountPackageService.findAccountPackageByAccountId(accountId).get)
         String cancelUrl = Utils.getBaseURL(request) + "/v1/paypal/" + URL_PAYPAL_CANCEL;
         String successUrl = Utils.getBaseURL(request) + "/v1/paypal/" + URL_PAYPAL_SUCCESS + "/" + accountId + "/" + packageId;
         try {
@@ -101,7 +102,7 @@ public class PaypalController {
                 accountPackageEntity.setPurchaseId(purchaseEntity.getId());
                 accountPackageEntity.setValidTo(LocalDateTime.now().plusMonths(1));
                 accountPackageEntity.setNumOfPost(packageService.findPackageById(packageId).getNumOfPost());
-                accountPackageService.createCompanyPackage(accountPackageEntity);
+                accountPackageService.createAccountPackage(accountPackageEntity);
 
 
 

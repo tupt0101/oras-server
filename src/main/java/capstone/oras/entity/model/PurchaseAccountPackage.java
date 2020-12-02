@@ -9,10 +9,10 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class PurchaseCompanyPagkage implements Serializable {
+public class PurchaseAccountPackage implements Serializable {
     private PurchaseEntity purchaseEntity;
     private AccountPackageEntity accountPackageEntity;
 
-    public PurchaseCompanyPagkage() {
+    public PurchaseAccountPackage() {
     }
 }

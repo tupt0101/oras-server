@@ -4,7 +4,7 @@ import capstone.oras.api.account.service.IAccountService;
 
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.company.service.ICompanyService;
-import capstone.oras.api.companyPackage.service.ICompanyPackageService;
+import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
 import capstone.oras.entity.*;
@@ -38,7 +38,7 @@ public class JobController {
     private IAccountService accountService;
 
     @Autowired
-    private ICompanyPackageService accountPackageService;
+    private IAccountPackageService accountPackageService;
 
     @Autowired
     private ICompanyService companyService;
