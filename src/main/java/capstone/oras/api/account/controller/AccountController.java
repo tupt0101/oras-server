@@ -14,6 +14,7 @@ import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -395,7 +396,9 @@ public class AccountController {
     @ResponseBody
     ResponseEntity<List<AccountEntity>> getAllAccount() {
         List<AccountEntity> lst = accountService.getAllAccount();
-        lst.sort(Comparator.comparingInt(AccountEntity::getId));
+        if (!CollectionUtils.isEmpty(lst)) {
+            lst.sort(Comparator.comparingInt(AccountEntity::getId));
+        }
         return new ResponseEntity<List<AccountEntity>>(lst, HttpStatus.OK);
     }
 

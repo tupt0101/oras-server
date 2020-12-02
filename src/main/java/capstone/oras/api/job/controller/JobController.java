@@ -1,18 +1,21 @@
 package capstone.oras.api.job.controller;
 
 import capstone.oras.api.account.service.IAccountService;
-
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.companyPackage.service.ICompanyPackageService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
-import capstone.oras.entity.*;
+import capstone.oras.entity.AccountPackageEntity;
+import capstone.oras.entity.CategoryEntity;
+import capstone.oras.entity.JobApplicationEntity;
+import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.model.Statistic;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -56,7 +59,9 @@ public class JobController {
     @ResponseBody
     List<JobEntity> getAllJob() {
         List<JobEntity> lst = jobService.getAllJob();
-        lst.sort(Comparator.comparingInt(JobEntity::getId));
+        if (!CollectionUtils.isEmpty(lst)) {
+            lst.sort(Comparator.comparingInt(JobEntity::getId));
+        }
         return lst;
     }
 
@@ -117,10 +122,16 @@ public class JobController {
         return new ResponseEntity<List<JobEntity>>(jobService.getOpenJob(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/job-by-creator-id/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/open-job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
         return new ResponseEntity<List<JobEntity>>(jobService.getJobByCreatorId(id), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/job-by-creator-id/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<JobEntity>> getAllJobByCreatorId(@PathVariable("id") int id) {
+        return new ResponseEntity<List<JobEntity>>(jobService.getAllJobByCreatorId(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job-statistic-by-creator-id/{id}", method = RequestMethod.GET)

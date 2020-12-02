@@ -6,6 +6,7 @@ import capstone.oras.entity.CompanyEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -74,7 +75,9 @@ public class CompanyController {
     @ResponseBody
     ResponseEntity<List<CompanyEntity>> getAllCompany() {
         List<CompanyEntity> lst = companyService.getAllCompany();
-        lst.sort(Comparator.comparingInt(CompanyEntity::getId));
+        if (!CollectionUtils.isEmpty(lst)) {
+            lst.sort(Comparator.comparingInt(CompanyEntity::getId));
+        }
         return new ResponseEntity<List<CompanyEntity>>(lst, HttpStatus.OK);
     }
 

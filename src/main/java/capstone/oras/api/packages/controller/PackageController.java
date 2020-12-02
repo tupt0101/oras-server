@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -42,7 +43,9 @@ public class PackageController {
     @ResponseBody
     ResponseEntity<List<PackageEntity>> getAllPackage() {
         List<PackageEntity> lst = packageService.getAllPackage();
-        lst.sort(Comparator.comparingInt(PackageEntity::getId));
+        if (!CollectionUtils.isEmpty(lst)) {
+            lst.sort(Comparator.comparingInt(PackageEntity::getId));
+        }
         return new ResponseEntity<List<PackageEntity>>(lst, HttpStatus.OK);
     }
 
