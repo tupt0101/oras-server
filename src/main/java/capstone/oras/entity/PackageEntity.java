@@ -17,6 +17,7 @@ public class PackageEntity {
     private String duration;
     private String currency;
     private String description;
+    private String tag;
     @ApiModelProperty(hidden = true)
     private Collection<AccountPackageEntity> accountPackagesById;
 
@@ -69,6 +70,16 @@ public class PackageEntity {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    @Basic
+    @Column(name = "tag")
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     @Override
