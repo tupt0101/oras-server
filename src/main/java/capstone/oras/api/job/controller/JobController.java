@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
+import static capstone.oras.common.Constant.JobStatus.CLOSED;
 import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
 
 @RestController
@@ -178,8 +179,11 @@ public class JobController {
     @RequestMapping(value = "/job/{id}/publish", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
-        if (jobService.getJobById(id) == null) {
+        JobEntity tempJob = jobService.getJobById(id);
+        if (tempJob == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
+        } else if(tempJob.getStatus().equals(CLOSED)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Closed job cannot be reopen");
         }
         JobEntity job = jobService.getJobById(id);
         AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(job.getCreatorId());

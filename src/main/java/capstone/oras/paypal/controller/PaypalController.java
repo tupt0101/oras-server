@@ -15,8 +15,10 @@ import com.paypal.base.rest.PayPalRESTException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -51,6 +53,10 @@ public class PaypalController {
 
     @RequestMapping(value = "/pay/{price}", method = RequestMethod.GET)
     public String pay(HttpServletRequest request, @PathVariable("price") double price, @RequestParam(value = "accountId", required = true) int accountId, @RequestParam(value = "packageId", required = true) int packageId) {
+        AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(accountId);
+        if (accountPackageEntity != null) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Account still has a usable package");
+        }
         String cancelUrl = Utils.getBaseURL(request) + "/v1/paypal/" + URL_PAYPAL_CANCEL;
         String successUrl = Utils.getBaseURL(request) + "/v1/paypal/" + URL_PAYPAL_SUCCESS + "/" + accountId + "/" + packageId;
         try {
