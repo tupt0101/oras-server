@@ -10,5 +10,5 @@ public interface IPurchaseService {
     PurchaseEntity updatePurchase(PurchaseEntity purchaseEntity);
     List<PurchaseEntity> getAllPurchase();
     PurchaseEntity findPurchaseById(int id);
-    PurchaseEntity findPurchaseEntityByAccountID(int id);
+    List<PurchaseEntity> findPurchaseEntityByAccountID(int id);
 }
