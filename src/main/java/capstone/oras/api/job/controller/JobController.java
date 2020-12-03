@@ -189,6 +189,9 @@ public class JobController {
         } else {
             throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
         }
+        if (accountPackageEntity.getNumOfPost() == 0 ) {
+            accountPackageEntity.setExpired(true);
+        }
         job.setStatus(PUBLISHED);
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
         openjobJobEntity.setApplyTo(job.getApplyTo());
@@ -232,7 +235,7 @@ public class JobController {
         activityEntity.setTitle("Published a Job");
         activityEntity.setJobId(id);
         activityService.createActivity(activityEntity);
-
+        accountPackageService.updateAccountPackage(accountPackageEntity);
 
         return new ResponseEntity<>(job, HttpStatus.OK);
     }
