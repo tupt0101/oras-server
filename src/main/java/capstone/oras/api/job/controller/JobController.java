@@ -183,6 +183,9 @@ public class JobController {
         }
         JobEntity job = jobService.getJobById(id);
         AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(job.getCreatorId());
+        if (accountPackageEntity == null) {
+            throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
+        }
         int numOfPost = accountPackageEntity.getNumOfPost();
         if (numOfPost > 0) {
             accountPackageEntity.setNumOfPost(numOfPost - 1);
