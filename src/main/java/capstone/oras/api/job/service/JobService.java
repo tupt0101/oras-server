@@ -48,10 +48,10 @@ public class JobService implements IJobService {
     @Override
     public JobEntity createJob(JobEntity job) {
         jobValidation(job);
-        if (IJobRepository.existsByCreatorIdEqualsAndTitleEquals(job.getCreatorId(), job.getTitle())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "This job title already exists");
+        if (IJobRepository.existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(job.getCreatorId(), job.getTitle(), CLOSED)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This job title already exists");
         }
-//        job.setProcessedJd(this.processJd(job.getDescription()));
+        job.setProcessedJd(this.processJd(job.getDescription()));
         job.setCreateDate(LocalDateTime.now());
         job.setTotalApplication(0);
         return IJobRepository.save(job);
