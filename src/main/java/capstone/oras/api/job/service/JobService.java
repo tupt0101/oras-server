@@ -48,6 +48,9 @@ public class JobService implements IJobService {
     @Override
     public JobEntity createJob(JobEntity job) {
         jobValidation(job);
+        if (IJobRepository.existsByCreatorIdEqualsAndTitleEquals(job.getCreatorId(), job.getTitle())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This job title already exists");
+        }
 //        job.setProcessedJd(this.processJd(job.getDescription()));
         job.setCreateDate(LocalDateTime.now());
         job.setTotalApplication(0);
@@ -160,9 +163,6 @@ public class JobService implements IJobService {
         }
         if (StringUtils.isEmpty(job.getTitle())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
-        }
-        if (IJobRepository.existsByCreatorIdEqualsAndTitleEquals(job.getCreatorId(), job.getTitle())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "This job title already exists");
         }
         if (job.getApplyFrom() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");

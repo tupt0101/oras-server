@@ -1,15 +1,12 @@
 package capstone.oras.api.job.controller;
 
 import capstone.oras.api.account.service.IAccountService;
+import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.company.service.ICompanyService;
-import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
-import capstone.oras.entity.AccountPackageEntity;
-import capstone.oras.entity.CategoryEntity;
-import capstone.oras.entity.JobApplicationEntity;
-import capstone.oras.entity.JobEntity;
+import capstone.oras.entity.*;
 import capstone.oras.entity.model.Statistic;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
@@ -69,11 +66,12 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> createJob(@RequestBody JobEntity job) {
         JobEntity jobEntity = jobService.createJob(job);
-//        ActivityEntity activityEntity = new ActivityEntity();
-//        activityEntity.setCreatorId(job.getCreatorId());
-//        activityEntity.setTime(java.time.LocalDateTime.now());
-//        activityEntity.setTitle("Create Job Draft");
-//        activityService.createActivity(activityEntity);
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setCreatorId(job.getCreatorId());
+        activityEntity.setTime(java.time.LocalDateTime.now());
+        activityEntity.setTitle("Create Job Draft");
+        activityEntity.setJobId(jobEntity.getId());
+        activityService.createActivity(activityEntity);
         return new ResponseEntity<>(jobEntity, HttpStatus.OK);
     }
 
@@ -89,7 +87,8 @@ public class JobController {
         if (jobService.getJobById(id) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to update");
         }
-        int openjobJobId = jobService.getJobById(id).getOpenjobJobId();
+        JobEntity job = jobService.getJobById(id);
+        int openjobJobId = job.getOpenjobJobId();
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = "Bearer " + userDetailsService.getOpenJobToken();
@@ -104,9 +103,15 @@ public class JobController {
         HttpEntity entity = new HttpEntity(headers);
         // close job on openjob
         restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setCreatorId(job.getCreatorId());
+        activityEntity.setTime(java.time.LocalDateTime.now());
+        activityEntity.setTitle("Close Job");
+        activityEntity.setJobId(id);
+        job = jobService.closeJob(id);
+        activityService.createActivity(activityEntity);
 
-
-        return new ResponseEntity<>(jobService.closeJob(id), HttpStatus.OK);
+        return new ResponseEntity<>(job, HttpStatus.OK);
     }
 
 
@@ -218,7 +223,18 @@ public class JobController {
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
         OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
         job.setOpenjobJobId(openJobEntity.getId());
-        return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
+
+
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setCreatorId(job.getCreatorId());
+        job = jobService.updateJob(job);
+        activityEntity.setTime(java.time.LocalDateTime.now());
+        activityEntity.setTitle("Published a Job");
+        activityEntity.setJobId(id);
+        activityService.createActivity(activityEntity);
+
+
+        return new ResponseEntity<>(job, HttpStatus.OK);
     }
 
     @PostMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)

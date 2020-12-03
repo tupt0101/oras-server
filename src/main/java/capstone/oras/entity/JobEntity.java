@@ -70,6 +70,8 @@ public class JobEntity implements Serializable {
     private String processedJd;
     private Integer totalApplication;
     private LocalDateTime expireDate;
+    @ApiModelProperty(hidden = true)
+    private Collection<ActivityEntity> activitiesById;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -274,6 +276,16 @@ public class JobEntity implements Serializable {
 
     public void setJobApplicationsById(Collection<JobApplicationEntity> jobApplicationsById) {
         this.jobApplicationsById = jobApplicationsById;
+    }
+
+    @OneToMany(mappedBy = "jobById", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "job-activity")
+    public Collection<ActivityEntity> getActivitiesById() {
+        return activitiesById;
+    }
+
+    public void setActivitiesById(Collection<ActivityEntity> activitiesById) {
+        this.activitiesById = activitiesById;
     }
 
     @Basic
