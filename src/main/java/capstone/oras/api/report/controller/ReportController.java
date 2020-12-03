@@ -88,6 +88,24 @@ public class ReportController {
         return new ResponseEntity<List<PostByCategory>>(postByCategories, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/total-post-of-account-by-category/{account-id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<PostByCategory>> getTotalPostOfAccountByCategory(@PathVariable("account-id") int accountId) {
+        List<CategoryEntity> listCategory = new ArrayList<>();
+        listCategory = categoryService.getAllCategory();
+        List<PostByCategory> postByCategories = new ArrayList<>();
+        List<JobEntity> jobEntityList = jobService.getAllJobByCreatorId(accountId);
+        for (CategoryEntity categoryEntity: listCategory
+        ) {
+            List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
+            PostByCategory postByCategory = new PostByCategory();
+            postByCategory.setCategory(categoryEntity.getName());
+            postByCategory.setNumOfPost(listByCatagory.size());
+            postByCategories.add(postByCategory);
+        }
+        return new ResponseEntity<List<PostByCategory>>(postByCategories, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/total-application-by-category", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<ApplicationByCategory>> getTotalApplicationByCategory() {
@@ -111,6 +129,29 @@ public class ReportController {
         return new ResponseEntity<List<ApplicationByCategory>>(applicationByCategories, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/total-application-of-account-by-category/{account-id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<ApplicationByCategory>> getTotalApplicationOfAccountByCategory(@PathVariable("account-id") int accountId) {
+        List<CategoryEntity> listCategory = new ArrayList<>();
+        listCategory = categoryService.getAllCategory();
+        List<ApplicationByCategory> applicationByCategories = new ArrayList<>();
+        List<JobEntity> jobEntityList = jobService.getAllJobByCreatorId(accountId);
+        for (CategoryEntity categoryEntity: listCategory
+        ) {
+            List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
+            int totalApplication = 0;
+            for (JobEntity jobEntity: listByCatagory
+            ) {
+                totalApplication += jobEntity.getJobApplicationsById().size();
+            }
+            ApplicationByCategory applicationByCategory = new ApplicationByCategory();
+            applicationByCategory.setCategory(categoryEntity.getName());
+            applicationByCategory.setNumOfApplication(totalApplication);
+            applicationByCategories.add(applicationByCategory);
+        }
+        return new ResponseEntity<List<ApplicationByCategory>>(applicationByCategories, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/average-salary-by-category", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<SalaryByCategory>> getAverageSalaryByCategory() {
@@ -118,6 +159,33 @@ public class ReportController {
         listCategory = categoryService.getAllCategory();
         List<SalaryByCategory> salaryByCategories = new ArrayList<>();
         List<JobEntity> jobEntityList = jobService.getAllJob();
+        for (CategoryEntity categoryEntity: listCategory
+        ) {
+            List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
+            SalaryByCategory salaryByCategory = new SalaryByCategory();
+            double totalSalary = 0;
+            for (JobEntity jobEntity: listByCatagory
+            ) {
+                totalSalary = ((jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
+            }
+            salaryByCategory.setCategory(categoryEntity.getName());
+            if (listByCatagory.size() > 0) {
+                salaryByCategory.setAverageSalary(totalSalary / listByCatagory.size());
+            } else {
+                salaryByCategory.setAverageSalary(0);
+            }
+            salaryByCategories.add(salaryByCategory);
+        }
+        return new ResponseEntity<List<SalaryByCategory>>(salaryByCategories, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/average-salary-of-account-by-category/{account-id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<SalaryByCategory>> getAverageSalaryByCategory(@PathVariable("account-id") int accountId) {
+        List<CategoryEntity> listCategory = new ArrayList<>();
+        listCategory = categoryService.getAllCategory();
+        List<SalaryByCategory> salaryByCategories = new ArrayList<>();
+        List<JobEntity> jobEntityList = jobService.getAllJobByCreatorId(accountId);
         for (CategoryEntity categoryEntity: listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
