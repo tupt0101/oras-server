@@ -15,11 +15,14 @@ import com.paypal.base.rest.PayPalRESTException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Controller
@@ -45,13 +48,22 @@ public class PaypalController {
     private PaypalService paypalService;
 
     @GetMapping("/")
-    public String index(){
+    public String index() {
         return "index";
     }
 
     @RequestMapping(value = "/pay/{price}", method = RequestMethod.GET)
-    public String pay(HttpServletRequest request,@PathVariable("price") double price, @RequestParam(value = "accountId", required = true) int accountId, @RequestParam(value = "packageId", required = true) int packageId ){
-//        if(accountPackageService.findAccountPackageByAccountId(accountId).get)
+    public String pay(HttpServletRequest request, @PathVariable("price") double price, @RequestParam(value = "accountId", required = true) int accountId, @RequestParam(value = "packageId", required = true) int packageId) {
+        List<AccountPackageEntity> accountPackageEntities = accountPackageService.findAccountPackagesByAccountId(accountId);
+        if (accountPackageEntities != null  && packageId == 1) {
+            for (int i = 0; i < accountPackageEntities.size(); i++) {
+                if (accountPackageEntities.get(i).getPackageId() == 1) {
+                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Package Starter has already been purchased");
+
+                }
+            }
+        }
+
         String cancelUrl = Utils.getBaseURL(request) + "/v1/paypal/" + URL_PAYPAL_CANCEL;
         String successUrl = Utils.getBaseURL(request) + "/v1/paypal/" + URL_PAYPAL_SUCCESS + "/" + accountId + "/" + packageId;
         try {
@@ -63,8 +75,8 @@ public class PaypalController {
                     "payment description",
                     cancelUrl,
                     successUrl);
-            for(Links links : payment.getLinks()){
-                if(links.getRel().equals("approval_url")){
+            for (Links links : payment.getLinks()) {
+                if (links.getRel().equals("approval_url")) {
                     return "redirect:" + links.getHref();
                 }
             }
@@ -76,16 +88,16 @@ public class PaypalController {
 
     @GetMapping(URL_PAYPAL_CANCEL)
     @ResponseBody
-    public String cancelPay(){
+    public String cancelPay() {
         return "cancel";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/pay/success/{accountId}/{packageId}")
     @ResponseBody
-    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId,@RequestParam("token") String token,  @PathVariable("accountId") int accountId, @PathVariable("packageId") int packageId){
+    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId, @RequestParam("token") String token, @PathVariable("accountId") int accountId, @PathVariable("packageId") int packageId) {
         try {
             Payment payment = paypalService.executePayment(paymentId, payerId);
-            if(payment.getState().equals("approved")){
+            if (payment.getState().equals("approved")) {
                 PurchaseEntity purchaseEntity = new PurchaseEntity();
                 purchaseEntity.setAccountId(accountId);
                 purchaseEntity.setAmount(Double.parseDouble(payment.getTransactions().get(0).getAmount().getTotal()));
@@ -103,8 +115,6 @@ public class PaypalController {
                 accountPackageEntity.setValidTo(LocalDateTime.now().plusMonths(1));
                 accountPackageEntity.setNumOfPost(packageService.findPackageById(packageId).getNumOfPost());
                 accountPackageService.createAccountPackage(accountPackageEntity);
-
-
 
 
                 return "<HTML><body> <a href=\"http://localhost:9527/#\">Payment Successful (Click to go back)</a></body></HTML>";

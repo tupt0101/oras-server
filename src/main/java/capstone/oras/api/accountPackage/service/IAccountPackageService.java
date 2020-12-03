@@ -10,5 +10,7 @@ public interface IAccountPackageService {
     List<AccountPackageEntity> getAllAccountPackage();
     AccountPackageEntity findAccountPackageById(int id);
     AccountPackageEntity findAccountPackageByAccountId(int id);
+    List<AccountPackageEntity> findAccountPackagesByAccountId(int id);
+
 
 }
