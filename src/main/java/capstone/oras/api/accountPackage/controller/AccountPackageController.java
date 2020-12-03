@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class AccountPackageController {
 
     @RequestMapping(value = "/account-package", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<AccountPackageEntity> createaccountPackage(@RequestBody PurchaseAccountPackage purchaseAccountPagkage) {
+    ResponseEntity<AccountPackageEntity> createAccountPackage(@RequestBody PurchaseAccountPackage purchaseAccountPagkage) {
         if (purchaseAccountPagkage.getAccountPackageEntity().getPackageId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Package Id is empty");
         } else if (purchaseAccountPagkage.getAccountPackageEntity().getPurchaseId() == null) {
@@ -104,4 +105,25 @@ public class AccountPackageController {
         return new ResponseEntity<AccountPackageEntity>(accountPackageService.findAccountPackageById(id), HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "/starter-package/{accountId}", method = RequestMethod.POST)
+    @ResponseBody
+    ResponseEntity<AccountPackageEntity> createStarterAccountPackage(@PathVariable("accountId") int accountId) {
+        List<AccountPackageEntity> accountPackageEntities = accountPackageService.findAccountPackagesByAccountId(accountId);
+        if (accountPackageEntities != null) {
+            for (int i = 0; i < accountPackageEntities.size(); i++) {
+                if (accountPackageEntities.get(i).getPackageId() == 1) {
+                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Package Starter has already been purchased");
+
+                }
+            }
+        }
+        AccountPackageEntity accountPackage = new AccountPackageEntity();
+        accountPackage.setNumOfPost(1);
+        accountPackage.setValidTo(LocalDateTime.now().plusMonths(1));
+        accountPackage.setPackageId(1);
+        accountPackage.setAccountId(accountId);
+        accountPackage.setExpired(false);
+        return new ResponseEntity<>(accountPackageService.createAccountPackage(accountPackage), HttpStatus.OK);
+    }
 }
