@@ -107,8 +107,14 @@ public class AccountPackageController {
 
     @RequestMapping(value = "/account-package-by-account-id/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<AccountPackageEntity>> getAccountPackageByAccountId(@PathVariable("id") int id) {
+    ResponseEntity<List<AccountPackageEntity>> getAccountPackagesByAccountId(@PathVariable("id") int id) {
         return new ResponseEntity<List<AccountPackageEntity>>(accountPackageService.findAccountPackagesByAccountId(id), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/current-account-package-by-account-id/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<AccountPackageEntity> getAccountPackageByAccountId(@PathVariable("id") int id) {
+        return new ResponseEntity<AccountPackageEntity>(accountPackageService.findAccountPackageByAccountId(id), HttpStatus.OK);
     }
 
 
