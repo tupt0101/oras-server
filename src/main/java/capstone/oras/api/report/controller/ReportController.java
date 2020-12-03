@@ -1,6 +1,7 @@
 package capstone.oras.api.report.controller;
 
 import capstone.oras.api.category.service.CategoryService;
+import capstone.oras.api.currency.CurrencyService;
 import capstone.oras.api.job.service.JobService;
 import capstone.oras.api.jobApplication.service.JobApplicationService;
 import capstone.oras.api.report.model.*;
@@ -152,13 +153,14 @@ public class ReportController {
         return new ResponseEntity<List<ApplicationByCategory>>(applicationByCategories, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/average-salary-by-category", method = RequestMethod.GET)
+    @RequestMapping(value = "/average-salary-by-category/{base}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<SalaryByCategory>> getAverageSalaryByCategory() {
+    ResponseEntity<List<SalaryByCategory>> getAverageSalaryByCategory(@PathVariable("base") String base) throws Exception {
         List<CategoryEntity> listCategory = new ArrayList<>();
         listCategory = categoryService.getAllCategory();
         List<SalaryByCategory> salaryByCategories = new ArrayList<>();
         List<JobEntity> jobEntityList = jobService.getAllJob();
+        CurrencyService currencyService = new CurrencyService();
         for (CategoryEntity categoryEntity: listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
@@ -166,7 +168,7 @@ public class ReportController {
             double totalSalary = 0;
             for (JobEntity jobEntity: listByCatagory
             ) {
-                totalSalary = ((jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
+                totalSalary = currencyService.currencyConverter(base, jobEntity.getCurrency(),(jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
             }
             salaryByCategory.setCategory(categoryEntity.getName());
             if (listByCatagory.size() > 0) {
@@ -179,13 +181,14 @@ public class ReportController {
         return new ResponseEntity<List<SalaryByCategory>>(salaryByCategories, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/average-salary-of-account-by-category/{account-id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/average-salary-of-account-by-category/{account-id}/{base}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<SalaryByCategory>> getAverageSalaryByCategory(@PathVariable("account-id") int accountId) {
+    ResponseEntity<List<SalaryByCategory>> getAverageSalaryOfAccountByCategory(@PathVariable("account-id") int accountId,@PathVariable("base") String base) throws Exception {
         List<CategoryEntity> listCategory = new ArrayList<>();
         listCategory = categoryService.getAllCategory();
         List<SalaryByCategory> salaryByCategories = new ArrayList<>();
         List<JobEntity> jobEntityList = jobService.getAllJobByCreatorId(accountId);
+        CurrencyService currencyService = new CurrencyService();
         for (CategoryEntity categoryEntity: listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
@@ -193,7 +196,7 @@ public class ReportController {
             double totalSalary = 0;
             for (JobEntity jobEntity: listByCatagory
             ) {
-                totalSalary = ((jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
+                totalSalary = currencyService.currencyConverter(base, jobEntity.getCurrency(),(jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
             }
             salaryByCategory.setCategory(categoryEntity.getName());
             if (listByCatagory.size() > 0) {
