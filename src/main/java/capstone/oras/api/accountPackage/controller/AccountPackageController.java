@@ -88,6 +88,18 @@ public class AccountPackageController {
 
     }
 
+    @RequestMapping(value = "/cancel-account-package/{accountId}", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<AccountPackageEntity> cancelCurrentAccountPackage(@PathVariable("accountId")int accountId) {
+        AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(accountId);
+        if(accountPackageEntity == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No current active package");
+        }
+        accountPackageEntity.setExpired(true);
+        return new ResponseEntity<>(accountPackageService.updateAccountPackage(accountPackageEntity), HttpStatus.OK);
+
+    }
+
     @RequestMapping(value = "/account-packages", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<AccountPackageEntity>> getAllAccountPackage() {
