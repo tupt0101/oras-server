@@ -223,7 +223,7 @@ public class JobController {
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
         OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
         job.setOpenjobJobId(openJobEntity.getId());
-
+        job.setExpireDate(accountPackageEntity.getValidTo());
 
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setCreatorId(job.getCreatorId());
