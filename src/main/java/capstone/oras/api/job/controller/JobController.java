@@ -140,6 +140,12 @@ public class JobController {
         return new ResponseEntity<List<JobEntity>>(jobService.getAllJobByCreatorId(id), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/closed-published-job-by-creator-id/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<JobEntity>> getAllClosedAndPublishedJobByCreatorId(@PathVariable("id") int id) {
+        return new ResponseEntity<List<JobEntity>>(jobService.getClosedAndPublishedJobByCreatorId(id), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/job-statistic-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<Statistic> getJobStatisticByCreatorId(@PathVariable("id") int id) {

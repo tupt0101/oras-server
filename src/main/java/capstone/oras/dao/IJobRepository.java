@@ -15,6 +15,8 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer> {
     boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(int creatorId, String title, String status);
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEquals(int creatorId);
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEqualsAndStatusEquals(int creatorId, String status);
+    Optional<List<JobEntity>> findJobEntitiesByCreatorIdEqualsAndStatusIn(int creatorId, List<String> status);
+
     @Query(value = "select j.id, " +
             "       (select count(*) " +
             "       from job_application ja " +
