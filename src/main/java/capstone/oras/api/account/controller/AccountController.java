@@ -425,9 +425,9 @@ public class AccountController {
             AccountEntity user = accountService.findAccountByEmail(token.getUser().getEmail());
             user.setConfirmMail(true);
             accountService.updateAccount(user);
-            return "redirect:http://localhost:8080//confirm_success";
+            return "<HTML><body> <a href=\"http://localhost:9527/#\">Confirm Successful (Click to go back)</a></body></HTML>";
         } else {
-            return "redirect:http://localhost:8080//confirm_error";
+            return "<HTML><body> <a href=\"http://localhost:9527/#\">Confirm Error (Click to go back)</a></body></HTML>";
         }
     }
 }
