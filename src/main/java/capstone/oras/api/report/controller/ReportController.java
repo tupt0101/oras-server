@@ -85,10 +85,12 @@ public class ReportController {
         for (CategoryEntity categoryEntity: listCategory
              ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
-            PostByCategory postByCategory = new PostByCategory();
-            postByCategory.setCategory(categoryEntity.getName());
-            postByCategory.setNumOfPost(listByCatagory.size());
-            postByCategories.add(postByCategory);
+            if( listByCatagory.size() > 0 ) {
+                PostByCategory postByCategory = new PostByCategory();
+                postByCategory.setCategory(categoryEntity.getName());
+                postByCategory.setNumOfPost(listByCatagory.size());
+                postByCategories.add(postByCategory);
+            }
         }
         return new ResponseEntity<List<PostByCategory>>(postByCategories, HttpStatus.OK);
     }
@@ -103,10 +105,12 @@ public class ReportController {
         for (CategoryEntity categoryEntity: listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
-            PostByCategory postByCategory = new PostByCategory();
-            postByCategory.setCategory(categoryEntity.getName());
-            postByCategory.setNumOfPost(listByCatagory.size());
-            postByCategories.add(postByCategory);
+            if( listByCatagory.size() > 0 ) {
+                PostByCategory postByCategory = new PostByCategory();
+                postByCategory.setCategory(categoryEntity.getName());
+                postByCategory.setNumOfPost(listByCatagory.size());
+                postByCategories.add(postByCategory);
+            }
         }
         return new ResponseEntity<List<PostByCategory>>(postByCategories, HttpStatus.OK);
     }
@@ -126,10 +130,12 @@ public class ReportController {
                  ) {
                 totalApplication += jobEntity.getJobApplicationsById().size();
             }
-            ApplicationByCategory applicationByCategory = new ApplicationByCategory();
-            applicationByCategory.setCategory(categoryEntity.getName());
-            applicationByCategory.setNumOfApplication(totalApplication);
-            applicationByCategories.add(applicationByCategory);
+            if (totalApplication > 0) {
+                ApplicationByCategory applicationByCategory = new ApplicationByCategory();
+                applicationByCategory.setCategory(categoryEntity.getName());
+                applicationByCategory.setNumOfApplication(totalApplication);
+                applicationByCategories.add(applicationByCategory);
+            }
         }
         return new ResponseEntity<List<ApplicationByCategory>>(applicationByCategories, HttpStatus.OK);
     }
@@ -149,10 +155,12 @@ public class ReportController {
             ) {
                 totalApplication += jobEntity.getJobApplicationsById().size();
             }
-            ApplicationByCategory applicationByCategory = new ApplicationByCategory();
-            applicationByCategory.setCategory(categoryEntity.getName());
-            applicationByCategory.setNumOfApplication(totalApplication);
-            applicationByCategories.add(applicationByCategory);
+            if (totalApplication > 0) {
+                ApplicationByCategory applicationByCategory = new ApplicationByCategory();
+                applicationByCategory.setCategory(categoryEntity.getName());
+                applicationByCategory.setNumOfApplication(totalApplication);
+                applicationByCategories.add(applicationByCategory);
+            }
         }
         return new ResponseEntity<List<ApplicationByCategory>>(applicationByCategories, HttpStatus.OK);
     }
