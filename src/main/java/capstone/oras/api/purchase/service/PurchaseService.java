@@ -37,7 +37,8 @@ public class PurchaseService implements IPurchaseService {
     }
 
     @Override
-    public PurchaseEntity findPurchaseEntityByAccountID(int id) {
-        return IPurchaseRepository.findPurchaseEntitiesByAccountIdEquals(id);
-    }
+    public List<PurchaseEntity> findPurchaseEntityByAccountID(int id) {
+        if (IPurchaseRepository.findPurchaseEntitiesByAccountIdEquals(id).isPresent()) {
+            return IPurchaseRepository.findPurchaseEntitiesByAccountIdEquals(id).get();
+        } else return null;    }
 }

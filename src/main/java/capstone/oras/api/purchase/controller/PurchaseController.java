@@ -56,7 +56,7 @@ public class PurchaseController {
 
     @RequestMapping(value = "/purchase-by-account-id/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<PurchaseEntity> getPurchaseByAccountId(@PathVariable("id") int id) {
-        return new ResponseEntity<PurchaseEntity>(purchaseService.findPurchaseEntityByAccountID(id), HttpStatus.OK);
+    ResponseEntity<List<PurchaseEntity>> getPurchaseByAccountId(@PathVariable("id") int id) {
+        return new ResponseEntity<List<PurchaseEntity>>(purchaseService.findPurchaseEntityByAccountID(id), HttpStatus.OK);
     }
 }

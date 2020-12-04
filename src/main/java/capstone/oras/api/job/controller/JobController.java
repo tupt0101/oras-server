@@ -1,16 +1,15 @@
 package capstone.oras.api.job.controller;
 
 import capstone.oras.api.account.service.IAccountService;
+import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.company.service.ICompanyService;
-import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.talentPool.service.ITalentPoolService;
 import capstone.oras.entity.AccountPackageEntity;
+import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.CategoryEntity;
-import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
-import capstone.oras.entity.model.Statistic;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +20,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
+import static capstone.oras.common.Constant.JobStatus.CLOSED;
 import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
 
 @RestController
@@ -69,11 +66,12 @@ public class JobController {
     @ResponseBody
     ResponseEntity<JobEntity> createJob(@RequestBody JobEntity job) {
         JobEntity jobEntity = jobService.createJob(job);
-//        ActivityEntity activityEntity = new ActivityEntity();
-//        activityEntity.setCreatorId(job.getCreatorId());
-//        activityEntity.setTime(java.time.LocalDateTime.now());
-//        activityEntity.setTitle("Create Job Draft");
-//        activityService.createActivity(activityEntity);
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setCreatorId(job.getCreatorId());
+        activityEntity.setTime(java.time.LocalDateTime.now());
+        activityEntity.setTitle("Create Job Draft");
+        activityEntity.setJobId(jobEntity.getId());
+        activityService.createActivity(activityEntity);
         return new ResponseEntity<>(jobEntity, HttpStatus.OK);
     }
 
@@ -89,7 +87,8 @@ public class JobController {
         if (jobService.getJobById(id) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to update");
         }
-        int openjobJobId = jobService.getJobById(id).getOpenjobJobId();
+        JobEntity job = jobService.getJobById(id);
+        int openjobJobId = job.getOpenjobJobId();
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = "Bearer " + userDetailsService.getOpenJobToken();
@@ -104,9 +103,15 @@ public class JobController {
         HttpEntity entity = new HttpEntity(headers);
         // close job on openjob
         restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setCreatorId(job.getCreatorId());
+        activityEntity.setTime(java.time.LocalDateTime.now());
+        activityEntity.setTitle("Close Job");
+        activityEntity.setJobId(id);
+        job = jobService.closeJob(id);
+        activityService.createActivity(activityEntity);
 
-
-        return new ResponseEntity<>(jobService.closeJob(id), HttpStatus.OK);
+        return new ResponseEntity<>(job, HttpStatus.OK);
     }
 
 
@@ -134,28 +139,6 @@ public class JobController {
         return new ResponseEntity<List<JobEntity>>(jobService.getAllJobByCreatorId(id), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/job-statistic-by-creator-id/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    ResponseEntity<Statistic> getJobStatisticByCreatorId(@PathVariable("id") int id) {
-        List<JobEntity> listJob = jobService.getJobByCreatorId(id);
-        Statistic statistic = new Statistic();
-        int totalApplication = 0;
-        int totalHiredApplicant = 0;
-        int totalPublicJob = 0;
-        List<Collection<JobApplicationEntity>> listApplication = listJob.stream().map(s -> s.getJobApplicationsById()).collect(Collectors.toList());
-        for (Collection<JobApplicationEntity> applications : listApplication
-        ) {
-            totalApplication += applications.size();
-            totalHiredApplicant += applications.stream().filter(s -> s.getStatus().equals(HIRED)).collect(Collectors.toList()).size();
-        }
-        totalPublicJob += listJob.stream().filter(s -> s.getStatus().equals(PUBLISHED)).collect(Collectors.toList()).size();
-        statistic.setTotalJob(listJob.size());
-        statistic.setTotalCandidate(totalApplication);
-        statistic.setTotalHiredCandidate(totalHiredApplicant);
-        statistic.setTotalPublishJob(totalPublicJob);
-        return new ResponseEntity<Statistic>(statistic, HttpStatus.OK);
-    }
-
 
     @RequestMapping(value = "/job/{id}/extend/{date}", method = RequestMethod.PUT)
     @ResponseBody
@@ -173,16 +156,25 @@ public class JobController {
     @RequestMapping(value = "/job/{id}/publish", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
-        if (jobService.getJobById(id) == null) {
+        JobEntity tempJob = jobService.getJobById(id);
+        if (tempJob == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
+        } else if(tempJob.getStatus().equals(CLOSED)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Closed job cannot be reopen");
         }
         JobEntity job = jobService.getJobById(id);
         AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(job.getCreatorId());
+        if (accountPackageEntity == null) {
+            throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
+        }
         int numOfPost = accountPackageEntity.getNumOfPost();
         if (numOfPost > 0) {
             accountPackageEntity.setNumOfPost(numOfPost - 1);
         } else {
             throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
+        }
+        if (accountPackageEntity.getNumOfPost() == 0 ) {
+            accountPackageEntity.setExpired(true);
         }
         job.setStatus(PUBLISHED);
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
@@ -218,7 +210,18 @@ public class JobController {
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
         OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
         job.setOpenjobJobId(openJobEntity.getId());
-        return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
+        job.setExpireDate(accountPackageEntity.getValidTo());
+
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setCreatorId(job.getCreatorId());
+        job = jobService.updateJob(job);
+        activityEntity.setTime(java.time.LocalDateTime.now());
+        activityEntity.setTitle("Published a Job");
+        activityEntity.setJobId(id);
+        activityService.createActivity(activityEntity);
+        accountPackageService.updateAccountPackage(accountPackageEntity);
+
+        return new ResponseEntity<>(job, HttpStatus.OK);
     }
 
     @PostMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
