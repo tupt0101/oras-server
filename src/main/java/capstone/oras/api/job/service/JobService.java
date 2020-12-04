@@ -133,7 +133,7 @@ public class JobService implements IJobService {
             return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusIn(id, statusToSearch).get();
 
         }
-        return null;
+        throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
     }
 
     @Override
