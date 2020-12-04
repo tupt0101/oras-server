@@ -22,10 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
 import static capstone.oras.common.Constant.JobStatus.CLOSED;
@@ -48,7 +45,7 @@ public class JobService implements IJobService {
     @Override
     public JobEntity createJob(JobEntity job) {
         jobValidation(job);
-        if (IJobRepository.existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(job.getCreatorId(), job.getTitle(), CLOSED)){
+        if (IJobRepository.existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(job.getCreatorId(), job.getTitle(), CLOSED)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This job title already exists");
         }
         job.setProcessedJd(this.processJd(job.getDescription()));
@@ -128,9 +125,21 @@ public class JobService implements IJobService {
     }
 
     @Override
+    public List<JobEntity> getClosedAndPublishedJobByCreatorId(int id) {
+        List<String> statusToSearch = new ArrayList<>();
+        statusToSearch.add(PUBLISHED);
+        statusToSearch.add(CLOSED);
+        if (IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusIn(id, statusToSearch).isPresent()) {
+            return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusIn(id, statusToSearch).get();
+
+        }
+        throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
+    }
+
+    @Override
     public List<JobEntity> getAllJobByCreatorId(int id) {
         Optional<List<JobEntity>> lstJob = IJobRepository.findJobEntitiesByCreatorIdEquals(id);
-        if(!lstJob.isPresent()) {
+        if (!lstJob.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
         }
         List<JobEntity> ret = lstJob.get();
@@ -184,7 +193,7 @@ public class JobService implements IJobService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
         }
 
-        if (job.getVacancies()  ==  null || job.getVacancies() <= 0) {
+        if (job.getVacancies() == null || job.getVacancies() <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vacancies must be greater than 0");
         }
 
@@ -196,7 +205,7 @@ public class JobService implements IJobService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category is empty");
         }
 
-        if (job.getSalaryFrom()  ==  null ||job.getSalaryTo()  ==  null ||job.getSalaryFrom() <= 0 || job.getSalaryTo() < job.getSalaryFrom() ) {
+        if (job.getSalaryFrom() == null || job.getSalaryTo() == null || job.getSalaryFrom() <= 0 || job.getSalaryTo() < job.getSalaryFrom()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary range is invalid");
         }
 
