@@ -163,7 +163,7 @@ public class ReportController {
         List<CategoryEntity> listCategory = new ArrayList<>();
         listCategory = categoryService.getAllCategory();
         List<SalaryByCategory> salaryByCategories = new ArrayList<>();
-        List<JobEntity> jobEntityList = jobService.getAllJob();
+        List<JobEntity> jobEntityList = jobService.getJobByCreatorId();
         CurrencyService currencyService = new CurrencyService();
         for (CategoryEntity categoryEntity: listCategory
         ) {
@@ -190,7 +190,8 @@ public class ReportController {
     ResponseEntity<List<SalaryByCategory>> getAverageSalaryOfAccountByCategory(@PathVariable("account-id") int accountId,@PathVariable("base") String base) throws Exception {
         List<CategoryEntity> listCategory = new ArrayList<>();
         listCategory = categoryService.getAllCategory();
-        List<SalaryByCategory> salaryByCategories = new ArrayList<>();
+        List<SalaryByCategory> accountSalaryByCategories = new ArrayList<>();
+        List<SalaryByCategory> systemSalaryByCategories = new ArrayList<>();
         List<JobEntity> jobEntityList = jobService.getAllJobByCreatorId(accountId);
         CurrencyService currencyService = new CurrencyService();
         for (CategoryEntity categoryEntity: listCategory
@@ -205,12 +206,10 @@ public class ReportController {
             salaryByCategory.setCategory(categoryEntity.getName());
             if (listByCatagory.size() > 0) {
                 salaryByCategory.setAverageSalary(totalSalary / listByCatagory.size());
-            } else {
-                salaryByCategory.setAverageSalary(0);
+                accountSalaryByCategories.add(salaryByCategory);
             }
-            salaryByCategories.add(salaryByCategory);
         }
-        return new ResponseEntity<List<SalaryByCategory>>(salaryByCategories, HttpStatus.OK);
+        return new ResponseEntity<List<SalaryByCategory>>(accountSalaryByCategories, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job-statistic-by-creator-id/{id}", method = RequestMethod.GET)
