@@ -160,6 +160,11 @@ public class ReportController {
     @RequestMapping(value = "/average-salary-by-category/{base}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<SalaryByCategory>> getAverageSalaryByCategory(@PathVariable("base") String base) throws Exception {
+        List<SalaryByCategory> salaryByCategories = getSalaryByCategories(base);
+        return new ResponseEntity<List<SalaryByCategory>>(salaryByCategories, HttpStatus.OK);
+    }
+
+    private List<SalaryByCategory> getSalaryByCategories(String base) throws Exception {
         List<CategoryEntity> listCategory = new ArrayList<>();
         listCategory = categoryService.getAllCategory();
         List<SalaryByCategory> salaryByCategories = new ArrayList<>();
@@ -177,21 +182,25 @@ public class ReportController {
             salaryByCategory.setCategory(categoryEntity.getName());
             if (listByCatagory.size() > 0) {
                 salaryByCategory.setAverageSalary(totalSalary / listByCatagory.size());
-            } else {
-                salaryByCategory.setAverageSalary(0);
+                salaryByCategories.add(salaryByCategory);
             }
-            salaryByCategories.add(salaryByCategory);
         }
-        return new ResponseEntity<List<SalaryByCategory>>(salaryByCategories, HttpStatus.OK);
+        return salaryByCategories;
     }
 
     @RequestMapping(value = "/average-salary-of-account-by-category/{account-id}/{base}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<SalaryByCategory>> getAverageSalaryOfAccountByCategory(@PathVariable("account-id") int accountId,@PathVariable("base") String base) throws Exception {
+        List<SalaryByCategory> accountSalaryByCategories = getSalaryByCategories(accountId, base);
+        return new ResponseEntity<List<SalaryByCategory>>(accountSalaryByCategories, HttpStatus.OK);
+    }
+
+    private List<SalaryByCategory> getSalaryByCategories(int accountId, String base) throws Exception {
         List<CategoryEntity> listCategory = new ArrayList<>();
         listCategory = categoryService.getAllCategory();
-        List<SalaryByCategory> salaryByCategories = new ArrayList<>();
-        List<JobEntity> jobEntityList = jobService.getAllJobByCreatorId(accountId);
+        List<SalaryByCategory> accountSalaryByCategories = new ArrayList<>();
+        List<SalaryByCategory> systemSalaryByCategories = new ArrayList<>();
+        List<JobEntity> jobEntityList = jobService.getClosedAndPublishedJobByCreatorId(accountId);
         CurrencyService currencyService = new CurrencyService();
         for (CategoryEntity categoryEntity: listCategory
         ) {
@@ -205,12 +214,10 @@ public class ReportController {
             salaryByCategory.setCategory(categoryEntity.getName());
             if (listByCatagory.size() > 0) {
                 salaryByCategory.setAverageSalary(totalSalary / listByCatagory.size());
-            } else {
-                salaryByCategory.setAverageSalary(0);
+                accountSalaryByCategories.add(salaryByCategory);
             }
-            salaryByCategories.add(salaryByCategory);
         }
-        return new ResponseEntity<List<SalaryByCategory>>(salaryByCategories, HttpStatus.OK);
+        return accountSalaryByCategories;
     }
 
     @RequestMapping(value = "/job-statistic-by-creator-id/{id}", method = RequestMethod.GET)
@@ -234,4 +241,25 @@ public class ReportController {
         statistic.setTotalPublishJob(totalPublicJob);
         return new ResponseEntity<Statistic>(statistic, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/system-user-salary-by-category/{id}/{base}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<SystemAndUserSalaryReport> getSalaryReport(@PathVariable("id") int id, @PathVariable("base") String base) throws Exception {
+        SystemAndUserSalaryReport systemAndUserSalaryReport = new SystemAndUserSalaryReport();
+        List<SalaryByCategory> userSalaryByCategories = new ArrayList<>();
+        userSalaryByCategories = getSalaryByCategories(id, base);
+        List<SalaryByCategory> salaryByCategories = new ArrayList<>();
+        salaryByCategories = getSalaryByCategories(base);
+        List<SalaryByCategory> systemSalaryByCategories = new ArrayList<>();
+        for (SalaryByCategory salaryByCategory: userSalaryByCategories
+             ) {
+            systemSalaryByCategories.add(salaryByCategories.stream().filter(s -> s.getCategory().equals(salaryByCategory.getCategory())).collect(Collectors.toList()).get(0));
+        }
+        systemAndUserSalaryReport.setSystem(systemSalaryByCategories);
+        systemAndUserSalaryReport.setUser(userSalaryByCategories);
+        return new ResponseEntity<SystemAndUserSalaryReport>(systemAndUserSalaryReport, HttpStatus.OK);
+    }
+
+
+
 }
