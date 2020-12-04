@@ -137,6 +137,17 @@ public class JobService implements IJobService {
     }
 
     @Override
+    public List<JobEntity> getClosedAndPublishedJob(int id) {
+        List<String> statusToSearch = new ArrayList<>();
+        statusToSearch.add(PUBLISHED);
+        statusToSearch.add(CLOSED);
+        if (IJobRepository.findJobEntitiesByStatusIn(statusToSearch).isPresent()) {
+            return IJobRepository.findJobEntitiesByStatusIn(statusToSearch).get();
+
+        }
+        throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");    }
+
+    @Override
     public List<JobEntity> getAllJobByCreatorId(int id) {
         Optional<List<JobEntity>> lstJob = IJobRepository.findJobEntitiesByCreatorIdEquals(id);
         if (!lstJob.isPresent()) {
