@@ -4,16 +4,19 @@ import capstone.oras.api.category.service.CategoryService;
 import capstone.oras.api.currency.CurrencyService;
 import capstone.oras.api.job.service.JobService;
 import capstone.oras.api.jobApplication.service.JobApplicationService;
+import capstone.oras.api.purchase.service.PurchaseService;
 import capstone.oras.api.report.model.*;
 import capstone.oras.entity.CategoryEntity;
 import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
+import capstone.oras.entity.PurchaseEntity;
 import capstone.oras.entity.model.Statistic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,15 +40,18 @@ public class ReportController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private PurchaseService purchaseService;
+
     @RequestMapping(value = "/time-to-hire/{account-id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity< List<TimeToHire>> getTimeToHire(@PathVariable("account-id") int accountId) {
+    ResponseEntity<List<TimeToHire>> getTimeToHire(@PathVariable("account-id") int accountId) {
         List<JobEntity> listJob = jobService.getAllJobByCreatorId(accountId);
         List<TimeToHire> timeToHires = new ArrayList<>();
-        for (JobEntity jobEntity: listJob) {
+        for (JobEntity jobEntity : listJob) {
             List<JobApplicationEntity> applicationEntityList = jobEntity.getJobApplicationsById().stream().filter(s -> HIRED.equals(s.getStatus())).collect(Collectors.toList());
             if (applicationEntityList.size() > 0) {
-                for (JobApplicationEntity application: applicationEntityList) {
+                for (JobApplicationEntity application : applicationEntityList) {
                     TimeToHire timeToHire = new TimeToHire();
                     timeToHire.setJobTitle(jobEntity.getTitle());
                     timeToHire.setHiredCandidate(application.getCandidateByCandidateId());
@@ -56,15 +62,15 @@ public class ReportController {
                 }
             }
         }
-        return new ResponseEntity< List<TimeToHire>>(timeToHires, HttpStatus.OK);
+        return new ResponseEntity<List<TimeToHire>>(timeToHires, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/candidate-of-job/{account-id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity< List<CandidateOfJob>> getCandidateOfJob(@PathVariable("account-id") int accountId) {
+    ResponseEntity<List<CandidateOfJob>> getCandidateOfJob(@PathVariable("account-id") int accountId) {
         List<JobEntity> listJob = jobService.getAllJobByCreatorId(accountId);
         List<CandidateOfJob> candidateOfJobList = new ArrayList<>();
-        for (JobEntity jobEntity: listJob) {
+        for (JobEntity jobEntity : listJob) {
             List<JobApplicationEntity> hiredList = jobEntity.getJobApplicationsById().stream().filter(s -> HIRED.equals(s.getStatus())).collect(Collectors.toList());
             CandidateOfJob candidateOfJob = new CandidateOfJob();
             candidateOfJob.setHired(hiredList.size());
@@ -82,10 +88,10 @@ public class ReportController {
         listCategory = categoryService.getAllCategory();
         List<PostByCategory> postByCategories = new ArrayList<>();
         List<JobEntity> jobEntityList = jobService.getAllJob();
-        for (CategoryEntity categoryEntity: listCategory
-             ) {
+        for (CategoryEntity categoryEntity : listCategory
+        ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
-            if( listByCatagory.size() > 0 ) {
+            if (listByCatagory.size() > 0) {
                 PostByCategory postByCategory = new PostByCategory();
                 postByCategory.setCategory(categoryEntity.getName());
                 postByCategory.setNumOfPost(listByCatagory.size());
@@ -102,10 +108,10 @@ public class ReportController {
         listCategory = categoryService.getAllCategory();
         List<PostByCategory> postByCategories = new ArrayList<>();
         List<JobEntity> jobEntityList = jobService.getAllJobByCreatorId(accountId);
-        for (CategoryEntity categoryEntity: listCategory
+        for (CategoryEntity categoryEntity : listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
-            if( listByCatagory.size() > 0 ) {
+            if (listByCatagory.size() > 0) {
                 PostByCategory postByCategory = new PostByCategory();
                 postByCategory.setCategory(categoryEntity.getName());
                 postByCategory.setNumOfPost(listByCatagory.size());
@@ -122,12 +128,12 @@ public class ReportController {
         listCategory = categoryService.getAllCategory();
         List<ApplicationByCategory> applicationByCategories = new ArrayList<>();
         List<JobEntity> jobEntityList = jobService.getAllJob();
-        for (CategoryEntity categoryEntity: listCategory
+        for (CategoryEntity categoryEntity : listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
             int totalApplication = 0;
-            for (JobEntity jobEntity: listByCatagory
-                 ) {
+            for (JobEntity jobEntity : listByCatagory
+            ) {
                 totalApplication += jobEntity.getJobApplicationsById().size();
             }
             if (totalApplication > 0) {
@@ -147,11 +153,11 @@ public class ReportController {
         listCategory = categoryService.getAllCategory();
         List<ApplicationByCategory> applicationByCategories = new ArrayList<>();
         List<JobEntity> jobEntityList = jobService.getAllJobByCreatorId(accountId);
-        for (CategoryEntity categoryEntity: listCategory
+        for (CategoryEntity categoryEntity : listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
             int totalApplication = 0;
-            for (JobEntity jobEntity: listByCatagory
+            for (JobEntity jobEntity : listByCatagory
             ) {
                 totalApplication += jobEntity.getJobApplicationsById().size();
             }
@@ -178,14 +184,14 @@ public class ReportController {
         List<SalaryByCategory> salaryByCategories = new ArrayList<>();
         List<JobEntity> jobEntityList = jobService.getAllJob();
         CurrencyService currencyService = new CurrencyService();
-        for (CategoryEntity categoryEntity: listCategory
+        for (CategoryEntity categoryEntity : listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
             SalaryByCategory salaryByCategory = new SalaryByCategory();
             double totalSalary = 0;
-            for (JobEntity jobEntity: listByCatagory
+            for (JobEntity jobEntity : listByCatagory
             ) {
-                totalSalary = currencyService.currencyConverter(base, jobEntity.getCurrency(),(jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
+                totalSalary = currencyService.currencyConverter(base, jobEntity.getCurrency(), (jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
             }
             salaryByCategory.setCategory(categoryEntity.getName());
             if (listByCatagory.size() > 0) {
@@ -198,7 +204,7 @@ public class ReportController {
 
     @RequestMapping(value = "/average-salary-of-account-by-category/{account-id}/{base}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<SalaryByCategory>> getAverageSalaryOfAccountByCategory(@PathVariable("account-id") int accountId,@PathVariable("base") String base) throws Exception {
+    ResponseEntity<List<SalaryByCategory>> getAverageSalaryOfAccountByCategory(@PathVariable("account-id") int accountId, @PathVariable("base") String base) throws Exception {
         List<SalaryByCategory> accountSalaryByCategories = getSalaryByCategories(accountId, base);
         return new ResponseEntity<List<SalaryByCategory>>(accountSalaryByCategories, HttpStatus.OK);
     }
@@ -210,14 +216,14 @@ public class ReportController {
         List<SalaryByCategory> systemSalaryByCategories = new ArrayList<>();
         List<JobEntity> jobEntityList = jobService.getClosedAndPublishedJobByCreatorId(accountId);
         CurrencyService currencyService = new CurrencyService();
-        for (CategoryEntity categoryEntity: listCategory
+        for (CategoryEntity categoryEntity : listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
             SalaryByCategory salaryByCategory = new SalaryByCategory();
             double totalSalary = 0;
-            for (JobEntity jobEntity: listByCatagory
+            for (JobEntity jobEntity : listByCatagory
             ) {
-                totalSalary = currencyService.currencyConverter(base, jobEntity.getCurrency(),(jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
+                totalSalary = currencyService.currencyConverter(base, jobEntity.getCurrency(), (jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
             }
             salaryByCategory.setCategory(categoryEntity.getName());
             if (listByCatagory.size() > 0) {
@@ -259,13 +265,84 @@ public class ReportController {
         List<SalaryByCategory> salaryByCategories = new ArrayList<>();
         salaryByCategories = getSalaryByCategories(base);
         List<SalaryByCategory> systemSalaryByCategories = new ArrayList<>();
-        for (SalaryByCategory salaryByCategory: userSalaryByCategories
-             ) {
+        for (SalaryByCategory salaryByCategory : userSalaryByCategories
+        ) {
             systemSalaryByCategories.add(salaryByCategories.stream().filter(s -> s.getCategory().equals(salaryByCategory.getCategory())).collect(Collectors.toList()).get(0));
         }
         systemAndUserSalaryReport.setSystem(systemSalaryByCategories);
         systemAndUserSalaryReport.setUser(userSalaryByCategories);
         return new ResponseEntity<SystemAndUserSalaryReport>(systemAndUserSalaryReport, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/account-purchase-report/{id}/{year}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<PurchasePerMonth>> getAccountPurchaseReport(@PathVariable("id") int id, @PathVariable("year") int year) throws Exception {
+        List<PurchasePerMonth> purchasePerMonths = new ArrayList<>();
+        List<PurchaseEntity> listPurchase =  new ArrayList<>();
+        listPurchase = purchaseService.findPurchaseEntityByAccountID(id);
+        if (listPurchase != null) {
+            if (listPurchase.size() >  0 ) {
+                listPurchase = getPurchaseByYear(year, listPurchase);
+                purchasePerMonths.add(getPurchaseByMonth(Month.JANUARY, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.FEBRUARY, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.MARCH, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.APRIL, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.MAY, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.JUNE, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.JULY, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.AUGUST, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.SEPTEMBER, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.OCTOBER, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.NOVEMBER, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.DECEMBER, listPurchase));
+                return new ResponseEntity<List<PurchasePerMonth>>(purchasePerMonths, HttpStatus.OK);
+            } else {
+                purchasePerMonths = createEmptyPurchasePerMonth();
+                return new ResponseEntity<List<PurchasePerMonth>>(purchasePerMonths, HttpStatus.OK);
+            }
+        } else {
+            purchasePerMonths = createEmptyPurchasePerMonth();
+            return new ResponseEntity<List<PurchasePerMonth>>(purchasePerMonths, HttpStatus.OK);
+        }
+
+    }
+
+    private List<PurchasePerMonth> createEmptyPurchasePerMonth() {
+        List<PurchasePerMonth> purchasePerMonths = new ArrayList<>();
+        purchasePerMonths.add(new PurchasePerMonth(Month.JANUARY.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.FEBRUARY.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.MARCH.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.APRIL.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.MAY.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.JUNE.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.JULY.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.AUGUST.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.SEPTEMBER.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.OCTOBER.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.NOVEMBER.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.DECEMBER.toString(), 0));
+        return  purchasePerMonths;
+    }
+
+        private List<PurchaseEntity> getPurchaseByYear(int year, List<PurchaseEntity> listPurchase) {
+        return listPurchase.stream().filter(s -> s.getPurchaseDate().getYear() == year).collect(Collectors.toList());
+    }
+
+    private PurchasePerMonth getPurchaseByMonth(Month month, List<PurchaseEntity> listPurchase) {
+        List<PurchaseEntity> temp = new ArrayList<>();
+        temp = listPurchase.stream().filter(s -> s.getPurchaseDate().getMonth().equals(month)).collect(Collectors.toList());
+        PurchasePerMonth purchasePerMonth = new PurchasePerMonth();
+        purchasePerMonth.setMonth(month.toString());
+        if (temp.size() > 0) {
+            double amount = 0;
+            for (PurchaseEntity purchaseEntity: temp) {
+                amount += purchaseEntity.getAmount();
+            }
+            purchasePerMonth.setAmount(amount);
+        }else {
+            purchasePerMonth.setAmount(0);
+        }
+        return purchasePerMonth;
     }
 
 
