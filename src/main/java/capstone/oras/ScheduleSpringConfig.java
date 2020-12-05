@@ -67,8 +67,6 @@ public class ScheduleSpringConfig {
                 activityEntity.setTitle("Current Package Expired");
                 activityEntity.setJobId(null);
                 activityService.createActivity(activityEntity);
-                System.out.println(accountPackage.getValidTo());
-                System.out.println(accountPackage.getId());
             }
         }
         accountPackageService.updateAccountPackages(accountPackagesToUpdate);
@@ -80,14 +78,12 @@ public class ScheduleSpringConfig {
         for (int i = 0; i < jobEntities.size(); i++) {
             JobEntity job = jobEntities.get(i);
             if (job.getExpireDate().isBefore(LocalDateTime.now()) || job.getApplyTo().isBefore(LocalDateTime.now())) {
-                System.out.println(job.getTitle());
                 int openjobJobId = job.getOpenjobJobId();
                 //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
                 String token = "Bearer " + userDetailsService.getOpenJobToken();
                 // post job to openjob
                 String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
-                System.out.println(uri);
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Authorization", token);
