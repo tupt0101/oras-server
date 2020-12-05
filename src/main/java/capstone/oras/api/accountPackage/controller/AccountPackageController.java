@@ -120,7 +120,9 @@ public class AccountPackageController {
     @RequestMapping(value = "/account-package-by-account-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<AccountPackageEntity>> getAccountPackagesByAccountId(@PathVariable("id") int id) {
-        return new ResponseEntity<List<AccountPackageEntity>>(accountPackageService.findAccountPackagesByAccountId(id), HttpStatus.OK);
+        List<AccountPackageEntity> accountPackageEntities = accountPackageService.findAccountPackagesByAccountId(id);
+        accountPackageEntities.sort(Comparator.comparing(AccountPackageEntity::getValidTo).reversed());
+        return new ResponseEntity<List<AccountPackageEntity>>(accountPackageEntities, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/current-account-package-by-account-id/{id}", method = RequestMethod.GET)
