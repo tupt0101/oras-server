@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface IAccountPackageRepository extends JpaRepository<AccountPackageEntity, Integer> {
     Optional<AccountPackageEntity> findAccountPackageEntityByAccountIdEqualsAndExpiredFalse(int id);
     Optional<List<AccountPackageEntity>> findAccountPackageEntitiesByAccountIdEquals(int id);
+    Optional<List<AccountPackageEntity>> findAccountPackageEntitiesByExpiredFalse();
+
 }

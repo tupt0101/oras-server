@@ -77,7 +77,7 @@ public class JobService implements IJobService {
         } else if (getJobById(id) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to close");
         }
-        JobEntity job = IJobRepository.getOne(id);
+        JobEntity job = getJobById(id);
         job.setStatus(CLOSED);
         return IJobRepository.save(job);
     }
@@ -143,6 +143,14 @@ public class JobService implements IJobService {
         statusToSearch.add(CLOSED);
         if (IJobRepository.findJobEntitiesByStatusIn(statusToSearch).isPresent()) {
             return IJobRepository.findJobEntitiesByStatusIn(statusToSearch).get();
+
+        }
+        throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");    }
+
+    @Override
+    public List<JobEntity> getAllPublishedJob() {
+        if (IJobRepository.findJobEntitiesByStatusEquals(PUBLISHED).isPresent()) {
+            return IJobRepository.findJobEntitiesByStatusEquals(PUBLISHED).get();
 
         }
         throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");    }

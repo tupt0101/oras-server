@@ -7,10 +7,12 @@ import java.util.List;
 public interface IAccountPackageService {
     AccountPackageEntity createAccountPackage(AccountPackageEntity accountPackageEntity);
     AccountPackageEntity updateAccountPackage(AccountPackageEntity accountPackageEntity);
+    List<AccountPackageEntity> updateAccountPackages(List<AccountPackageEntity> accountPackageEntity);
     List<AccountPackageEntity> getAllAccountPackage();
     AccountPackageEntity findAccountPackageById(int id);
     AccountPackageEntity findAccountPackageByAccountId(int id);
     List<AccountPackageEntity> findAccountPackagesByAccountId(int id);
+    List<AccountPackageEntity> findAllValidAccountPackages();
 
 
 }

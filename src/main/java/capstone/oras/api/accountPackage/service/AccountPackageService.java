@@ -24,6 +24,11 @@ public class AccountPackageService implements IAccountPackageService {
     }
 
     @Override
+    public List<AccountPackageEntity> updateAccountPackages(List<AccountPackageEntity> accountPackageEntity) {
+        return IAccountPackageRepository.saveAll(accountPackageEntity);
+    }
+
+    @Override
     public List<AccountPackageEntity> getAllAccountPackage() {
         return IAccountPackageRepository.findAll();
     }
@@ -47,4 +52,11 @@ public class AccountPackageService implements IAccountPackageService {
         if (IAccountPackageRepository.findAccountPackageEntitiesByAccountIdEquals(id).isPresent()) {
             return IAccountPackageRepository.findAccountPackageEntitiesByAccountIdEquals(id).get();
         } else return null;    }
+
+    @Override
+    public List<AccountPackageEntity> findAllValidAccountPackages() {
+        if (IAccountPackageRepository.findAccountPackageEntitiesByExpiredFalse().isPresent()) {
+            return IAccountPackageRepository.findAccountPackageEntitiesByExpiredFalse().get();
+        } else return null;
+    }
 }

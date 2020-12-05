@@ -18,5 +18,7 @@ public interface IJobService {
     List<CategoryEntity> getAllCategories();
     List<JobEntity> getClosedAndPublishedJobByCreatorId(int id);
     List<JobEntity> getClosedAndPublishedJob(int id);
+    List<JobEntity> getAllPublishedJob();
+
 
 }

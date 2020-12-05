@@ -15,7 +15,7 @@ public class ActivityEntity {
     private LocalDateTime time;
     @ApiModelProperty(hidden = true)
     private AccountEntity accountById;
-    private int jobId;
+    private Integer jobId;
     @ApiModelProperty(hidden = true)
     private JobEntity jobById;
 
@@ -62,11 +62,11 @@ public class ActivityEntity {
 
     @Basic
     @Column(name = "job_id", nullable = true)
-    public int getJobId() {
+    public Integer getJobId() {
         return jobId;
     }
 
-    public void setJobId(int jobId) {
+    public void setJobId(Integer jobId) {
         this.jobId = jobId;
     }
 
