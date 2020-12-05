@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -90,19 +91,12 @@ public class ReportController {
         for (CategoryEntity categoryEntity : listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
-<<<<<<< Updated upstream
-            PostByCategory postByCategory = new PostByCategory();
-            postByCategory.setCategory(categoryEntity.getName());
-            postByCategory.setNumOfPost(listByCatagory.size());
-            postByCategories.add(postByCategory);
-=======
             if (listByCatagory.size() > 0) {
                 PostByCategory postByCategory = new PostByCategory();
                 postByCategory.setCategory(categoryEntity.getName());
                 postByCategory.setNumOfPost(listByCatagory.size());
                 postByCategories.add(postByCategory);
             }
->>>>>>> Stashed changes
         }
         return new ResponseEntity<List<PostByCategory>>(postByCategories, HttpStatus.OK);
     }
@@ -117,19 +111,12 @@ public class ReportController {
         for (CategoryEntity categoryEntity : listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
-<<<<<<< Updated upstream
-            PostByCategory postByCategory = new PostByCategory();
-            postByCategory.setCategory(categoryEntity.getName());
-            postByCategory.setNumOfPost(listByCatagory.size());
-            postByCategories.add(postByCategory);
-=======
             if (listByCatagory.size() > 0) {
                 PostByCategory postByCategory = new PostByCategory();
                 postByCategory.setCategory(categoryEntity.getName());
                 postByCategory.setNumOfPost(listByCatagory.size());
                 postByCategories.add(postByCategory);
             }
->>>>>>> Stashed changes
         }
         return new ResponseEntity<List<PostByCategory>>(postByCategories, HttpStatus.OK);
     }
@@ -287,17 +274,73 @@ public class ReportController {
     @ResponseBody
     ResponseEntity<List<PurchasePerMonth>> getAccountPurchaseReport(@PathVariable("id") int id, @PathVariable("year") int year) throws Exception {
         List<PurchasePerMonth> purchasePerMonths = new ArrayList<>();
-        List<PurchaseEntity> listPurchase = purchaseService.findPurchaseEntityByAccountID(id);
+        List<PurchaseEntity> listPurchase =  new ArrayList<>();
+        listPurchase = purchaseService.findPurchaseEntityByAccountID(id);
         if (listPurchase != null) {
-            if (listPurchase.size() > 0) {
-                for (PurchaseEntity purchaseEntity: listPurchase) {
-                    purchaseEntity.getPurchaseDate().getMonth();
-                    System.out.println(purchaseEntity.getPurchaseDate().getMonth());
-                }
+            if (listPurchase.size() >  0 ) {
+                listPurchase = getPurchaseByYear(year, listPurchase);
+                purchasePerMonths.add(getPurchaseByMonth(Month.JANUARY, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.FEBRUARY, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.MARCH, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.APRIL, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.MAY, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.JUNE, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.JULY, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.AUGUST, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.SEPTEMBER, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.OCTOBER, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.NOVEMBER, listPurchase));
+                purchasePerMonths.add(getPurchaseByMonth(Month.DECEMBER, listPurchase));
+                return new ResponseEntity<List<PurchasePerMonth>>(purchasePerMonths, HttpStatus.OK);
+            } else {
+                purchasePerMonths = createEmptyPurchasePerMonth();
+                return new ResponseEntity<List<PurchasePerMonth>>(purchasePerMonths, HttpStatus.OK);
             }
+        } else {
+            purchasePerMonths = createEmptyPurchasePerMonth();
+            return new ResponseEntity<List<PurchasePerMonth>>(purchasePerMonths, HttpStatus.OK);
         }
-        return new ResponseEntity<List<PurchasePerMonth>>(purchasePerMonths, HttpStatus.OK);
+
     }
+
+    private List<PurchasePerMonth> createEmptyPurchasePerMonth() {
+        List<PurchasePerMonth> purchasePerMonths = new ArrayList<>();
+        purchasePerMonths.add(new PurchasePerMonth(Month.JANUARY.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.FEBRUARY.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.MARCH.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.APRIL.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.MAY.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.JUNE.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.JULY.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.AUGUST.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.SEPTEMBER.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.OCTOBER.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.NOVEMBER.toString(), 0));
+        purchasePerMonths.add(new PurchasePerMonth(Month.DECEMBER.toString(), 0));
+        return  purchasePerMonths;
+    }
+
+        private List<PurchaseEntity> getPurchaseByYear(int year, List<PurchaseEntity> listPurchase) {
+        return listPurchase.stream().filter(s -> s.getPurchaseDate().getYear() == year).collect(Collectors.toList());
+    }
+
+    private PurchasePerMonth getPurchaseByMonth(Month month, List<PurchaseEntity> listPurchase) {
+        List<PurchaseEntity> temp = new ArrayList<>();
+        temp = listPurchase.stream().filter(s -> s.getPurchaseDate().getMonth().equals(month)).collect(Collectors.toList());
+        PurchasePerMonth purchasePerMonth = new PurchasePerMonth();
+        purchasePerMonth.setMonth(month.toString());
+        if (temp.size() > 0) {
+            double amount = 0;
+            for (PurchaseEntity purchaseEntity: temp) {
+                amount += purchaseEntity.getAmount();
+            }
+            purchasePerMonth.setAmount(amount);
+        }else {
+            purchasePerMonth.setAmount(0);
+        }
+        return purchasePerMonth;
+    }
+
 
 
 }
