@@ -57,6 +57,8 @@ public class PurchaseController {
     @RequestMapping(value = "/purchase-by-account-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<PurchaseEntity>> getPurchaseByAccountId(@PathVariable("id") int id) {
-        return new ResponseEntity<List<PurchaseEntity>>(purchaseService.findPurchaseEntityByAccountID(id), HttpStatus.OK);
+        List<PurchaseEntity> purchaseEntityList = purchaseService.findPurchaseEntityByAccountID(id);
+        purchaseEntityList.sort(Comparator.comparing(PurchaseEntity::getPurchaseDate).reversed());
+        return new ResponseEntity<List<PurchaseEntity>>(purchaseEntityList, HttpStatus.OK);
     }
 }

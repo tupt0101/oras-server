@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -44,7 +45,9 @@ public class ActivityController {
     @RequestMapping(value = "/activity-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<ActivityEntity>> getActivitiesByCreatorId(@PathVariable("id") int creatorId) {
-        return new ResponseEntity<List<ActivityEntity>>(activityService.findActivitiesByCreatorId(creatorId), HttpStatus.OK);
+        List<ActivityEntity> activityEntityList = activityService.findActivitiesByCreatorId(creatorId);
+        activityEntityList.sort(Comparator.comparing(ActivityEntity::getTime).reversed());
+        return new ResponseEntity<List<ActivityEntity>>(activityEntityList, HttpStatus.OK);
 
     }
 }

@@ -8,7 +8,7 @@ public interface IActivityService {
     ActivityEntity createActivity (ActivityEntity activityEntity);
     ActivityEntity updateActivity (ActivityEntity activityEntity);
     List<ActivityEntity> getAllActivities();
-    ActivityEntity findActivyById(int id);
+    ActivityEntity findActivityById(int id);
     List<ActivityEntity> findActivitiesByCreatorId(int creatorId);
 
 }

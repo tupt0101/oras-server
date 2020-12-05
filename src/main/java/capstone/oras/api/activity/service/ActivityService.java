@@ -30,7 +30,7 @@ public class ActivityService implements IActivityService {
     }
 
     @Override
-    public ActivityEntity findActivyById(int id) {
+    public ActivityEntity findActivityById(int id) {
         if (IActivityRepository.findById(id).isPresent()) {
             return IActivityRepository.findById(id).get();
         } else return null;
