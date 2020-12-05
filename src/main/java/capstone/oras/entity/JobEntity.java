@@ -29,7 +29,7 @@ public class JobEntity implements Serializable {
     @ApiModelProperty(example = "1500")
     @JsonProperty("salaryTo")
     private Double salaryTo;
-    @ApiModelProperty(example = "$")
+    @ApiModelProperty(example = "USD")
     @JsonProperty("currency")
     private String currency;
     @JsonProperty("salaryHidden")

@@ -142,12 +142,22 @@ public class AccountPackageController {
                 }
             }
         }
+
+        PurchaseEntity purchaseEntity = new PurchaseEntity();
+        purchaseEntity.setAccountId(accountId);
+        purchaseEntity.setAmount(0.0);
+        purchaseEntity.setPurchaseDate(LocalDateTime.now());
+        purchaseEntity.setStatus("success");
+        purchaseEntity = purchaseService.createPurchase(purchaseEntity);
+
+
         AccountPackageEntity accountPackage = new AccountPackageEntity();
         accountPackage.setNumOfPost(1);
         accountPackage.setValidTo(LocalDateTime.now().plusMonths(1));
         accountPackage.setPackageId(1);
         accountPackage.setAccountId(accountId);
         accountPackage.setExpired(false);
+        accountPackage.setPurchaseId(purchaseEntity.getId());
         return new ResponseEntity<>(accountPackageService.createAccountPackage(accountPackage), HttpStatus.OK);
     }
 }
