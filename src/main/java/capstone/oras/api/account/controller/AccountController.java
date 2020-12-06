@@ -392,6 +392,12 @@ public class AccountController {
         }
     }
 
+    @RequestMapping(value = "/update-account", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<Integer> customUpdateAccount(@RequestBody AccountEntity accountEntity) {
+        return new ResponseEntity<>(accountService.updateFullNameAndPhoneNo(accountEntity), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<AccountEntity>> getAllAccount() {
