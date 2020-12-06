@@ -116,7 +116,7 @@ public class AccountPackageController {
     @RequestMapping(value = "/account-packages-paging", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<AccountPackageEntity>> getAllAccountPackageWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
-        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("validTo").descending());
         return new ResponseEntity<List<AccountPackageEntity>>(accountPackageService.getAllAccountPackageWithPaging(pageable), HttpStatus.OK);
     }
 
