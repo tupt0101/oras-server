@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -38,7 +39,10 @@ public class AccountEntity implements Serializable {
     private Collection<ActivityEntity> activitiesById;
     @ApiModelProperty(hidden = true)
     private Collection<AccountPackageEntity> accountPackageById;
+    @ApiModelProperty(example = "0913144842")
     private String phoneNo;
+    @ApiModelProperty(example = "2020-12-23T17:00:00")
+    private LocalDateTime createDate;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -107,7 +111,17 @@ public class AccountEntity implements Serializable {
         return role;
     }
 
-//    @Override
+    @Basic
+    @Column(name = "create_date", nullable = true)
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    //    @Override
 //    public boolean equals(Object o) {
 //        if (this == o) return true;
 //        if (o == null || getClass() != o.getClass()) return false;

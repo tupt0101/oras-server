@@ -25,6 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -83,6 +84,7 @@ public class AccountController {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
+            accountEntity.setCreateDate(LocalDateTime.now());
             return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
         }
     }
@@ -109,7 +111,7 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
 
-
+            signup.accountEntity.setCreateDate(LocalDateTime.now());
             //get openjob token
             CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
             String token = "Bearer " + userDetailsService.getOpenJobToken();
