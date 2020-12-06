@@ -5,7 +5,6 @@ import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.job.service.IJobService;
-import capstone.oras.api.talentPool.service.ITalentPoolService;
 import capstone.oras.entity.AccountPackageEntity;
 import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.CategoryEntity;
@@ -46,8 +45,7 @@ public class JobController {
     @Autowired
     private ICompanyService companyService;
 
-    @Autowired
-    private ITalentPoolService talentPoolService;
+
 
     @Autowired
     private IActivityService activityService;
@@ -282,10 +280,7 @@ public class JobController {
         }
 
 
-        if (job.getTalentPoolId() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is a required field");
-        }
 
         if (jobService.getJobById(job.getId()) != null) {
 
@@ -297,10 +292,7 @@ public class JobController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
         }
 
-        if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
-        }
         job.setCreateDate(LocalDateTime.now());
         JobEntity jobEntity = jobService.createJob(job);
 
@@ -380,10 +372,6 @@ public class JobController {
         }
 
 
-        if (job.getTalentPoolId() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is a required field");
-        }
 
         if (jobService.getJobById(job.getId()) == null) {
 
@@ -395,10 +383,6 @@ public class JobController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
         }
 
-        if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
-        }
 
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
         openjobJobEntity.setApplyTo(job.getApplyTo());
@@ -474,10 +458,6 @@ public class JobController {
 //        }
 //
 //
-//        if (job.getTalentPoolId() == null) {
-//
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is a required field");
-//        }
 //
 //        if (jobService.getJobById(job.getId()) != null) {
 //
@@ -489,10 +469,6 @@ public class JobController {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
 //        }
 //
-//        if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
-//
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
-//        }
 //        job.setCreateDate(LocalDateTime.now());
 //        JobEntity jobEntity = jobService.createJob(job);
 //
@@ -571,10 +547,6 @@ public class JobController {
 //        }
 //
 //
-//        if (job.getTalentPoolId() == null) {
-//
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is a required field");
-//        }
 //
 //        if (jobService.getJobById(job.getId()) == null) {
 //
@@ -584,11 +556,6 @@ public class JobController {
 //        if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
 //
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
-//        }
-//
-//        if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
-//
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
 //        }
 //
 //        OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();

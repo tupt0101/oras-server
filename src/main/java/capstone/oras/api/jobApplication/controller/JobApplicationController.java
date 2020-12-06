@@ -4,7 +4,6 @@ package capstone.oras.api.jobApplication.controller;
 import capstone.oras.api.candidate.service.ICandidateService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.IJobApplicationService;
-import capstone.oras.api.talentPool.service.ITalentPoolService;
 import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
@@ -22,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+
 import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
 
 @RestController
@@ -38,8 +38,6 @@ public class JobApplicationController {
     @Autowired
     private IJobService jobService;
 
-    @Autowired
-    private ITalentPoolService talentPoolService;
 
     HttpHeaders httpHeaders = new HttpHeaders();
 
@@ -55,10 +53,7 @@ public class JobApplicationController {
         } else if (jobApplicationEntity.getSource() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Source is null");
-        } else if (jobApplicationEntity.getTalentPoolId() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is null");
-        } else if (jobApplicationEntity.getStatus() == null) {
+        }  else if (jobApplicationEntity.getStatus() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is null");
         } else if (jobApplicationEntity.getJobId() == null) {
@@ -67,9 +62,6 @@ public class JobApplicationController {
         } else if (jobService.getJobById(jobApplicationEntity.getJobId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID doesn't exist");
-        } else if (talentPoolService.findTalentPoolEntityById(jobApplicationEntity.getTalentPoolId()) == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool Id doesn't exist");
         } else if (candidateService.findCandidateById(jobApplicationEntity.getCandidateId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Candidate ID doesn't exist");
@@ -97,9 +89,6 @@ public class JobApplicationController {
         } else if (jobApplicationEntity.getSource() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Source is null");
-        } else if (jobApplicationEntity.getTalentPoolId() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is null");
         } else if (jobApplicationEntity.getStatus() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is null");
@@ -109,9 +98,6 @@ public class JobApplicationController {
         } else if (jobService.getJobById(jobApplicationEntity.getJobId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID doesn't exist");
-        } else if (talentPoolService.findTalentPoolEntityById(jobApplicationEntity.getTalentPoolId()) == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool Id doesn't exist");
         } else if (candidateService.findCandidateById(jobApplicationEntity.getCandidateId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Candidate ID doesn't exist");
@@ -213,7 +199,6 @@ public class JobApplicationController {
         List<OpenjobJobApplicationEntity> jobApplicationEntityList = Arrays.asList(jobApplicationsList.getBody());
         List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
         JobEntity jobEntity = jobService.getJobById(jobId);
-        int talentPoolId = jobEntity.getTalentPoolId();
         for (int i = 0; i < jobApplicationEntityList.size(); i++) {
             OpenjobJobApplicationEntity openjobJobApplication = jobApplicationEntityList.get(i);
             JobApplicationEntity jobApplicationEntity = new JobApplicationEntity();
@@ -245,7 +230,6 @@ public class JobApplicationController {
                jobApplicationEntity.setJobId(jobId);
                jobApplicationEntity.setSource("openjob");
                jobApplicationEntity.setMatchingRate(0.0);
-               jobApplicationEntity.setTalentPoolId(talentPoolId);
 //               jobApplicationEntity.setId(openjobJobApplication.getId());
                jobApplicationEntity.setStatus("Applied");
                jobApplicationsOras.add(jobApplicationEntity);
