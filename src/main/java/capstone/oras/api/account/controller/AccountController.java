@@ -427,7 +427,7 @@ public class AccountController {
     @RequestMapping(value = "/accounts-paging", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<AccountEntity>> getAllAccountWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
-        Pageable pageable = PageRequest.of(page - 1, numOfElement, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page - 1, numOfElement, Sort.by("createDate").descending());
         return new ResponseEntity<List<AccountEntity>>(accountService.getAllAccountWithPaging(pageable), HttpStatus.OK);
     }
 
