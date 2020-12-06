@@ -12,4 +12,5 @@ public interface IAccountService {
     AccountEntity findAccountByEmail(String email);
     AccountEntity findAccountEntityById(int id);
     AccountEntity findAccountByCompanyId(int id);
+    Integer updateFullNameAndPhoneNo(AccountEntity accountEntity);
 }

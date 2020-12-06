@@ -242,32 +242,32 @@ public class JobController {
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
         }
         if (job.getApplyFrom() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
         }
 
         if (job.getApplyTo() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
         }
 
         if (job.getCreateDate() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is a required field");
         }
 
         if (job.getCurrency() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
         }
 
 
         if (job.getTalentPoolId() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is a required field");
         }
 
         if (jobService.getJobById(job.getId()) != null) {
@@ -340,32 +340,32 @@ public class JobController {
         }
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
         }
         if (job.getApplyFrom() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
         }
 
         if (job.getApplyTo() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
         }
 
         if (job.getCreateDate() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is a required field");
         }
 
         if (job.getCurrency() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
         }
 
 
         if (job.getTalentPoolId() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is a required field");
         }
 
         if (jobService.getJobById(job.getId()) == null) {
@@ -434,32 +434,32 @@ public class JobController {
 //        }
 //        if (job.getTitle() == null || job.getTitle().isEmpty()) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
 //        }
 //        if (job.getApplyFrom() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
 //        }
 //
 //        if (job.getApplyTo() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
 //        }
 //
 //        if (job.getCreateDate() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is a required field");
 //        }
 //
 //        if (job.getCurrency() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
 //        }
 //
 //
 //        if (job.getTalentPoolId() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is a required field");
 //        }
 //
 //        if (jobService.getJobById(job.getId()) != null) {
@@ -531,32 +531,32 @@ public class JobController {
 //        }
 //        if (job.getTitle() == null || job.getTitle().isEmpty()) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
 //        }
 //        if (job.getApplyFrom() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
 //        }
 //
 //        if (job.getApplyTo() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
 //        }
 //
 //        if (job.getCreateDate() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is a required field");
 //        }
 //
 //        if (job.getCurrency() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
 //        }
 //
 //
 //        if (job.getTalentPoolId() == null) {
 //
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is a required field");
 //        }
 //
 //        if (jobService.getJobById(job.getId()) == null) {
