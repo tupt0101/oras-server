@@ -76,7 +76,7 @@ public class CompanyController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
         }
         for (int i = 0; i < companyList.size(); i++) {
-            if(companyEntity.getName().equals(companyList.get(i).getName())) {
+            if(companyEntity.getName().equals(companyList.get(i).getName()) && companyEntity.getId() != companyList.get(i).getId()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
             }
         }
