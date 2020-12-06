@@ -15,5 +15,6 @@ public interface IAccountPackageRepository extends JpaRepository<AccountPackageE
     Optional<List<AccountPackageEntity>> findAccountPackageEntitiesByAccountIdEquals(int id);
     Optional<List<AccountPackageEntity>> findAccountPackageEntitiesByExpiredFalse();
     List<AccountPackageEntity> findAllBy(Pageable pageable);
+    List<AccountPackageEntity> findAccountPackageEntitiesByPackageId(int id);
 
 }

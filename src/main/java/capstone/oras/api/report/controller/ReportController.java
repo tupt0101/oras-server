@@ -1,15 +1,15 @@
 package capstone.oras.api.report.controller;
 
+import capstone.oras.api.account.service.AccountService;
+import capstone.oras.api.accountPackage.service.AccountPackageService;
 import capstone.oras.api.category.service.CategoryService;
 import capstone.oras.api.currency.CurrencyService;
 import capstone.oras.api.job.service.JobService;
 import capstone.oras.api.jobApplication.service.JobApplicationService;
+import capstone.oras.api.packages.service.PackageService;
 import capstone.oras.api.purchase.service.PurchaseService;
 import capstone.oras.api.report.model.*;
-import capstone.oras.entity.CategoryEntity;
-import capstone.oras.entity.JobApplicationEntity;
-import capstone.oras.entity.JobEntity;
-import capstone.oras.entity.PurchaseEntity;
+import capstone.oras.entity.*;
 import capstone.oras.entity.model.Statistic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +42,17 @@ public class ReportController {
 
     @Autowired
     private PurchaseService purchaseService;
+
+    @Autowired
+    private PackageService packageService;
+
+    @Autowired
+    private AccountPackageService accountPackageService;
+
+    @Autowired
+    private AccountService accountService;
+
+
 
     @RequestMapping(value = "/time-to-hire/{account-id}", method = RequestMethod.GET)
     @ResponseBody
@@ -276,75 +287,175 @@ public class ReportController {
 
     @RequestMapping(value = "/account-purchase-report/{id}/{year}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<PurchasePerMonth>> getAccountPurchaseReport(@PathVariable("id") int id, @PathVariable("year") int year) throws Exception {
-        List<PurchasePerMonth> purchasePerMonths = new ArrayList<>();
+    ResponseEntity<List<ReportPerMonth>> getAccountPurchaseReport(@PathVariable("id") int id, @PathVariable("year") int year) throws Exception {
+        List<ReportPerMonth> reportPerMonths = new ArrayList<>();
         List<PurchaseEntity> listPurchase =  new ArrayList<>();
         listPurchase = purchaseService.findPurchaseEntityByAccountID(id);
         if (listPurchase != null) {
             if (listPurchase.size() >  0 ) {
                 listPurchase = getPurchaseByYear(year, listPurchase);
-                purchasePerMonths.add(getPurchaseByMonth(Month.JANUARY, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.FEBRUARY, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.MARCH, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.APRIL, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.MAY, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.JUNE, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.JULY, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.AUGUST, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.SEPTEMBER, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.OCTOBER, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.NOVEMBER, listPurchase));
-                purchasePerMonths.add(getPurchaseByMonth(Month.DECEMBER, listPurchase));
-                return new ResponseEntity<List<PurchasePerMonth>>(purchasePerMonths, HttpStatus.OK);
+                reportPerMonths.add(getPurchaseByMonth(Month.JANUARY, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.FEBRUARY, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.MARCH, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.APRIL, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.MAY, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.JUNE, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.JULY, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.AUGUST, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.SEPTEMBER, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.OCTOBER, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.NOVEMBER, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.DECEMBER, listPurchase));
+                return new ResponseEntity<List<ReportPerMonth>>(reportPerMonths, HttpStatus.OK);
             } else {
-                purchasePerMonths = createEmptyPurchasePerMonth();
-                return new ResponseEntity<List<PurchasePerMonth>>(purchasePerMonths, HttpStatus.OK);
+                reportPerMonths = createEmptyReportPerMonth();
+                return new ResponseEntity<List<ReportPerMonth>>(reportPerMonths, HttpStatus.OK);
             }
         } else {
-            purchasePerMonths = createEmptyPurchasePerMonth();
-            return new ResponseEntity<List<PurchasePerMonth>>(purchasePerMonths, HttpStatus.OK);
+            reportPerMonths = createEmptyReportPerMonth();
+            return new ResponseEntity<List<ReportPerMonth>>(reportPerMonths, HttpStatus.OK);
         }
 
     }
 
-    private List<PurchasePerMonth> createEmptyPurchasePerMonth() {
-        List<PurchasePerMonth> purchasePerMonths = new ArrayList<>();
-        purchasePerMonths.add(new PurchasePerMonth(Month.JANUARY.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.FEBRUARY.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.MARCH.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.APRIL.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.MAY.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.JUNE.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.JULY.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.AUGUST.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.SEPTEMBER.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.OCTOBER.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.NOVEMBER.toString(), 0));
-        purchasePerMonths.add(new PurchasePerMonth(Month.DECEMBER.toString(), 0));
-        return  purchasePerMonths;
+    private List<ReportPerMonth> createEmptyReportPerMonth() {
+        List<ReportPerMonth> reportPerMonths = new ArrayList<>();
+        reportPerMonths.add(new ReportPerMonth(Month.JANUARY.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.FEBRUARY.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.MARCH.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.APRIL.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.MAY.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.JUNE.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.JULY.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.AUGUST.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.SEPTEMBER.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.OCTOBER.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.NOVEMBER.toString(), 0));
+        reportPerMonths.add(new ReportPerMonth(Month.DECEMBER.toString(), 0));
+        return reportPerMonths;
     }
 
         private List<PurchaseEntity> getPurchaseByYear(int year, List<PurchaseEntity> listPurchase) {
         return listPurchase.stream().filter(s -> s.getPurchaseDate().getYear() == year).collect(Collectors.toList());
     }
 
-    private PurchasePerMonth getPurchaseByMonth(Month month, List<PurchaseEntity> listPurchase) {
+    private ReportPerMonth getPurchaseByMonth(Month month, List<PurchaseEntity> listPurchase) {
         List<PurchaseEntity> temp = new ArrayList<>();
         temp = listPurchase.stream().filter(s -> s.getPurchaseDate().getMonth().equals(month)).collect(Collectors.toList());
-        PurchasePerMonth purchasePerMonth = new PurchasePerMonth();
-        purchasePerMonth.setMonth(month.toString());
+        ReportPerMonth reportPerMonth = new ReportPerMonth();
+        reportPerMonth.setMonth(month.toString());
         if (temp.size() > 0) {
             double amount = 0;
             for (PurchaseEntity purchaseEntity: temp) {
                 amount += purchaseEntity.getAmount();
             }
-            purchasePerMonth.setAmount(amount);
+            reportPerMonth.setAmount(amount);
         }else {
-            purchasePerMonth.setAmount(0);
+            reportPerMonth.setAmount(0);
         }
-        return purchasePerMonth;
+        return reportPerMonth;
     }
 
+    @RequestMapping(value = "/package-report", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<PackageReport>> getPackageReport() {
+        List<PackageReport> result = new ArrayList<>();
+        List<PackageEntity> listPackage = new ArrayList<>();
+        listPackage = packageService.getAllPackage();
+        if (listPackage != null) {
+            for (PackageEntity packageEntity: listPackage) {
+                PackageReport packageReport = new PackageReport();
+                packageReport.setPackageName(packageEntity.getName());
+                packageReport.setNum(accountPackageService.findAccountPackageByPackageId(packageEntity.getId()).size());
+                result.add(packageReport);
+            }
+        }
+        return  new ResponseEntity<List<PackageReport>>(result, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/account-report/{year}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<ReportPerMonth>> getAccountReport(@PathVariable("year") int year) {
+        List<ReportPerMonth> reportPerMonths = new ArrayList<>();
+        List<AccountEntity> listAccount = new ArrayList<>();
+        listAccount = accountService.getAllAccount();
+        if (listAccount != null) {
+            if (listAccount.size() >0) {
+                listAccount = getAccountByCreateYear(year, listAccount);
+                reportPerMonths.add(getAccountByMonth(Month.JANUARY, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.FEBRUARY, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.MARCH, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.APRIL, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.MAY, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.JUNE, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.JULY, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.AUGUST, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.SEPTEMBER, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.OCTOBER, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.NOVEMBER, listAccount));
+                reportPerMonths.add(getAccountByMonth(Month.DECEMBER, listAccount));
+                return new ResponseEntity<List<ReportPerMonth>>(reportPerMonths, HttpStatus.OK);
+            } else {
+                reportPerMonths = createEmptyReportPerMonth();
+                return new ResponseEntity<List<ReportPerMonth>>(reportPerMonths, HttpStatus.OK);
+            }
+        } else {
+            reportPerMonths = createEmptyReportPerMonth();
+            return new ResponseEntity<List<ReportPerMonth>>(reportPerMonths, HttpStatus.OK);
+        }
 
+    }
 
+    private List<AccountEntity> getAccountByCreateYear(int year, List<AccountEntity> list) {
+        return list.stream().filter(s -> s.getCreateDate().getYear() == year).collect(Collectors.toList());
+    }
+
+    private ReportPerMonth getAccountByMonth(Month month, List<AccountEntity> listAccount) {
+        List<AccountEntity> temp = new ArrayList<>();
+        temp = listAccount.stream().filter(s -> s.getCreateDate().getMonth().equals(month)).collect(Collectors.toList());
+        ReportPerMonth reportPerMonth = new ReportPerMonth();
+        reportPerMonth.setMonth(month.toString());
+        if (temp == null) {
+            reportPerMonth.setAmount(0);
+        } else {
+            reportPerMonth.setAmount(temp.size());
+        }
+        return reportPerMonth;
+    }
+
+    @RequestMapping(value = "/purchase-report/{year}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<ReportPerMonth>> getPurchaseReport(@PathVariable("year") int year) {
+        List<ReportPerMonth> reportPerMonths = new ArrayList<>();
+        List<PurchaseEntity> listPurchase = new ArrayList<>();
+        listPurchase = purchaseService.getAllPurchase();
+        if (listPurchase != null) {
+            if (listPurchase.size() >0) {
+                listPurchase = getPurchaseByCreateYear(year, listPurchase);
+                reportPerMonths.add(getPurchaseByMonth(Month.JANUARY, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.FEBRUARY, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.MARCH, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.APRIL, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.MAY, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.JUNE, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.JULY, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.AUGUST, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.SEPTEMBER, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.OCTOBER, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.NOVEMBER, listPurchase));
+                reportPerMonths.add(getPurchaseByMonth(Month.DECEMBER, listPurchase));
+                return new ResponseEntity<List<ReportPerMonth>>(reportPerMonths, HttpStatus.OK);
+            } else {
+                reportPerMonths = createEmptyReportPerMonth();
+                return new ResponseEntity<List<ReportPerMonth>>(reportPerMonths, HttpStatus.OK);
+            }
+        } else {
+            reportPerMonths = createEmptyReportPerMonth();
+            return new ResponseEntity<List<ReportPerMonth>>(reportPerMonths, HttpStatus.OK);
+        }
+
+    }
+
+    private List<PurchaseEntity> getPurchaseByCreateYear(int year, List<PurchaseEntity> list) {
+        return list.stream().filter(s -> s.getPurchaseDate().getYear() == year).collect(Collectors.toList());
+    }
 }

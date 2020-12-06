@@ -15,6 +15,7 @@ public interface IAccountPackageService {
     AccountPackageEntity findAccountPackageByAccountId(int id);
     List<AccountPackageEntity> findAccountPackagesByAccountId(int id);
     List<AccountPackageEntity> findAllValidAccountPackages();
+    List<AccountPackageEntity> findAccountPackageByPackageId(int id);
 
 
 }
