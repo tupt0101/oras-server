@@ -463,7 +463,7 @@ public class AccountController {
     public ResponseEntity<AccountEntity> resetPassword(@PathVariable("email") String email) throws MessagingException {
         AccountEntity accountEntity = accountService.findAccountByEmail(email);
         if (accountEntity == null) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Account does not exist");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account does not exist");
         }
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         String pwd = RandomStringUtils.random( 15, characters );
