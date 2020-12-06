@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Comparator;
 import java.util.List;
@@ -46,6 +48,9 @@ public class ActivityController {
     @ResponseBody
     ResponseEntity<List<ActivityEntity>> getActivitiesByCreatorId(@PathVariable("id") int creatorId) {
         List<ActivityEntity> activityEntityList = activityService.findActivitiesByCreatorId(creatorId);
+        if (CollectionUtils.isEmpty(activityEntityList)) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This account has no activity");
+        }
         activityEntityList.sort(Comparator.comparing(ActivityEntity::getTime).reversed());
         return new ResponseEntity<List<ActivityEntity>>(activityEntityList, HttpStatus.OK);
 

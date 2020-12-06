@@ -43,13 +43,13 @@ public class AccountPackageController {
     @ResponseBody
     ResponseEntity<AccountPackageEntity> createAccountPackage(@RequestBody PurchaseAccountPackage purchaseAccountPagkage) {
         if (purchaseAccountPagkage.getAccountPackageEntity().getPackageId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Package Id is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Package Id is a required field");
         } else if (purchaseAccountPagkage.getAccountPackageEntity().getPurchaseId() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase Id is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase Id is a required field");
         } else if (purchaseAccountPagkage.getAccountPackageEntity().getValidTo() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valid To is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valid To is a required field");
         } else if (purchaseService.findPurchaseById(purchaseAccountPagkage.getAccountPackageEntity().getPurchaseId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase Id doesn't exist");
@@ -70,13 +70,13 @@ public class AccountPackageController {
     ResponseEntity<AccountPackageEntity> updateAccountPackage(@RequestBody AccountPackageEntity accountPackageEntity) {
         if (accountPackageEntity.getPackageId() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Package Id is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Package Id is a required field");
         } else if (accountPackageEntity.getPurchaseId() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase Id is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase Id is a required field");
         } else if (accountPackageEntity.getValidTo() == null) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valid To is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valid To is a required field");
         } else if (purchaseService.findPurchaseById(accountPackageEntity.getPurchaseId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase Id doesn't exist");

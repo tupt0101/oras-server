@@ -75,8 +75,7 @@ public class ScheduleSpringConfig {
     @Scheduled(fixedRate = 86400000)
     public void scanForExpiredJob() {
         List<JobEntity> jobEntities = jobService.getAllPublishedJob();
-        for (int i = 0; i < jobEntities.size(); i++) {
-            JobEntity job = jobEntities.get(i);
+        for (JobEntity job : jobEntities) {
             if (job.getExpireDate().isBefore(LocalDateTime.now()) || job.getApplyTo().isBefore(LocalDateTime.now())) {
                 int openjobJobId = job.getOpenjobJobId();
                 //get openjob token
@@ -94,7 +93,7 @@ public class ScheduleSpringConfig {
                 restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
                 ActivityEntity activityEntity = new ActivityEntity();
                 activityEntity.setCreatorId(job.getCreatorId());
-                activityEntity.setTime(java.time.LocalDateTime.now());
+                activityEntity.setTime(LocalDateTime.now());
                 if (job.getExpireDate().isBefore(LocalDateTime.now())) {
                     activityEntity.setTitle("Job Expired");
                 } else if (job.getApplyTo().isBefore(LocalDateTime.now())) {
