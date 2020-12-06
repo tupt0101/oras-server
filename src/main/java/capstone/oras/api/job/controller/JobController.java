@@ -13,6 +13,9 @@ import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +63,14 @@ public class JobController {
             lst.sort(Comparator.comparingInt(JobEntity::getId));
         }
         return lst;
+    }
+
+    @RequestMapping(value = "/jobs-paging", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<JobEntity>> getAllJobWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
+        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("id"));
+
+        return new ResponseEntity<List<JobEntity>>(jobService.getAllJobWithPaging(pageable), HttpStatus.OK);
     }
 
     @PostMapping(value = "/job", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -147,6 +158,12 @@ public class JobController {
         return new ResponseEntity<List<JobEntity>>(jobService.getAllJobByCreatorId(id), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/job-by-creator-id", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<JobEntity>> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
+        Pageable pageable = PageRequest.of(page-1,numOfElement,Sort.by("id"));
+        return new ResponseEntity<List<JobEntity>>(jobService.getAllJobByCreatorIdWithPaging(id,pageable), HttpStatus.OK);
+    }
 
 
     @RequestMapping(value = "/job/{id}/extend/{date}", method = RequestMethod.PUT)

@@ -12,6 +12,7 @@ import capstone.oras.model.oras_ai.ProcessJdRequest;
 import capstone.oras.model.oras_ai.ProcessJdResponse;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -68,6 +69,11 @@ public class JobService implements IJobService {
     @Override
     public List<JobEntity> getAllJob() {
         return IJobRepository.findAll();
+    }
+
+    @Override
+    public List<JobEntity> getAllJobWithPaging(Pageable pageable) {
+        return IJobRepository.findAllBy(pageable);
     }
 
     @Override
@@ -165,6 +171,17 @@ public class JobService implements IJobService {
         ret.sort(Comparator.comparingInt(JobEntity::getId));
         return ret;
     }
+
+    @Override
+    public List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable) {
+        Optional<List<JobEntity>> lstJob = IJobRepository.findJobEntitiesByCreatorIdEquals(id, pageable);
+        if (!lstJob.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
+        }
+        return lstJob.get();
+
+    }
+
 
     @Override
     public List<CategoryEntity> getAllCategories() {

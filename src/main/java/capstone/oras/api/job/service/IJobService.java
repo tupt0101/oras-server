@@ -2,6 +2,7 @@ package capstone.oras.api.job.service;
 
 import capstone.oras.entity.CategoryEntity;
 import capstone.oras.entity.JobEntity;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,6 +20,8 @@ public interface IJobService {
     List<JobEntity> getClosedAndPublishedJobByCreatorId(int id);
     List<JobEntity> getClosedAndPublishedJob(int id);
     List<JobEntity> getAllPublishedJob();
+    List<JobEntity> getAllJobWithPaging(Pageable pageable);
+    List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable);
 
 
 }

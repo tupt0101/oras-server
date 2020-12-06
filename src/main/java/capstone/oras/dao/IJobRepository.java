@@ -1,8 +1,10 @@
 package capstone.oras.dao;
 
 import capstone.oras.entity.JobEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IJobRepository extends JpaRepository<JobEntity, Integer> {
+public interface IJobRepository extends JpaRepository<JobEntity, Integer>, PagingAndSortingRepository<JobEntity, Integer> {
     Optional<List<JobEntity>> findAllByStatus(String status);
     boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(int creatorId, String title, String status);
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEquals(int creatorId);
@@ -18,6 +20,9 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer> {
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEqualsAndStatusIn(int creatorId, List<String> status);
     Optional<List<JobEntity>> findJobEntitiesByStatusIn(List<String> status);
     Optional<List<JobEntity>> findJobEntitiesByStatusEquals(String status);
+    List<JobEntity> findAllBy(Pageable pageable);
+    Optional<List<JobEntity>> findJobEntitiesByCreatorIdEquals(int creatorId,Pageable pageable);
+
 
 
 

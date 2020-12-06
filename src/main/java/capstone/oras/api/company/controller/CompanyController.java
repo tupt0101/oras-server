@@ -28,21 +28,22 @@ public class CompanyController {
     @RequestMapping(value = "/company", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<CompanyEntity> createCompany(@RequestBody CompanyEntity companyEntity) {
+        List<CompanyEntity> companyList = companyService.getAllCompany();
         if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
         } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
         } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is empty");
         } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
         } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is empty");
+        }
+        for (int i = 0; i < companyList.size(); i++) {
+            if(companyEntity.getName().equals(companyList.get(i).getName())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
+            }
         }
             return new ResponseEntity<>(companyService.createCompany(companyEntity), HttpStatus.OK);
 
@@ -51,6 +52,7 @@ public class CompanyController {
     @RequestMapping(value = "/company", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<CompanyEntity> updateCompany(@RequestBody CompanyEntity companyEntity) {
+        List<CompanyEntity> companyList = companyService.getAllCompany();
         if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
@@ -67,8 +69,25 @@ public class CompanyController {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is empty");
         }
+        for (int i = 0; i < companyList.size(); i++) {
+            if(companyEntity.getName().equals(companyList.get(i).getName())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
+            }
+        }
         return new ResponseEntity<>(companyService.updateCompany(companyEntity), HttpStatus.OK);
 
+    }
+
+    @RequestMapping(value = "/check-company-name/{companyName}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<String> checkCompanyName(@PathVariable("companyName")String companyName) {
+        List<CompanyEntity> companyList = companyService.getAllCompany();
+        for (int i = 0; i < companyList.size(); i++) {
+            if(companyName.equals(companyList.get(i).getName())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
+            }
+        }
+        return new ResponseEntity<String>("Name is ok to use", HttpStatus.OK);
     }
 
     @RequestMapping(value = "/companies", method = RequestMethod.GET)
