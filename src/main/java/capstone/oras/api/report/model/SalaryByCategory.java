@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class SalaryByCategory {
     private String category;
-    private double averageSalary;
+    private int averageSalary;
 
     public SalaryByCategory() {
     }

@@ -195,7 +195,7 @@ public class ReportController {
             }
             salaryByCategory.setCategory(categoryEntity.getName());
             if (listByCatagory.size() > 0) {
-                salaryByCategory.setAverageSalary(totalSalary / listByCatagory.size());
+                salaryByCategory.setAverageSalary((int) (totalSalary / listByCatagory.size()));
                 salaryByCategories.add(salaryByCategory);
             }
         }
@@ -227,7 +227,7 @@ public class ReportController {
             }
             salaryByCategory.setCategory(categoryEntity.getName());
             if (listByCatagory.size() > 0) {
-                salaryByCategory.setAverageSalary(totalSalary / listByCatagory.size());
+                salaryByCategory.setAverageSalary((int)(totalSalary / listByCatagory.size()));
                 accountSalaryByCategories.add(salaryByCategory);
             }
         }
