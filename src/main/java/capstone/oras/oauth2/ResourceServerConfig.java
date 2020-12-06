@@ -27,6 +27,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         ,"/swagger-resources/**","/configuration/**"
                         ,"/v1/account-management/account"
                         ,"/v1/account-management/confirm-account"
+                        ,"/v1/account-management/reset-password/**"
                         ,"/linkedin/**"
                         ,"**"
                         ,"/v1/paypal/pay/**","/pay/**").permitAll()
