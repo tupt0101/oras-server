@@ -459,7 +459,7 @@ public class AccountController {
         }
     }
 
-    @RequestMapping(value = "/reset-password/{email}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/reset-password/{email}", method = RequestMethod.POST)
     public ResponseEntity<AccountEntity> resetPassword(@PathVariable("email") String email) throws MessagingException {
         AccountEntity accountEntity = accountService.findAccountByEmail(email);
         if (accountEntity == null) {
