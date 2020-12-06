@@ -9,6 +9,9 @@ import capstone.oras.entity.AccountPackageEntity;
 import capstone.oras.entity.PurchaseEntity;
 import capstone.oras.entity.model.PurchaseAccountPackage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,6 +113,13 @@ public class AccountPackageController {
         return new ResponseEntity<List<AccountPackageEntity>>(lst, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/account-packages-paging", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<AccountPackageEntity>> getAllAccountPackageWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
+        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("id"));
+        return new ResponseEntity<List<AccountPackageEntity>>(accountPackageService.getAllAccountPackageWithPaging(pageable), HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/account-package/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -143,6 +153,10 @@ public class AccountPackageController {
 
                 }
             }
+        }
+        AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(accountId);
+        if (accountPackageEntity != null) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Account still has a usable package");
         }
 
         PurchaseEntity purchaseEntity = new PurchaseEntity();

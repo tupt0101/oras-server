@@ -3,6 +3,7 @@ package capstone.oras.api.accountPackage.service;
 import capstone.oras.dao.IAccountPackageRepository;
 import capstone.oras.entity.AccountPackageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +32,11 @@ public class AccountPackageService implements IAccountPackageService {
     @Override
     public List<AccountPackageEntity> getAllAccountPackage() {
         return IAccountPackageRepository.findAll();
+    }
+
+    @Override
+    public List<AccountPackageEntity> getAllAccountPackageWithPaging(Pageable pageable) {
+        return IAccountPackageRepository.findAllBy(pageable);
     }
 
     @Override

@@ -10,6 +10,9 @@ import capstone.oras.entity.ConfirmationToken;
 import capstone.oras.entity.openjob.OpenjobCompanyEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -397,6 +400,13 @@ public class AccountController {
             lst.sort(Comparator.comparingInt(AccountEntity::getId));
         }
         return new ResponseEntity<List<AccountEntity>>(lst, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/accounts-paging", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<AccountEntity>> getAllAccountWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
+        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("id"));
+        return new ResponseEntity<List<AccountEntity>>(accountService.getAllAccountWithPaging(pageable), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/account/{id}", method = RequestMethod.GET)

@@ -3,6 +3,7 @@ package capstone.oras.api.company.service;
 import capstone.oras.dao.ICompanyRepository;
 import capstone.oras.entity.CompanyEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,11 @@ public class CompanyService implements ICompanyService{
     @Override
     public List<CompanyEntity> getAllCompany() {
         return ICompanyRepository.findAll();
+    }
+
+    @Override
+    public List<CompanyEntity> getAllCompanyWithPaging(Pageable pageable) {
+        return ICompanyRepository.findAllBy(pageable);
     }
 
     @Override
