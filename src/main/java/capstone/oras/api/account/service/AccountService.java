@@ -104,6 +104,11 @@ public class AccountService implements IAccountService {
         return ret;
     }
 
+    @Override
+    public Integer updatePassword(AccountEntity accountEntity) {
+        return null;
+    }
+
 //    @Override
 //    public AccountEntity createAccount(String email, String password,String fullname) {
 //        AccountEntity accountEntity = new AccountEntity();

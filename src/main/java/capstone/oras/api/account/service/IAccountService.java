@@ -15,4 +15,5 @@ public interface IAccountService {
     AccountEntity findAccountEntityById(int id);
     AccountEntity findAccountByCompanyId(int id);
     Integer updateFullNameAndPhoneNo(AccountEntity accountEntity);
+    Integer updatePassword(AccountEntity accountEntity);
 }

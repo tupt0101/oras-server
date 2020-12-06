@@ -58,6 +58,11 @@ public class AccountController {
         public CompanyEntity companyEntity;
     }
 
+    static class PasswordChanges {
+        public Integer accountId;
+        public String currentPassword;
+        public String newPassword;
+    }
 
     @RequestMapping(value = "/account", method = RequestMethod.POST)
     @ResponseBody
@@ -386,6 +391,21 @@ public class AccountController {
         }
     }
 
+    @RequestMapping(value = "/change-password-account", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<AccountEntity> changePassword(@RequestBody PasswordChanges passwordChanges) {
+        AccountEntity accountEntity = accountService.findAccountEntityById(passwordChanges.accountId);
+        if (accountEntity == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account doesn't exist");
+        }else if (!passwordEncoder.matches(passwordChanges.currentPassword, accountEntity.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password doesn't match current password");
+        }
+        accountEntity.setPassword(passwordEncoder.encode(passwordChanges.newPassword));
+
+
+        return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/update-account", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<Integer> customUpdateAccount(@RequestBody AccountEntity accountEntity) {
@@ -405,7 +425,7 @@ public class AccountController {
     @RequestMapping(value = "/accounts-paging", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<AccountEntity>> getAllAccountWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
-        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page - 1, numOfElement, Sort.by("id"));
         return new ResponseEntity<List<AccountEntity>>(accountService.getAllAccountWithPaging(pageable), HttpStatus.OK);
     }
 
@@ -422,13 +442,11 @@ public class AccountController {
         return new ResponseEntity<AccountEntity>(accountService.findAccountByEmail(email), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
-    public String confirmUserAccount(@RequestParam("token")String confirmationToken)
-    {
+    @RequestMapping(value = "/confirm-account", method = {RequestMethod.GET, RequestMethod.POST})
+    public String confirmUserAccount(@RequestParam("token") String confirmationToken) {
         ConfirmationToken token = confirmationTokenRepository.findConfirmationTokenByConfirmationToken(confirmationToken);
 
-        if(token != null)
-        {
+        if (token != null) {
             AccountEntity user = accountService.findAccountByEmail(token.getUser().getEmail());
             user.setConfirmMail(true);
             accountService.updateAccount(user);

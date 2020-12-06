@@ -21,5 +21,10 @@ public interface IAccountRepository extends JpaRepository<AccountEntity, Integer
     @Transactional
     Integer updateFullNameAndPhoneNo(int id, String fullname, String phoneNo);
 
+    @Query(value = "update account set password = :password where id = :id", nativeQuery = true)
+    @Modifying
+    @Transactional
+    Integer updatePassword(int id, String password);
+
     List<AccountEntity> findAllBy(Pageable pageable);
 }
