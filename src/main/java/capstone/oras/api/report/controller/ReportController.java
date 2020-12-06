@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
 import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
-
+import static capstone.oras.common.Constant.AccountRole.ADMIN;
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(value = "/v1/report-management")
@@ -51,7 +51,6 @@ public class ReportController {
 
     @Autowired
     private AccountService accountService;
-
 
 
     @RequestMapping(value = "/time-to-hire/{account-id}", method = RequestMethod.GET)
@@ -238,7 +237,7 @@ public class ReportController {
             }
             salaryByCategory.setCategory(categoryEntity.getName());
             if (listByCatagory.size() > 0) {
-                salaryByCategory.setAverageSalary((int)(totalSalary / listByCatagory.size()));
+                salaryByCategory.setAverageSalary((int) (totalSalary / listByCatagory.size()));
                 accountSalaryByCategories.add(salaryByCategory);
             }
         }
@@ -289,10 +288,10 @@ public class ReportController {
     @ResponseBody
     ResponseEntity<List<ReportPerMonth>> getAccountPurchaseReport(@PathVariable("id") int id, @PathVariable("year") int year) throws Exception {
         List<ReportPerMonth> reportPerMonths = new ArrayList<>();
-        List<PurchaseEntity> listPurchase =  new ArrayList<>();
+        List<PurchaseEntity> listPurchase = new ArrayList<>();
         listPurchase = purchaseService.findPurchaseEntityByAccountID(id);
         if (listPurchase != null) {
-            if (listPurchase.size() >  0 ) {
+            if (listPurchase.size() > 0) {
                 listPurchase = getPurchaseByYear(year, listPurchase);
                 reportPerMonths.add(getPurchaseByMonth(Month.JANUARY, listPurchase));
                 reportPerMonths.add(getPurchaseByMonth(Month.FEBRUARY, listPurchase));
@@ -335,7 +334,7 @@ public class ReportController {
         return reportPerMonths;
     }
 
-        private List<PurchaseEntity> getPurchaseByYear(int year, List<PurchaseEntity> listPurchase) {
+    private List<PurchaseEntity> getPurchaseByYear(int year, List<PurchaseEntity> listPurchase) {
         return listPurchase.stream().filter(s -> s.getPurchaseDate().getYear() == year).collect(Collectors.toList());
     }
 
@@ -346,11 +345,11 @@ public class ReportController {
         reportPerMonth.setMonth(month.toString());
         if (temp.size() > 0) {
             double amount = 0;
-            for (PurchaseEntity purchaseEntity: temp) {
+            for (PurchaseEntity purchaseEntity : temp) {
                 amount += purchaseEntity.getAmount();
             }
             reportPerMonth.setAmount(amount);
-        }else {
+        } else {
             reportPerMonth.setAmount(0);
         }
         return reportPerMonth;
@@ -363,15 +362,16 @@ public class ReportController {
         List<PackageEntity> listPackage = new ArrayList<>();
         listPackage = packageService.getAllPackage();
         if (listPackage != null) {
-            for (PackageEntity packageEntity: listPackage) {
+            for (PackageEntity packageEntity : listPackage) {
                 PackageReport packageReport = new PackageReport();
                 packageReport.setPackageName(packageEntity.getName());
                 packageReport.setNum(accountPackageService.findAccountPackageByPackageId(packageEntity.getId()).size());
                 result.add(packageReport);
             }
         }
-        return  new ResponseEntity<List<PackageReport>>(result, HttpStatus.OK);
+        return new ResponseEntity<List<PackageReport>>(result, HttpStatus.OK);
     }
+
     @RequestMapping(value = "/account-report/{year}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<ReportPerMonth>> getAccountReport(@PathVariable("year") int year) {
@@ -379,7 +379,7 @@ public class ReportController {
         List<AccountEntity> listAccount = new ArrayList<>();
         listAccount = accountService.getAllAccount();
         if (listAccount != null) {
-            if (listAccount.size() >0) {
+            if (listAccount.size() > 0) {
                 listAccount = getAccountByCreateYear(year, listAccount);
                 reportPerMonths.add(getAccountByMonth(Month.JANUARY, listAccount));
                 reportPerMonths.add(getAccountByMonth(Month.FEBRUARY, listAccount));
@@ -429,7 +429,7 @@ public class ReportController {
         List<PurchaseEntity> listPurchase = new ArrayList<>();
         listPurchase = purchaseService.getAllPurchase();
         if (listPurchase != null) {
-            if (listPurchase.size() >0) {
+            if (listPurchase.size() > 0) {
                 listPurchase = getPurchaseByCreateYear(year, listPurchase);
                 reportPerMonths.add(getPurchaseByMonth(Month.JANUARY, listPurchase));
                 reportPerMonths.add(getPurchaseByMonth(Month.FEBRUARY, listPurchase));
@@ -457,5 +457,16 @@ public class ReportController {
 
     private List<PurchaseEntity> getPurchaseByCreateYear(int year, List<PurchaseEntity> list) {
         return list.stream().filter(s -> s.getPurchaseDate().getYear() == year).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/system-statistic", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<SystemStatistic> getPurchaseReport() {
+        SystemStatistic systemStatistic = new SystemStatistic();
+        systemStatistic.setTotalJobs(  jobService.getClosedAndPublishedJob().size());
+        systemStatistic.setOpenJobs(jobService.getAllPublishedJob().size());
+        systemStatistic.setCandidate(jobApplicationService.getAllJobApplication().size());
+        systemStatistic.setUser(accountService.getAllAccount().stream().filter(s -> !s.getRole().equals(ADMIN)).collect(Collectors.toList()).size());
+        return new ResponseEntity<SystemStatistic>(systemStatistic, HttpStatus.OK);
     }
 }

@@ -143,7 +143,7 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public List<JobEntity> getClosedAndPublishedJob(int id) {
+    public List<JobEntity> getClosedAndPublishedJob() {
         List<String> statusToSearch = new ArrayList<>();
         statusToSearch.add(PUBLISHED);
         statusToSearch.add(CLOSED);
