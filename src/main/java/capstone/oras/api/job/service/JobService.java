@@ -207,26 +207,26 @@ public class JobService implements IJobService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
         }
         if (StringUtils.isEmpty(job.getTitle())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
         }
         if (job.getApplyFrom() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
         }
 
         if (job.getApplyTo() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
         }
 
         if (job.getCreateDate() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is a required field");
         }
 
         if (StringUtils.isEmpty(job.getCurrency())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
         }
 
         if (job.getTalentPoolId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is a required field");
         }
 
         if (job.getVacancies() == null || job.getVacancies() <= 0) {
@@ -234,11 +234,11 @@ public class JobService implements IJobService {
         }
 
         if (StringUtils.isEmpty(job.getJobType())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job Type is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job Type is a required field");
         }
 
         if (StringUtils.isEmpty(job.getCategory())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category is a required field");
         }
 
         if (job.getSalaryFrom() == null || job.getSalaryTo() == null || job.getSalaryFrom() <= 0 || job.getSalaryTo() < job.getSalaryFrom()) {

@@ -50,8 +50,6 @@ public class AccountController {
     @Autowired
     private ICompanyService companyService;
 
-    HttpHeaders httpHeaders = new HttpHeaders();
-
     static class Signup {
         public AccountEntity accountEntity;
         public CompanyEntity companyEntity;
@@ -63,13 +61,13 @@ public class AccountController {
     ResponseEntity<AccountEntity> createAccount(@RequestBody AccountEntity accountEntity) {
         if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is a required field");
         } else if (accountEntity.getPassword() == null || accountEntity.getPassword().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is a required field");
         } else if (accountService.findAccountByEmail(accountEntity.getEmail()) != null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered");
@@ -88,13 +86,13 @@ public class AccountController {
         System.out.println(signup);
         if (signup.accountEntity.getEmail() == null || signup.accountEntity.getEmail().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (signup.accountEntity.getFullname() == null || signup.accountEntity.getFullname().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is a required field");
         } else if (signup.accountEntity.getPassword() == null || signup.accountEntity.getPassword().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is a required field");
         } else if (accountService.findAccountByEmail(signup.accountEntity.getEmail()) != null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered");
@@ -357,7 +355,7 @@ public class AccountController {
     ResponseEntity<AccountEntity> activeAccountViaCompany(@PathVariable("id") int companyId) {
 
         if (companyId == 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id is a required field");
         } else if (companyService.findCompanyById(companyId) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company doesn't exist");
         }
@@ -370,26 +368,25 @@ public class AccountController {
         return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
     }
 
-
     @RequestMapping(value = "/account", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<AccountEntity> updateAccount(@RequestBody AccountEntity accountEntity) {
 
         if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is empty");
-        } else if (accountEntity.getPassword() == null || accountEntity.getPassword().isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is a required field");
         } else if (accountService.findAccountEntityById(accountEntity.getId()) == null) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account doesn't exist");
         } else {
             return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/update-account", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<Integer> customUpdateAccount(@RequestBody AccountEntity accountEntity) {
+        return new ResponseEntity<>(accountService.updateFullNameAndPhoneNo(accountEntity), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)

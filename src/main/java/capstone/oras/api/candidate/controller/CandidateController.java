@@ -39,16 +39,16 @@ public class CandidateController {
     ResponseEntity<CandidateEntity> createCandidate(@RequestBody CandidateEntity candidateEntity) {
         if (candidateEntity.getEmail() == null || candidateEntity.getEmail().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (candidateEntity.getFullname() == null || candidateEntity.getFullname().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fullname is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fullname is a required field");
         } else if (candidateEntity.getPhoneNo() == null || candidateEntity.getPhoneNo().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
         } else if (candidateEntity.getAddress() == null || candidateEntity.getAddress().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address is a required field");
         }
             return new ResponseEntity<>(candidateService.createCandidate(candidateEntity), HttpStatus.OK);
 
@@ -60,16 +60,16 @@ public class CandidateController {
     ResponseEntity<CandidateEntity> updateCandidate(@RequestBody CandidateEntity candidateEntity) {
         if (candidateEntity.getEmail() == null || candidateEntity.getEmail().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (candidateEntity.getFullname() == null || candidateEntity.getFullname().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fullname is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fullname is a required field");
         } else if (candidateEntity.getPhoneNo() == null || candidateEntity.getPhoneNo().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
         } else if (candidateEntity.getAddress() == null || candidateEntity.getAddress().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address is a required field");
         }
         return new ResponseEntity<>(candidateService.createCandidate(candidateEntity), HttpStatus.OK);
 

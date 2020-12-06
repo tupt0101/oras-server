@@ -30,15 +30,21 @@ public class CompanyController {
     ResponseEntity<CompanyEntity> createCompany(@RequestBody CompanyEntity companyEntity) {
         List<CompanyEntity> companyList = companyService.getAllCompany();
         if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
+
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
         } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is empty");
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
         } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
         } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is empty");
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
         }
         for (int i = 0; i < companyList.size(); i++) {
             if(companyEntity.getName().equals(companyList.get(i).getName())) {
@@ -55,19 +61,19 @@ public class CompanyController {
         List<CompanyEntity> companyList = companyService.getAllCompany();
         if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
         } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
         } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
         } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
         }
         for (int i = 0; i < companyList.size(); i++) {
             if(companyEntity.getName().equals(companyList.get(i).getName())) {
@@ -114,19 +120,19 @@ public class CompanyController {
     ResponseEntity<CompanyEntity> createCompanyMulti(@RequestBody CompanyEntity companyEntity) {
         if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
         } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
         } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
         } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
         }
         //get openjob token
         CustomUserDetailsService userDetailsService = new CustomUserDetailsService();

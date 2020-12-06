@@ -43,7 +43,7 @@ public class TalentPoolController {
     ResponseEntity<TalentPoolEntity> createTalentPool(@RequestBody TalentPoolEntity talentPoolEntity) {
         if (talentPoolEntity.getName() == null || talentPoolEntity.getName().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
         } else if (talentPoolService.findTalentPoolEntityById(talentPoolEntity.getId()) != null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID already exist");
@@ -56,7 +56,7 @@ public class TalentPoolController {
     ResponseEntity<TalentPoolEntity> updateTalentPool(@RequestBody TalentPoolEntity talentPoolEntity) {
         if (talentPoolEntity.getName() == null || talentPoolEntity.getName().isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
         } else if (talentPoolService.findTalentPoolEntityById(talentPoolEntity.getId()) == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");

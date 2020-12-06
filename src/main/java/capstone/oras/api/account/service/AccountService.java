@@ -3,8 +3,11 @@ package capstone.oras.api.account.service;
 import capstone.oras.dao.IAccountRepository;
 import capstone.oras.entity.AccountEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -72,6 +75,28 @@ public class AccountService implements IAccountService {
             return IAccountRepository.findAccountEntityByCompanyIdEquals(id).get();
         } else return null;    }
 
+    @Override
+    public Integer updateFullNameAndPhoneNo(AccountEntity accountEntity) {
+        Integer id = accountEntity.getId();
+        String fullName = accountEntity.getFullname();
+        String phoneNo = accountEntity.getPhoneNo();
+        if (this.findAccountEntityById(id) == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account doesn't exist");
+        }
+        if (StringUtils.isEmpty(fullName)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is a required field");
+        }
+        if (StringUtils.isEmpty(phoneNo)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone number is a required field");
+        }
+        int ret;
+        try {
+            ret = IAccountRepository.updateFullNameAndPhoneNo(id, fullName, phoneNo);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        return ret;
+    }
 
 //    @Override
 //    public AccountEntity createAccount(String email, String password,String fullname) {
