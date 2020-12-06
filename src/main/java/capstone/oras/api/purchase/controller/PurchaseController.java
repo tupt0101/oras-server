@@ -61,4 +61,5 @@ public class PurchaseController {
         purchaseEntityList.sort(Comparator.comparing(PurchaseEntity::getPurchaseDate).reversed());
         return new ResponseEntity<List<PurchaseEntity>>(purchaseEntityList, HttpStatus.OK);
     }
+
 }

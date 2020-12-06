@@ -65,4 +65,9 @@ public class AccountPackageService implements IAccountPackageService {
             return IAccountPackageRepository.findAccountPackageEntitiesByExpiredFalse().get();
         } else return null;
     }
+
+    @Override
+    public List<AccountPackageEntity> findAccountPackageByPackageId(int id) {
+        return IAccountPackageRepository.findAccountPackageEntitiesByPackageId(id);
+    }
 }

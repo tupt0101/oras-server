@@ -5,15 +5,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PurchasePerMonth {
+public class ReportPerMonth {
     private String month;
     private double amount;
 
-    public PurchasePerMonth(String month, double amount) {
+    public ReportPerMonth(String month, double amount) {
         this.month = month;
         this.amount = amount;
     }
 
-    public PurchasePerMonth() {
+    public ReportPerMonth() {
     }
 }
