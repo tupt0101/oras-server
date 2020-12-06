@@ -43,9 +43,6 @@ public class JobEntity implements Serializable {
     @JsonProperty("applyTo")
     private LocalDateTime applyTo;
     @ApiModelProperty(example = "1", value = "should be a valid id")
-    @JsonProperty("talentPoolId")
-    private Integer talentPoolId;
-    @ApiModelProperty(example = "1", value = "should be a valid id")
     @JsonProperty("creatorId")
     private Integer creatorId;
     @ApiModelProperty(example = "Draft")
@@ -54,9 +51,6 @@ public class JobEntity implements Serializable {
     @ApiModelProperty(example = "2020-12-23T17:00:00")
     @JsonProperty("createDate")
     private LocalDateTime createDate;
-    @ApiModelProperty(hidden = true)
-    @JsonProperty("talentPoolByTalentPoolId")
-    private TalentPoolEntity talentPoolByTalentPoolId;
     @JsonProperty("accountByCreatorId")
     @ApiModelProperty(hidden = true)
     private AccountEntity accountByCreatorId;
@@ -176,15 +170,6 @@ public class JobEntity implements Serializable {
     }
 
 
-    @Basic
-    @Column(name = "talent_pool_id", nullable = true)
-    public Integer getTalentPoolId() {
-        return talentPoolId;
-    }
-
-    public void setTalentPoolId(Integer talentPoolId) {
-        this.talentPoolId = talentPoolId;
-    }
 
     @Basic
     @Column(name = "creator_id", nullable = true)
@@ -232,7 +217,6 @@ public class JobEntity implements Serializable {
                 Objects.equals(vacancies, jobEntity.vacancies) &&
                 Objects.equals(applyFrom, jobEntity.applyFrom) &&
                 Objects.equals(applyTo, jobEntity.applyTo) &&
-                Objects.equals(talentPoolId, jobEntity.talentPoolId) &&
                 Objects.equals(creatorId, jobEntity.creatorId) &&
                 Objects.equals(status, jobEntity.status) &&
                 Objects.equals(createDate, jobEntity.createDate) &&
@@ -244,19 +228,10 @@ public class JobEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, talentPoolId, creatorId, status, createDate, jobType, location, openjobJobId, category);
+        return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, creatorId, status, createDate, jobType, location, openjobJobId, category);
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
-//    @JsonManagedReference(value = "job-talent")
-    public TalentPoolEntity getTalentPoolByTalentPoolId() {
-        return talentPoolByTalentPoolId;
-    }
 
-    public void setTalentPoolByTalentPoolId(TalentPoolEntity talentPoolByTalentPoolId) {
-        this.talentPoolByTalentPoolId = talentPoolByTalentPoolId;
-    }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "creator_id", referencedColumnName = "id", insertable=false, updatable=false)

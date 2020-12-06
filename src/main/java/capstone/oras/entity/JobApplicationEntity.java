@@ -19,8 +19,7 @@ public class JobApplicationEntity implements Serializable {
     @ApiModelProperty(example = "2020-12-23T17:00:00")
     private LocalDateTime applyDate;
     private LocalDateTime hiredDate;
-    @ApiModelProperty(example = "1")
-    private Integer talentPoolId;
+
     @ApiModelProperty(example = "linkedin")
     private String source;
     @ApiModelProperty(example = "apply")
@@ -31,8 +30,6 @@ public class JobApplicationEntity implements Serializable {
     private Integer jobId;
     @ApiModelProperty(hidden = true)
     private CandidateEntity candidateByCandidateId;
-    @ApiModelProperty(hidden = true)
-    private TalentPoolEntity talentPoolByTalentPoolId;
     @ApiModelProperty(hidden = true)
     private JobEntity jobByJobId;
 
@@ -98,16 +95,6 @@ public class JobApplicationEntity implements Serializable {
     }
 
     @Basic
-    @Column(name = "talent_pool_id", nullable = true)
-    public Integer getTalentPoolId() {
-        return talentPoolId;
-    }
-
-    public void setTalentPoolId(Integer talentPoolId) {
-        this.talentPoolId = talentPoolId;
-    }
-
-    @Basic
     @Column(name = "source", nullable = true, length = 100)
     public String getSource() {
         return source;
@@ -157,7 +144,6 @@ public class JobApplicationEntity implements Serializable {
                 Objects.equals(matchingRate, that.matchingRate) &&
                 Objects.equals(cv, that.cv) &&
                 Objects.equals(applyDate, that.applyDate) &&
-                Objects.equals(talentPoolId, that.talentPoolId) &&
                 Objects.equals(source, that.source) &&
                 Objects.equals(status, that.status) &&
                 Objects.equals(comment, that.comment) &&
@@ -169,7 +155,6 @@ public class JobApplicationEntity implements Serializable {
         return Objects.hash(id,
                 candidateId,
                 matchingRate, cv, applyDate,
-                talentPoolId,
                 source, status, comment,
                 jobId
         );
@@ -186,16 +171,6 @@ public class JobApplicationEntity implements Serializable {
         this.candidateByCandidateId = candidateByCandidateId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "talent_pool_id", referencedColumnName = "id", insertable=false, updatable=false)
-//    @JsonManagedReference(value = "application-talent")
-    public TalentPoolEntity getTalentPoolByTalentPoolId() {
-        return talentPoolByTalentPoolId;
-    }
-
-    public void setTalentPoolByTalentPoolId(TalentPoolEntity talentPoolByTalentPoolId) {
-        this.talentPoolByTalentPoolId = talentPoolByTalentPoolId;
-    }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "job_id", referencedColumnName = "id", insertable=false, updatable=false)

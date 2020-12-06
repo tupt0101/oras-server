@@ -2,7 +2,6 @@ package capstone.oras.api.job.service;
 
 import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.api.company.service.ICompanyService;
-import capstone.oras.api.talentPool.service.ITalentPoolService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.ICategoryRepository;
 import capstone.oras.dao.IJobRepository;
@@ -39,8 +38,7 @@ public class JobService implements IJobService {
     private IAccountService accountService;
     @Autowired
     private ICompanyService companyService;
-    @Autowired
-    private ITalentPoolService talentPoolService;
+
     RestTemplate restTemplate = CommonUtils.initRestTemplate();
 
     @Override
@@ -225,9 +223,6 @@ public class JobService implements IJobService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
         }
 
-        if (job.getTalentPoolId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Poll ID is a required field");
-        }
 
         if (job.getVacancies() == null || job.getVacancies() <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vacancies must be greater than 0");
@@ -249,8 +244,5 @@ public class JobService implements IJobService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
         }
 
-        if (talentPoolService.findTalentPoolEntityById(job.getTalentPoolId()) == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Talent Pool ID is not exist");
-        }
     }
 }
