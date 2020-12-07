@@ -82,7 +82,7 @@ public class PaypalController {
     @GetMapping(URL_PAYPAL_CANCEL)
     @ResponseBody
     public String cancelPay() {
-        return "cancel";
+        return "Payment failed";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/pay/success/{accountId}/{packageId}")
