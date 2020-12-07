@@ -40,4 +40,11 @@ public class CompanyService implements ICompanyService{
             return ICompanyRepository.findById(id).get();
         } else return null;
     }
+
+    @Override
+    public List<CompanyEntity> getAllCompanyWithNameAndIsVerified(String name) {
+        if( ICompanyRepository.findCompanyEntitiesByNameEqualsAndVerifiedEquals(name, true).isPresent()) {
+            return ICompanyRepository.findCompanyEntitiesByNameEqualsAndVerifiedEquals(name,true).get();
+        } else return null;
+    }
 }

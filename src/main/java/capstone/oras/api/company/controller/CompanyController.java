@@ -90,11 +90,10 @@ public class CompanyController {
     @RequestMapping(value = "/check-company-name/{companyName}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<String> checkCompanyName(@PathVariable("companyName")String companyName) {
-        List<CompanyEntity> companyList = companyService.getAllCompany();
-        for (int i = 0; i < companyList.size(); i++) {
-            if(companyName.equals(companyList.get(i).getName())) {
+        List<CompanyEntity> companyList = companyService.getAllCompanyWithNameAndIsVerified(companyName);
+            if(companyList != null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
-            }
+
         }
         return new ResponseEntity<String>("Name is ok to use", HttpStatus.OK);
     }
