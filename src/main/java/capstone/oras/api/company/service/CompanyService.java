@@ -4,7 +4,9 @@ import capstone.oras.dao.ICompanyRepository;
 import capstone.oras.entity.CompanyEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -43,8 +45,24 @@ public class CompanyService implements ICompanyService{
 
     @Override
     public List<CompanyEntity> getAllCompanyWithNameAndIsVerified(String name) {
-        if( ICompanyRepository.findCompanyEntitiesByNameEqualsAndVerifiedEquals(name, true).isPresent()) {
+        if(ICompanyRepository.findCompanyEntitiesByNameEqualsAndVerifiedEquals(name, true).isPresent()) {
             return ICompanyRepository.findCompanyEntitiesByNameEqualsAndVerifiedEquals(name,true).get();
         } else return null;
+    }
+
+    @Override
+    public Boolean checkCompanyName(Integer id, String name) {
+        if (id == null) {
+            id = 0;
+        }
+        return ICompanyRepository.findCompanyEntitiesByIdIsNotAndNameEqualsAndVerifiedEquals(id, name, true).isPresent();
+    }
+
+    @Override
+    public Integer verifyCompany(int id) {
+        if (!ICompanyRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company does not exist.");
+        }
+        return ICompanyRepository.verifyCompanyPass(id);
     }
 }
