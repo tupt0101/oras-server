@@ -58,7 +58,6 @@ public class JobEntity implements Serializable {
     @JsonProperty("jobApplicationsById")
     private Collection<JobApplicationEntity> jobApplicationsById;
     private String jobType;
-    private String location;
     private Integer openjobJobId;
     private String category;
     private String processedJd;
@@ -221,14 +220,13 @@ public class JobEntity implements Serializable {
                 Objects.equals(status, jobEntity.status) &&
                 Objects.equals(createDate, jobEntity.createDate) &&
                 Objects.equals(jobType, jobEntity.jobType) &&
-                Objects.equals(location, jobEntity.location) &&
                 Objects.equals(openjobJobId, jobEntity.openjobJobId) &&
                 Objects.equals(category, jobEntity.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, creatorId, status, createDate, jobType, location, openjobJobId, category);
+        return Objects.hash(id, title, description, salaryFrom, salaryTo, currency, salaryHidden, vacancies, applyFrom, applyTo, creatorId, status, createDate, jobType, openjobJobId, category);
     }
 
 
@@ -273,15 +271,6 @@ public class JobEntity implements Serializable {
         this.jobType = jobType;
     }
 
-    @Basic
-    @Column(name = "location")
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
 
     @Basic
     @Column(name = "openjob_job_id")

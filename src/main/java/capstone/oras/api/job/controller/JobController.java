@@ -214,7 +214,6 @@ public class JobController {
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
-        openjobJobEntity.setLocation(job.getLocation());
         openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
         openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
         openjobJobEntity.setSalaryTo(job.getSalaryTo());
@@ -312,7 +311,6 @@ public class JobController {
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
-        openjobJobEntity.setLocation(job.getLocation());
         openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
         openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
         openjobJobEntity.setSalaryTo(job.getSalaryTo());
@@ -399,7 +397,6 @@ public class JobController {
         openjobJobEntity.setCurrency(job.getCurrency());
         openjobJobEntity.setDescription(job.getDescription());
         openjobJobEntity.setJobType(job.getJobType());
-        openjobJobEntity.setLocation(job.getLocation());
         openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
         openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
         openjobJobEntity.setSalaryTo(job.getSalaryTo());
