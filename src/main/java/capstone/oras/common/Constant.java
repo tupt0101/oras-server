@@ -8,6 +8,10 @@ public class Constant {
         public static final String PUBLISHED = "Published";
         public static final String CLOSED = "Closed";
     }
+    public static class AccountRole{
+        public static final String ADMIN = "admin";
+        public static final String USER = "user";
+    }
     public static class ApplicantStatus {
         public static final String HIRED = "Hired";
     }
