@@ -106,7 +106,7 @@ public class JobApplicationService implements IJobApplicationService {
 
     @Override
     public List<JobApplicationEntity> findJobApplicationsByJobIdWithPaging(int id, Pageable pageable) {
-        if (IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id,pageable).isPresent()) {
-            return IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id,pageable).get();
-        } else return null;    }
+        Optional<List<JobApplicationEntity>> ret = IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id,pageable);
+        return ret.orElse(null);
+    }
 }
