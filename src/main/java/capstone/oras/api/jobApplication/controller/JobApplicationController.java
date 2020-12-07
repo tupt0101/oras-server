@@ -151,25 +151,26 @@ public class JobApplicationController {
 
     }
 
-
     @RequestMapping(value = "/job-applications-by-job-id", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@RequestParam(value = "jobId") int jobId, @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
         Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("matchingRate").descending());
         List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId,pageable);
         return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationEntityList, HttpStatus.OK);
-
     }
 
     @RequestMapping(value = "/job-application-rank-cv", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<List<JobApplicationEntity>> rankApplication(@RequestBody Integer id) {
-        jobApplicationService.calcSimilarity(id);
-        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobId(id);
-        if (!CollectionUtils.isEmpty(jobApplicationEntityList)) {
-            jobApplicationEntityList.sort(Comparator.comparingDouble(JobApplicationEntity::getMatchingRate).reversed());
+    ResponseEntity<List<JobApplicationEntity>> rankApplication(@RequestParam(value = "jobId") int jobId, @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+            jobApplicationService.calcSimilarity(jobId);
+        } catch (Exception e) {
+            httpStatus = HttpStatus.NOT_MODIFIED;
         }
-        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationEntityList, HttpStatus.OK);
+        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("matchingRate").descending());
+        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId,pageable);
+        return new ResponseEntity<>(jobApplicationEntityList, httpStatus);
     }
 
 
