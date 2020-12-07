@@ -464,6 +464,8 @@ public class AccountController {
         AccountEntity accountEntity = accountService.findAccountByEmail(email);
         if (accountEntity == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account does not exist");
+        }else if (!accountEntity.getActive()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account has not been activated");
         }
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         String pwd = RandomStringUtils.random( 15, characters );
