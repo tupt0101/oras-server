@@ -25,8 +25,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
-import static capstone.oras.common.Constant.JobStatus.CLOSED;
-import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
+import static capstone.oras.common.Constant.JobStatus.*;
 
 @Service
 public class JobService implements IJobService {
@@ -67,6 +66,11 @@ public class JobService implements IJobService {
     @Override
     public List<JobEntity> getAllJob() {
         return IJobRepository.findAll();
+    }
+
+    @Override
+    public List<JobEntity> getAllClosedAndPublishedJob() {
+        return IJobRepository.findJobEntitiesByStatusNot(DRAFT);
     }
 
     @Override

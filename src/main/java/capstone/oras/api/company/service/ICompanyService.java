@@ -11,6 +11,8 @@ public interface ICompanyService {
     List<CompanyEntity> getAllCompany();
     List<CompanyEntity> getAllCompanyWithPaging(Pageable pageable);
     CompanyEntity findCompanyById(int id);
+    Integer verifyCompany(int id);
     List<CompanyEntity> getAllCompanyWithNameAndIsVerified(String name);
+    Boolean checkCompanyName(Integer id, String name);
 
 }

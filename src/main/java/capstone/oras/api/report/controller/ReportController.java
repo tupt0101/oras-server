@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -23,9 +24,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static capstone.oras.common.Constant.AccountRole.ADMIN;
 import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
 import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
-import static capstone.oras.common.Constant.AccountRole.ADMIN;
+
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(value = "/v1/report-management")
@@ -51,6 +53,15 @@ public class ReportController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private CurrencyService currencyService;
+    double rateUSD = 0;
+    double rateVND = 0;
+    double rateSGD = 0;
+    double rateEUR = 0;
+    double rateJPY = 0;
+    double rateCNY = 0;
 
 
     @RequestMapping(value = "/time-to-hire/{account-id}", method = RequestMethod.GET)
@@ -188,28 +199,11 @@ public class ReportController {
         return new ResponseEntity<List<SalaryByCategory>>(salaryByCategories, HttpStatus.OK);
     }
 
+    // FOR SYSTEM
     private List<SalaryByCategory> getSalaryByCategories(String base) throws Exception {
-        List<CategoryEntity> listCategory = new ArrayList<>();
-        listCategory = categoryService.getAllCategory();
-        List<SalaryByCategory> salaryByCategories = new ArrayList<>();
-        List<JobEntity> jobEntityList = jobService.getAllJob();
-        CurrencyService currencyService = new CurrencyService();
-        for (CategoryEntity categoryEntity : listCategory
-        ) {
-            List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
-            SalaryByCategory salaryByCategory = new SalaryByCategory();
-            double totalSalary = 0;
-            for (JobEntity jobEntity : listByCatagory
-            ) {
-                totalSalary = currencyService.currencyConverter(base, jobEntity.getCurrency(), (jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
-            }
-            salaryByCategory.setCategory(categoryEntity.getName());
-            if (listByCatagory.size() > 0) {
-                salaryByCategory.setAverageSalary((int) (totalSalary / listByCatagory.size()));
-                salaryByCategories.add(salaryByCategory);
-            }
-        }
-        return salaryByCategories;
+        List<CategoryEntity> listCategory = categoryService.getAllCategory();
+        List<JobEntity> jobEntityList = jobService.getAllClosedAndPublishedJob();
+        return this.calAvgSalaryByCategory(listCategory, jobEntityList, base);
     }
 
     @RequestMapping(value = "/average-salary-of-account-by-category/{account-id}/{base}", method = RequestMethod.GET)
@@ -219,29 +213,53 @@ public class ReportController {
         return new ResponseEntity<List<SalaryByCategory>>(accountSalaryByCategories, HttpStatus.OK);
     }
 
+    // FOR ACCOUNT
     private List<SalaryByCategory> getSalaryByCategories(int accountId, String base) throws Exception {
-        List<CategoryEntity> listCategory = new ArrayList<>();
-        listCategory = categoryService.getAllCategory();
-        List<SalaryByCategory> accountSalaryByCategories = new ArrayList<>();
-        List<SalaryByCategory> systemSalaryByCategories = new ArrayList<>();
+        List<CategoryEntity> listCategory = categoryService.getAllCategory();
         List<JobEntity> jobEntityList = jobService.getClosedAndPublishedJobByCreatorId(accountId);
-        CurrencyService currencyService = new CurrencyService();
+        return this.calAvgSalaryByCategory(listCategory, jobEntityList, base);
+    }
+
+    private List<SalaryByCategory> calAvgSalaryByCategory(
+            List<CategoryEntity> listCategory, List<JobEntity> jobEntityList, String base)
+            throws Exception {
+        List<SalaryByCategory> salaryByCategories = new ArrayList<>();
         for (CategoryEntity categoryEntity : listCategory
         ) {
-            List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
+            // FILTER JOB BY CATEGORY
+            List<JobEntity> listByCatagory = jobEntityList.stream()
+                    .filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
             SalaryByCategory salaryByCategory = new SalaryByCategory();
+            // CALCULATE AVERAGE SALARY
             double totalSalary = 0;
+            double jobAvgSal;
+            double rate;
             for (JobEntity jobEntity : listByCatagory
             ) {
-                totalSalary = currencyService.currencyConverter(base, jobEntity.getCurrency(), (jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2) + totalSalary;
+                // GET EXCHANGES RATE
+                String currency = jobEntity.getCurrency();
+                if (!currency.equalsIgnoreCase(base)) {
+                    Field field = this.getClass().getDeclaredField("rate" + jobEntity.getCurrency());
+                    field.setAccessible(true);
+                    rate = field.getDouble(this);
+                    if (rate == 0) {
+                        field.setDouble(this, currencyService.getCurrencyRate(base, jobEntity.getCurrency()));
+                    }
+                    rate = field.getDouble(this);
+                } else {
+                    rate = 1;
+                }
+                jobAvgSal = (jobEntity.getSalaryFrom() + jobEntity.getSalaryTo()) / 2;
+                totalSalary += jobAvgSal/rate;
             }
             salaryByCategory.setCategory(categoryEntity.getName());
+
             if (listByCatagory.size() > 0) {
                 salaryByCategory.setAverageSalary((int) (totalSalary / listByCatagory.size()));
-                accountSalaryByCategories.add(salaryByCategory);
+                salaryByCategories.add(salaryByCategory);
             }
         }
-        return accountSalaryByCategories;
+        return salaryByCategories;
     }
 
     @RequestMapping(value = "/job-statistic-by-creator-id/{id}", method = RequestMethod.GET)
@@ -463,7 +481,7 @@ public class ReportController {
     @ResponseBody
     ResponseEntity<SystemStatistic> getPurchaseReport() {
         SystemStatistic systemStatistic = new SystemStatistic();
-        systemStatistic.setTotalJobs(  jobService.getClosedAndPublishedJob().size());
+        systemStatistic.setTotalJobs(jobService.getClosedAndPublishedJob().size());
         systemStatistic.setOpenJobs(jobService.getAllPublishedJob().size());
         systemStatistic.setCandidate(jobApplicationService.getAllJobApplication().size());
         systemStatistic.setUser(accountService.getAllAccount().stream().filter(s -> !s.getRole().equals(ADMIN)).collect(Collectors.toList()).size());

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -26,76 +27,53 @@ public class CompanyController {
     @Autowired
     private ICompanyService companyService;
 
-    HttpHeaders httpHeaders = new HttpHeaders();
-
     @RequestMapping(value = "/company", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<CompanyEntity> createCompany(@RequestBody CompanyEntity companyEntity) {
-        List<CompanyEntity> companyList = companyService.getAllCompany();
         if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
-
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
         } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
         } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
         } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
+        } else if (companyService.checkCompanyName(companyEntity.getId(), companyEntity.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
         }
-        for (int i = 0; i < companyList.size(); i++) {
-            if(companyEntity.getName().equals(companyList.get(i).getName())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
-            }
-        }
-            return new ResponseEntity<>(companyService.createCompany(companyEntity), HttpStatus.OK);
+        return new ResponseEntity<>(companyService.createCompany(companyEntity), HttpStatus.OK);
 
     }
 
     @RequestMapping(value = "/company", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<CompanyEntity> updateCompany(@RequestBody CompanyEntity companyEntity) {
-        List<CompanyEntity> companyList = companyService.getAllCompany();
         if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
         } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
         } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
         } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
-        }
-        for (int i = 0; i < companyList.size(); i++) {
-            if(companyEntity.getName().equals(companyList.get(i).getName()) && companyEntity.getId() != companyList.get(i).getId()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
-            }
+        } else if (companyService.checkCompanyName(companyEntity.getId(), companyEntity.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
         }
         return new ResponseEntity<>(companyService.updateCompany(companyEntity), HttpStatus.OK);
 
     }
 
-    @RequestMapping(value = "/check-company-name/{companyName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/check-company-name", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<String> checkCompanyName(@PathVariable("companyName")String companyName) {
-        List<CompanyEntity> companyList = companyService.getAllCompanyWithNameAndIsVerified(companyName);
-            if(companyList != null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
-
+    ResponseEntity<String> checkCompanyName(@Param("id") Integer id, @Param("name") String name) {
+        if (companyService.checkCompanyName(id, name)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Name already exist");
         }
-        return new ResponseEntity<String>("Name is ok to use", HttpStatus.OK);
+        return new ResponseEntity<>("Name is ok to use", HttpStatus.OK);
     }
 
     @RequestMapping(value = "/companies", method = RequestMethod.GET)
@@ -112,7 +90,7 @@ public class CompanyController {
     @RequestMapping(value = "/companies-paging", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<CompanyEntity>> getAllCompanyWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
-        Pageable pageable  = PageRequest.of(page-1, numOfElement, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page - 1, numOfElement, Sort.by("id"));
         return new ResponseEntity<List<CompanyEntity>>(companyService.getAllCompanyWithPaging(pageable), HttpStatus.OK);
     }
 
@@ -122,7 +100,11 @@ public class CompanyController {
         return new ResponseEntity<CompanyEntity>(companyService.findCompanyById(id), HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/company/verify/{id}", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<Integer> verifyCompany(@PathVariable("id") int id) {
+        return new ResponseEntity<>(companyService.verifyCompany(id), HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/company-openjob", method = RequestMethod.POST)
     @ResponseBody
@@ -154,7 +136,7 @@ public class CompanyController {
 //        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<CompanyEntity> entity = new HttpEntity<>(companyEntity,headers);
+        HttpEntity<CompanyEntity> entity = new HttpEntity<>(companyEntity, headers);
         System.out.println(entity.getHeaders());
         CompanyEntity openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
 //        ResponseEntity<CompanyEntity> openJobEntity = restTemplate.exchange(uri,HttpMethod.POST, entity, CompanyEntity.class);
