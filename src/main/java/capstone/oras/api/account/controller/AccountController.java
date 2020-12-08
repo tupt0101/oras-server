@@ -31,6 +31,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static capstone.oras.common.Constant.ORAS_HOST;
+
 
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
@@ -320,7 +322,7 @@ public class AccountController {
                     "                                    <td bgcolor=\"#ffffff\" align=\"center\" style=\"padding: 20px 30px 60px 30px;\">\n" +
                     "                                        <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n" +
                     "                                            <tr>\n" +
-                    "                                                <td align=\"center\" style=\"border-radius: 3px;\" bgcolor=\"#1746e0\"><a href=\"https://oras-api.herokuapp.com/v1/account-management/confirm-account?token=" + confirmationToken.getConfirmationToken() + "\" target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #1746e0; display: inline-block;\">Confirm Account</a></td>\n" +
+                    "                                                <td align=\"center\" style=\"border-radius: 3px;\" bgcolor=\"#1746e0\"><a href=\"" + ORAS_HOST + "/v1/account-management/confirm-account?token=" + confirmationToken.getConfirmationToken() + "\" target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #1746e0; display: inline-block;\">Confirm Account</a></td>\n" +
                     "                                            </tr>\n" +
                     "                                        </table>\n" +
                     "                                    </td>\n" +
@@ -335,7 +337,7 @@ public class AccountController {
                     "                    </tr> <!-- COPY -->\n" +
                     "                    <tr>\n" +
                     "                        <td bgcolor=\"#ffffff\" align=\"left\" style=\"padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;\">\n" +
-                    "                            <p style=\"margin: 0;\"><a href=\"#\" target=\"_blank\" style=\"color: #1746e0;\">https://oras-api.herokuapp.com/v1/account-management/confirm-account?token=" + confirmationToken.getConfirmationToken() + "</a></p>\n" +
+                    "                            <p style=\"margin: 0;\"><a href=\"#\" target=\"_blank\" style=\"color: #1746e0;\">" + ORAS_HOST + "/v1/account-management/confirm-account?token=" + confirmationToken.getConfirmationToken() + "</a></p>\n" +
                     "                        </td>\n" +
                     "                    </tr>\n" +
                     "                    <tr>\n" +
@@ -400,7 +402,7 @@ public class AccountController {
         AccountEntity accountEntity = accountService.findAccountEntityById(passwordChanges.accountId);
         if (accountEntity == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account doesn't exist");
-        }else if (!passwordEncoder.matches(passwordChanges.currentPassword, accountEntity.getPassword())) {
+        } else if (!passwordEncoder.matches(passwordChanges.currentPassword, accountEntity.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password doesn't match current password");
         }
         accountEntity.setPassword(passwordEncoder.encode(passwordChanges.newPassword));
@@ -466,7 +468,7 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account does not exist");
         }
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        String pwd = RandomStringUtils.random( 15, characters );
+        String pwd = RandomStringUtils.random(15, characters);
         accountEntity.setPassword(passwordEncoder.encode(pwd));
         MimeMessage message = javaMailSender.createMimeMessage();
         message.setSubject("Reset Password!");
@@ -608,7 +610,7 @@ public class AccountController {
                 "                    <tr>\n" +
                 "                        <td bgcolor=\"#ffffff\" align=\"left\" style=\"padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;\">\n" +
                 "                            <p style=\"margin: 0;\">You've successfully reset your ORAS password.</p>\n" +
-                "                            <p style=\"margin: 0;\">Your new password: <strong>"+ pwd +"</strong></p>\n" +
+                "                            <p style=\"margin: 0;\">Your new password: <strong>" + pwd + "</strong></p>\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
                 "                    <tr>\n" +
