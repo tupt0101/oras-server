@@ -153,10 +153,11 @@ public class JobApplicationController {
 
     @RequestMapping(value = "/job-applications-by-job-id", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@RequestParam(value = "jobId") int jobId, @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
-        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("matchingRate").descending());
+    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@RequestParam(value = "jobId") int jobId, @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page, @RequestParam(value = "sort") String sort) {
+        String sortBy = sort.substring(1);
+        Pageable pageable = PageRequest.of(page-1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).descending());
         List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId,pageable);
-        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationEntityList, HttpStatus.OK);
+        return new ResponseEntity<>(jobApplicationEntityList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job-application-rank-cv", method = RequestMethod.POST)

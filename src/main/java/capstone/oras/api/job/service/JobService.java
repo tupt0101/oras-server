@@ -1,7 +1,6 @@
 package capstone.oras.api.job.service;
 
 import capstone.oras.api.account.service.IAccountService;
-import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.ICategoryRepository;
 import capstone.oras.dao.IJobRepository;
@@ -35,8 +34,6 @@ public class JobService implements IJobService {
     private ICategoryRepository iCategoryRepository;
     @Autowired
     private IAccountService accountService;
-    @Autowired
-    private ICompanyService companyService;
 
     RestTemplate restTemplate = CommonUtils.initRestTemplate();
 
