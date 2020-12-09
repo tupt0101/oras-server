@@ -155,7 +155,7 @@ public class JobApplicationController {
     @ResponseBody
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@RequestParam(value = "jobId") int jobId, @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page, @RequestParam(value = "sort") String sort) {
         String sortBy = sort.substring(1);
-        Pageable pageable = PageRequest.of(page-1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).descending());
+        Pageable pageable = PageRequest.of(page-1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
         List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId,pageable);
         return new ResponseEntity<>(jobApplicationEntityList, HttpStatus.OK);
     }
