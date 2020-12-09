@@ -46,7 +46,11 @@ public class JobService implements IJobService {
         if (IJobRepository.existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(job.getCreatorId(), job.getTitle(), CLOSED)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This job title already exists");
         }
-        job.setProcessedJd(this.processJd(job.getDescription()));
+        try {
+            job.setProcessedJd(this.processJd(job.getDescription()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         job.setCreateDate(LocalDateTime.now());
         job.setTotalApplication(0);
         return IJobRepository.save(job);
