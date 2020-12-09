@@ -3,7 +3,9 @@ package capstone.oras.api.packages.service;
 import capstone.oras.dao.IPackageRepository;
 import capstone.oras.entity.PackageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,5 +35,13 @@ public class PackageService implements IPackageService {
         if (IPackageRepository.findById(id).isPresent()) {
             return IPackageRepository.findById(id).get();
         } else return null;
+    }
+
+    @Override
+    public Integer deactivatePackage(int id) {
+        if (IPackageRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This package ID does not exist.");
+        }
+        return IPackageRepository.deactivatePackage(id);
     }
 }

@@ -9,4 +9,5 @@ public interface IPackageService {
     PackageEntity updatePackage(PackageEntity packageEntity);
     List<PackageEntity> getAllPackage();
     PackageEntity findPackageById(int id);
+    Integer deactivatePackage(int id);
 }

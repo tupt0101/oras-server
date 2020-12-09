@@ -234,6 +234,7 @@ public class JobController {
         OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
         job.setOpenjobJobId(openJobEntity.getId());
         job.setExpireDate(accountPackageEntity.getValidTo());
+        job.setApplyFrom(LocalDateTime.now());
 
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setCreatorId(job.getCreatorId());
@@ -257,10 +258,6 @@ public class JobController {
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
-        }
-        if (job.getApplyFrom() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
         }
 
         if (job.getApplyTo() == null) {
@@ -348,10 +345,6 @@ public class JobController {
         if (job.getTitle() == null || job.getTitle().isEmpty()) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
-        }
-        if (job.getApplyFrom() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
         }
 
         if (job.getApplyTo() == null) {
