@@ -1,5 +1,6 @@
 package capstone.oras.api.company.service;
 
+import capstone.oras.dao.IAccountRepository;
 import capstone.oras.dao.ICompanyRepository;
 import capstone.oras.entity.CompanyEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class CompanyService implements ICompanyService{
 
     @Autowired
     private ICompanyRepository ICompanyRepository;
+    @Autowired
+    private IAccountRepository iAccountRepository;
 
     @Override
     public CompanyEntity createCompany(CompanyEntity companyEntity) {
@@ -63,6 +66,7 @@ public class CompanyService implements ICompanyService{
         if (!ICompanyRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company does not exist.");
         }
+        iAccountRepository.updateActiveByVerifyingCompany(id);
         return ICompanyRepository.verifyCompanyPass(id);
     }
 }

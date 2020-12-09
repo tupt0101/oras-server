@@ -26,5 +26,10 @@ public interface IAccountRepository extends JpaRepository<AccountEntity, Integer
     @Transactional
     Integer updatePassword(int id, String password);
 
+    @Query(value = "update account a set active = true from company c where a.company_id = c.id and c.id = :companyId", nativeQuery = true)
+    @Modifying
+    @Transactional
+    Integer updateActiveByVerifyingCompany(Integer companyId);
+
     List<AccountEntity> findAllBy(Pageable pageable);
 }
