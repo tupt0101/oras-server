@@ -49,10 +49,15 @@ public class PackageController {
         return new ResponseEntity<List<PackageEntity>>(lst, HttpStatus.OK);
     }
 
-
     @RequestMapping(value = "/package/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<PackageEntity> getPackageById(@PathVariable("id") int id) {
         return new ResponseEntity<PackageEntity>(packageService.findPackageById(id), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/deactivate", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<Integer> deactivatePackage(@RequestBody int id) {
+        return new ResponseEntity<>(packageService.deactivatePackage(id), HttpStatus.OK);
     }
 }
