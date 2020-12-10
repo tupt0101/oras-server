@@ -75,9 +75,9 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public List<JobEntity> getAllPublishedJobByCreatorIdWithPaging(int creatorId, Pageable pageable) {
-        if (IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED, pageable).isPresent()) {
-            return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED, pageable).get();
+    public List<JobEntity> getAllPublishedJobByCreatorId(int creatorId) {
+        if (IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED).isPresent()) {
+            return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED).get();
 
         } else return null;
     }
