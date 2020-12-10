@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
@@ -42,11 +43,12 @@ public class PackageController {
     @RequestMapping(value = "/packages", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<PackageEntity>> getAllPackage() {
-        List<PackageEntity> lst = packageService.getAllPackage();
+        List<PackageEntity> lst = packageService.getAllPackage().stream()
+                .filter(PackageEntity::isActive).collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(lst)) {
             lst.sort(Comparator.comparingInt(PackageEntity::getId));
         }
-        return new ResponseEntity<List<PackageEntity>>(lst, HttpStatus.OK);
+        return new ResponseEntity<>(lst, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/active-packages", method = RequestMethod.GET)
