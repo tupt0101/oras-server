@@ -53,7 +53,7 @@ public class JobApplicationController {
         } else if (jobApplicationEntity.getSource() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Source is null");
-        }  else if (jobApplicationEntity.getStatus() == null) {
+        } else if (jobApplicationEntity.getStatus() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is null");
         } else if (jobApplicationEntity.getJobId() == null) {
@@ -153,24 +153,33 @@ public class JobApplicationController {
 
     @RequestMapping(value = "/job-applications-by-job-id", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@RequestParam(value = "jobId") int jobId, @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page, @RequestParam(value = "sort") String sort) {
+    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@RequestParam(value = "jobId") int jobId,
+                                                                           @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page,
+                                                                           @RequestParam(value = "sort") String sort,
+                                                                           @RequestParam(value = "status") String status,
+                                                                           @RequestParam(value = "name") String name) {
         String sortBy = sort.substring(1);
-        Pageable pageable = PageRequest.of(page-1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
-        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId,pageable);
+        Pageable pageable = PageRequest.of(page - 1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId, pageable, status, name);
         return new ResponseEntity<>(jobApplicationEntityList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job-application-rank-cv", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<List<JobApplicationEntity>> rankApplication(@RequestParam(value = "jobId") int jobId, @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
+    ResponseEntity<List<JobApplicationEntity>> rankApplication(@RequestParam(value = "jobId") int jobId,
+                                                               @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page,
+                                                               @RequestParam(value = "sort") String sort,
+                                                               @RequestParam(value = "status") String status,
+                                                               @RequestParam(value = "name") String name) {
         HttpStatus httpStatus = HttpStatus.OK;
         try {
             jobApplicationService.calcSimilarity(jobId);
         } catch (Exception e) {
             httpStatus = HttpStatus.NOT_MODIFIED;
         }
-        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("matchingRate").descending());
-        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId,pageable);
+        String sortBy = sort.substring(1);
+        Pageable pageable = PageRequest.of(page - 1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId, pageable, status, name);
         return new ResponseEntity<>(jobApplicationEntityList, httpStatus);
     }
 
@@ -206,7 +215,7 @@ public class JobApplicationController {
             JobApplicationEntity jobApplicationEntity = new JobApplicationEntity();
             int candidateId;
             // check to see if candidate already in system by email
-            if(candidateService.findCandidatesByEmail(openjobJobApplication.getAccountByAccountId().getEmail()) == null){
+            if (candidateService.findCandidatesByEmail(openjobJobApplication.getAccountByAccountId().getEmail()) == null) {
                 OpenjobAccountEntity openjobAccountEntity = openjobJobApplication.getAccountByAccountId();
                 CandidateEntity candidateEntity = new CandidateEntity();
 //                candidateEntity.setId(openjobAccountEntity.getId());
@@ -224,23 +233,23 @@ public class JobApplicationController {
 
 
             //need to check if application already exist(check by candidateID and jobId if exist bot
-            JobApplicationEntity tempJobApplication = jobApplicationService.findJobApplicationByJobIdAndCandidateId(jobId, candidateId );
-           if (tempJobApplication == null) {
-               jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
+            JobApplicationEntity tempJobApplication = jobApplicationService.findJobApplicationByJobIdAndCandidateId(jobId, candidateId);
+            if (tempJobApplication == null) {
+                jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
 //            jobApplicationEntity.setCandidateId(openjobJobApplication.getAccountId());
-               jobApplicationEntity.setCv(openjobJobApplication.getCv());
-               jobApplicationEntity.setJobId(jobId);
-               jobApplicationEntity.setSource("openjob");
-               jobApplicationEntity.setMatchingRate(0.0);
+                jobApplicationEntity.setCv(openjobJobApplication.getCv());
+                jobApplicationEntity.setJobId(jobId);
+                jobApplicationEntity.setSource("openjob");
+                jobApplicationEntity.setMatchingRate(0.0);
 //               jobApplicationEntity.setId(openjobJobApplication.getId());
-               jobApplicationEntity.setStatus("Applied");
-               jobApplicationsOras.add(jobApplicationEntity);
-           } else if(!tempJobApplication.getApplyDate().isEqual(openjobJobApplication.getApplyAt()) ) {
-               tempJobApplication.setApplyDate(openjobJobApplication.getApplyAt());
-               tempJobApplication.setCv(openjobJobApplication.getCv());
-               tempJobApplication.setMatchingRate(0.0);
-               jobApplicationsOras.add(tempJobApplication);
-          }
+                jobApplicationEntity.setStatus("Applied");
+                jobApplicationsOras.add(jobApplicationEntity);
+            } else if (!tempJobApplication.getApplyDate().isEqual(openjobJobApplication.getApplyAt())) {
+                tempJobApplication.setApplyDate(openjobJobApplication.getApplyAt());
+                tempJobApplication.setCv(openjobJobApplication.getCv());
+                tempJobApplication.setMatchingRate(0.0);
+                jobApplicationsOras.add(tempJobApplication);
+            }
 
 
         }

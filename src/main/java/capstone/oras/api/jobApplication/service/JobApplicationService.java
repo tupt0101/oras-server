@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -102,11 +103,16 @@ public class JobApplicationService implements IJobApplicationService {
     public JobApplicationEntity findJobApplicationByJobIdAndCandidateId(int jobId, int candidateId) {
         if (IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId).isPresent()) {
             return IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId).get();
-        } else return null;    }
+        } else return null;
+    }
 
     @Override
-    public List<JobApplicationEntity> findJobApplicationsByJobIdWithPaging(int id, Pageable pageable) {
-        Optional<List<JobApplicationEntity>> ret = IJobApplicationRepository.findJobApplicationEntitiesByJobIdEquals(id,pageable);
+    public List<JobApplicationEntity> findJobApplicationsByJobIdWithPaging(int id, Pageable pageable, String status, String name) {
+        status = StringUtils.isEmpty(status) ? "" : status;
+        name = StringUtils.isEmpty(name) ? "" : name;
+        Optional<List<JobApplicationEntity>> ret =
+                IJobApplicationRepository.findJobApplicationEntitiesByJobIdEqualsAndStatusLikeAndCandidateByCandidateId_FullnameLike(
+                        id, pageable, status, name);
         return ret.orElse(null);
     }
 }

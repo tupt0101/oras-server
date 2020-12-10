@@ -15,6 +15,6 @@ public interface IJobApplicationService {
     List<JobApplicationEntity> findJobApplicationsByJobIdAndCandidateId(int jobId,int candiateId);
     String calcSimilarity(Integer id);
     JobApplicationEntity findJobApplicationByJobIdAndCandidateId(int jobId,int candidateId);
-    List<JobApplicationEntity> findJobApplicationsByJobIdWithPaging(int id, Pageable pageable);
+    List<JobApplicationEntity> findJobApplicationsByJobIdWithPaging(int id, Pageable pageable, String status, String name);
 
 }

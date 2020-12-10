@@ -168,7 +168,6 @@ public class JobService implements IJobService {
     public List<JobEntity> getAllPublishedJob() {
         if (IJobRepository.findJobEntitiesByStatusEquals(PUBLISHED).isPresent()) {
             return IJobRepository.findJobEntitiesByStatusEquals(PUBLISHED).get();
-
         }
         throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");    }
 

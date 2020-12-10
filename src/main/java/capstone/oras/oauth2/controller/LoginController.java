@@ -35,7 +35,9 @@ public class LoginController {
     ResponseEntity<String> login(@RequestParam("username") String email, @RequestParam("password") String password) throws Exception {
         AccountEntity accountEntity = accountService.findAccountByEmail(email);
         if (accountEntity == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email isn't registered");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is not registered");
+        } else if (!accountEntity.getConfirmMail()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please confirm your email to complete the registration");
         } else if (!accountEntity.getActive()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not active");
         }
