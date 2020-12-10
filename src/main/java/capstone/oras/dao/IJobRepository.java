@@ -42,7 +42,7 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer>, Pagin
     List<JobEntity> findJobEntitiesByCreatorIdEqualsAndTitleLikeAndStatusLikeAndCurrencyLike(
             int creatorId, String title, String status, String currency, Pageable pageable);
 
-    @Query(value = "update job set process_jd = :processJd where id = :id", nativeQuery = true)
+    @Query(value = "update job set process_jd = :processJd where id = :jobId", nativeQuery = true)
     @Modifying
     @Transactional
     Integer updateProcessJd(int jobId, String processJd);
