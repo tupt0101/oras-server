@@ -143,13 +143,4 @@ public class PackageEntity {
         this.accountPackagesById = accountPackagesById;
     }
 
-    @Basic
-    @Column(name = "active")
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
 }
