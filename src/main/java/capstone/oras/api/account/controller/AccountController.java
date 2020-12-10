@@ -580,6 +580,15 @@ public class AccountController {
         return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/activate-by-account-id/{accountId}", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<AccountEntity> activeAccount(@PathVariable("accountId") int accountId) {
+        // refactor code de update 1 field thoi dung native query nang cao hieu suat
+        AccountEntity accountEntity = accountService.findAccountEntityById(accountId);
+        accountEntity.setActive(true);
+        return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/account", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<AccountEntity> updateAccount(@RequestBody AccountEntity accountEntity) {
