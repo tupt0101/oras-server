@@ -27,7 +27,6 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
-          <factory-entry name="NewPersistenceUnit" value="ee224efd-a13e-45d8-b657-7b22db2d883a" />
           <factory-entry name="entityManagerFactory" />
           <factory-entry name="noname-a.xml@0" value="9d65121b-188a-462b-a7e9-d61a635c6d46" />
         </datasource-mapping>

@@ -18,6 +18,7 @@ public class PackageEntity {
     private String currency;
     private String description;
     private String tag;
+    private boolean active;
     @ApiModelProperty(hidden = true)
     private Collection<AccountPackageEntity> accountPackagesById;
 
@@ -80,6 +81,16 @@ public class PackageEntity {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    @Basic
+    @Column(name = "active")
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override

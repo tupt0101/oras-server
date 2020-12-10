@@ -23,6 +23,7 @@ public interface IJobService {
     List<JobEntity> getAllJobWithPaging(Pageable pageable);
     List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable);
     List<JobEntity> getAllClosedAndPublishedJob();
+    List<JobEntity> getAllPublishedJobByCreatorIdWithPaging(int creatorId,Pageable pageable);
 
 
 }

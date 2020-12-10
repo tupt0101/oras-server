@@ -49,6 +49,17 @@ public class PackageController {
         return new ResponseEntity<List<PackageEntity>>(lst, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/active-packages", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<List<PackageEntity>> getAllActivePackage() {
+        List<PackageEntity> lst = packageService.getAllActivePackage();
+        if (!CollectionUtils.isEmpty(lst)) {
+            lst.sort(Comparator.comparingInt(PackageEntity::getId));
+        }
+        return new ResponseEntity<List<PackageEntity>>(lst, HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/package/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<PackageEntity> getPackageById(@PathVariable("id") int id) {

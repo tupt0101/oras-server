@@ -44,4 +44,11 @@ public class PackageService implements IPackageService {
         }
         return IPackageRepository.deactivatePackage(id);
     }
+
+    @Override
+    public List<PackageEntity> getAllActivePackage() {
+        if (IPackageRepository.findPackageEntitiesByActiveTrue().isPresent()) {
+            return IPackageRepository.findPackageEntitiesByActiveTrue().get();
+        } else return null;
+    }
 }
