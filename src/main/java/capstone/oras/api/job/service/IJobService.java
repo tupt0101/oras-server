@@ -24,6 +24,8 @@ public interface IJobService {
     List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable);
     List<JobEntity> getAllClosedAndPublishedJob();
     List<JobEntity> getAllPublishedJobByCreatorId(int creatorId);
+    List<JobEntity> getAllPublishedJobByCreatorIdWithPaging(int creatorId,Pageable pageable);
+    boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(Integer creatorId, String title);
 
 
 }

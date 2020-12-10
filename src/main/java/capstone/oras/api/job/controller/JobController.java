@@ -185,13 +185,15 @@ public class JobController {
     @RequestMapping(value = "/job/{id}/publish", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
-        JobEntity tempJob = jobService.getJobById(id);
-        if (tempJob == null) {
+        JobEntity job = jobService.getJobById(id);
+        if (job == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
-        } else if(tempJob.getStatus().equals(CLOSED)) {
+        } else if(job.getStatus().equals(CLOSED)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Closed job cannot be reopen");
         }
-        JobEntity job = jobService.getJobById(id);
+        if (jobService.existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(job.getCreatorId(), job.getTitle())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This job title already exists");
+        }
         AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(job.getCreatorId());
         if (accountPackageEntity == null) {
             throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
