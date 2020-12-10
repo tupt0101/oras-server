@@ -56,6 +56,9 @@ public class ScheduleSpringConfig {
     public void scanForExpiredAccountPackage() {
         List<AccountPackageEntity> accountPackages = accountPackageService.findAllValidAccountPackages();
         List<AccountPackageEntity> accountPackagesToUpdate = new ArrayList<>();
+        if (accountPackages == null) {
+            return;
+        }
         for (int i = 0; i < accountPackages.size(); i++) {
             AccountPackageEntity accountPackage = accountPackages.get(i);
             if (accountPackage.getValidTo().isBefore(LocalDateTime.now())) {

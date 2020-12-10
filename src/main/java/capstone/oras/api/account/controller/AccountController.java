@@ -3,11 +3,14 @@ package capstone.oras.api.account.controller;
 import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.email.service.EmailSenderService;
+import capstone.oras.api.job.service.IJobService;
 import capstone.oras.dao.IConfirmationTokenRepository;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.CompanyEntity;
 import capstone.oras.entity.ConfirmationToken;
+import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobCompanyEntity;
+import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +59,12 @@ public class AccountController {
 
     @Autowired
     private ICompanyService companyService;
+
+    @Autowired
+    private IJobService jobService;
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
     static class Signup {
         public AccountEntity accountEntity;
@@ -378,6 +387,35 @@ public class AccountController {
         companyService.updateCompany(companyEntity);
         AccountEntity accountEntity = accountService.findAccountByCompanyId(companyId);
         accountEntity.setActive(true);
+        return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/deactivate-account/{accountId}", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<AccountEntity> deactiveAccount(@PathVariable("accountId") int accountId) {
+
+        // refactor code de update 1 field thoi dung native query nang cao hieu suat
+        AccountEntity accountEntity = accountService.findAccountEntityById(accountId);
+        accountEntity.setActive(false);
+        List<JobEntity> jobEntities = jobService.getAllJobByCreatorId(accountId);
+        if(jobEntities != null) {
+            for (int i = 0; i < jobEntities.size(); i++) {
+                int openjobJobId = jobEntities.get(i).getOpenjobJobId();
+                //get openjob token
+                String token = "Bearer " + userDetailsService.getOpenJobToken();
+                // close job to openjob
+                String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders headers = new HttpHeaders();
+                headers.set("Authorization", token);
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+                HttpEntity entity = new HttpEntity(headers);
+                // close job on openjob
+                restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+                jobService.closeJob(jobEntities.get(i).getId());
+            }
+        }
         return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
     }
 
