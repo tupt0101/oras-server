@@ -138,9 +138,13 @@ public class JobController {
 
     @RequestMapping(value = "/open-job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id,@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
-       Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("applyFrom"));
-        return new ResponseEntity<List<JobEntity>>(jobService.getAllPublishedJobByCreatorIdWithPaging(id, pageable), HttpStatus.OK);
+    ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
+        List<JobEntity> jobEntities = jobService.getAllPublishedJobByCreatorId(id);
+        if (!CollectionUtils.isEmpty(jobEntities)) {
+            jobEntities.sort(Comparator.comparing(JobEntity::getApplyFrom).reversed());
+        }
+
+        return new ResponseEntity<List<JobEntity>>(jobEntities, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/closed-published-job-by-creator-id/{id}", method = RequestMethod.GET)
