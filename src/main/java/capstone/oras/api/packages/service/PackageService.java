@@ -39,7 +39,7 @@ public class PackageService implements IPackageService {
 
     @Override
     public Integer deactivatePackage(int id) {
-        if (IPackageRepository.existsById(id)) {
+        if (!IPackageRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This package ID does not exist.");
         }
         return IPackageRepository.deactivatePackage(id);

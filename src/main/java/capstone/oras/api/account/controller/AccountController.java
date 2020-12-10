@@ -558,23 +558,21 @@ public class AccountController {
         AccountEntity accountEntity = accountService.findAccountEntityById(accountId);
         accountEntity.setActive(false);
         List<JobEntity> jobEntities = jobService.getAllJobByCreatorId(accountId);
-        if(jobEntities != null) {
-            for (int i = 0; i < jobEntities.size(); i++) {
-                int openjobJobId = jobEntities.get(i).getOpenjobJobId();
-                //get openjob token
-                String token = "Bearer " + userDetailsService.getOpenJobToken();
-                // close job to openjob
-                String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
-                RestTemplate restTemplate = new RestTemplate();
-                HttpHeaders headers = new HttpHeaders();
-                headers.set("Authorization", token);
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-                HttpEntity entity = new HttpEntity(headers);
-                // close job on openjob
-                restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
-                jobService.closeJob(jobEntities.get(i).getId());
-            }
+        for (JobEntity jobEntity : jobEntities) {
+            int openjobJobId = jobEntity.getOpenjobJobId();
+            //get openjob token
+            String token = "Bearer " + userDetailsService.getOpenJobToken();
+            // close job to openjob
+            String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            HttpEntity entity = new HttpEntity(headers);
+            // close job on openjob
+            restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+            jobService.closeJob(jobEntity.getId());
         }
         return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
     }

@@ -486,7 +486,7 @@ public class ReportController {
         systemStatistic.setTotalJobs(jobService.getClosedAndPublishedJob().size());
         systemStatistic.setOpenJobs(jobService.getAllPublishedJob().size());
         systemStatistic.setCandidate(jobApplicationService.getAllJobApplication().size());
-        systemStatistic.setUser(accountService.getAllAccount().stream().filter(s -> !s.getRole().equals(ADMIN)).collect(Collectors.toList()).size());
-        return new ResponseEntity<SystemStatistic>(systemStatistic, HttpStatus.OK);
+        systemStatistic.setUser((int) accountService.getAllAccount().stream().filter(s -> !s.getRole().equals(ADMIN)).count());
+        return new ResponseEntity<>(systemStatistic, HttpStatus.OK);
     }
 }
