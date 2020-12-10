@@ -20,11 +20,12 @@ public interface IJobService {
     List<JobEntity> getClosedAndPublishedJobByCreatorId(int id);
     List<JobEntity> getClosedAndPublishedJob();
     List<JobEntity> getAllPublishedJob();
-    List<JobEntity> getAllJobWithPaging(Pageable pageable, String status, String currency);
-    List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable, String status, String currency);
+    List<JobEntity> getAllJobWithPaging(Pageable pageable, String title, String status, String currency);
+    List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable, String title, String status, String currency);
     List<JobEntity> getAllClosedAndPublishedJob();
     List<JobEntity> getAllPublishedJobByCreatorId(int creatorId);
     boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(Integer creatorId, String title);
+    String processJd(String description);
 
 
 }
