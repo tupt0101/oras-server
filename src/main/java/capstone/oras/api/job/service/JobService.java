@@ -85,8 +85,10 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public List<JobEntity> getAllJobWithPaging(Pageable pageable) {
-        return IJobRepository.findAllBy(pageable);
+    public List<JobEntity> getAllJobWithPaging(Pageable pageable, String status, String currency) {
+        status = StringUtils.isEmpty(status) ? "%" : status;
+        currency = StringUtils.isEmpty(currency) ? "%" : currency;
+        return IJobRepository.findAllByStatusLikeAndCurrencyLike(status, currency, pageable);
     }
 
     @Override
@@ -185,13 +187,10 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable) {
-        Optional<List<JobEntity>> lstJob = IJobRepository.findJobEntitiesByCreatorIdEquals(id, pageable);
-        if (!lstJob.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
-        }
-        return lstJob.get();
-
+    public List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable, String status, String currency) {
+        status = StringUtils.isEmpty(status) ? "%" : status;
+        currency = StringUtils.isEmpty(currency) ? "%" : currency;
+        return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusLikeAndCurrencyLike(id, status, currency, pageable);
     }
 
 

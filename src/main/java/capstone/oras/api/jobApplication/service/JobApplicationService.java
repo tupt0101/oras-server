@@ -108,8 +108,8 @@ public class JobApplicationService implements IJobApplicationService {
 
     @Override
     public List<JobApplicationEntity> findJobApplicationsByJobIdWithPaging(int id, Pageable pageable, String status, String name) {
-        status = StringUtils.isEmpty(status) ? "" : status;
-        name = StringUtils.isEmpty(name) ? "" : name;
+        status = StringUtils.isEmpty(status) ? "%" : status;
+        name = StringUtils.isEmpty(name) ? "%" : name;
         Optional<List<JobApplicationEntity>> ret =
                 IJobApplicationRepository.findJobApplicationEntitiesByJobIdEqualsAndStatusLikeAndCandidateByCandidateId_FullnameLike(
                         id, pageable, status, name);

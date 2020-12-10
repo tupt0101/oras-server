@@ -22,8 +22,11 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer>, Pagin
     Optional<List<JobEntity>> findJobEntitiesByStatusEquals(String status);
     List<JobEntity> findJobEntitiesByStatusNot(String status);
     List<JobEntity> findAllBy(Pageable pageable);
+    List<JobEntity> findAllByStatusLikeAndCurrencyLike(String status, String currency, Pageable pageable);
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEquals(int creatorId,Pageable pageable);
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEqualsAndStatusEquals(int creatorId,String status,Pageable pageable);
+    List<JobEntity> findJobEntitiesByCreatorIdEqualsAndStatusLikeAndCurrencyLike(
+            int creatorId,String status,String currency,Pageable pageable);
 
 
 
