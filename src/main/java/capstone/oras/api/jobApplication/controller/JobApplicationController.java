@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
@@ -121,6 +122,7 @@ public class JobApplicationController {
         JobApplicationEntity applicationEntity = jobApplicationService.findJobApplicationById(id);
         if (applicationEntity != null) {
             applicationEntity.setStatus(HIRED);
+            applicationEntity.setHiredDate(LocalDateTime.now());
             this.jobApplicationService.updateJobApplication(applicationEntity);
             return new ResponseEntity<JobApplicationEntity>(this.jobApplicationService.updateJobApplication(applicationEntity), HttpStatus.OK);
         } else {

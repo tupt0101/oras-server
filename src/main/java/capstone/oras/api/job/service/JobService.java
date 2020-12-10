@@ -80,13 +80,13 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(Integer creatorId, String title) {
-        return IJobRepository.existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(creatorId, title, CLOSED);
+    public boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIs(Integer creatorId, String title) {
+        return IJobRepository.existsByCreatorIdEqualsAndTitleEqualsAndStatusIs(creatorId, title, PUBLISHED);
     }
 
     @Override
     public List<JobEntity> getAllJobWithPaging(Pageable pageable, String title, String status, String currency) {
-        title = StringUtils.isEmpty(title) ? "%" : title + "%";
+        title = StringUtils.isEmpty(title) ? "%" : "%" + title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;
         currency = StringUtils.isEmpty(currency) ? "%" : currency;
         return IJobRepository.findAllByTitleLikeAndStatusLikeAndCurrencyLike(title, status, currency, pageable);
@@ -189,7 +189,7 @@ public class JobService implements IJobService {
 
     @Override
     public List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable, String title, String status, String currency) {
-        title = StringUtils.isEmpty(title) ? "%" : title + "%";
+        title = StringUtils.isEmpty(title) ? "%" : "%" + title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;
         currency = StringUtils.isEmpty(currency) ? "%" : currency;
         return IJobRepository.findJobEntitiesByCreatorIdEqualsAndTitleLikeAndStatusLikeAndCurrencyLike(id, title, status, currency, pageable);
