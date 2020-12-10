@@ -142,5 +142,4 @@ public class PackageEntity {
     public void setAccountPackagesById(Collection<AccountPackageEntity> accountPackagesById) {
         this.accountPackagesById = accountPackagesById;
     }
-
 }

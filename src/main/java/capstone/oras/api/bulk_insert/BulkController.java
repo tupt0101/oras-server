@@ -7,6 +7,7 @@ import capstone.oras.api.email.service.EmailSenderService;
 import capstone.oras.dao.IConfirmationTokenRepository;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.CompanyEntity;
+import capstone.oras.entity.JobEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,11 +40,17 @@ public class BulkController {
         public CompanyEntity companyEntity;
     }
 
-
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<String> signup(@RequestBody List<Signup> signup) {
         int res = bulkService.signup(signup);
         return new ResponseEntity<>("Create " + res + "/" + signup.size() + " accounts", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/create-job", method = RequestMethod.POST)
+    @ResponseBody
+    ResponseEntity<String> createJob(@RequestBody List<JobEntity> jobs) {
+        int res = bulkService.createJob(jobs);
+        return new ResponseEntity<>("Create " + res + "/" + jobs.size() + " accounts", HttpStatus.OK);
     }
 }

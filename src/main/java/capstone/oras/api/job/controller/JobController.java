@@ -46,7 +46,6 @@ public class JobController {
     private ICompanyService companyService;
 
 
-
     @Autowired
     private IActivityService activityService;
 
@@ -65,10 +64,13 @@ public class JobController {
 
     @RequestMapping(value = "/jobs-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllJobWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
-        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("id"));
-
-        return new ResponseEntity<List<JobEntity>>(jobService.getAllJobWithPaging(pageable), HttpStatus.OK);
+    ResponseEntity<List<JobEntity>> getAllJobWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page,
+                                                        @RequestParam(value = "sort") String sort,
+                                                        @RequestParam(value = "status") String status,
+                                                        @RequestParam(value = "currency") String currency) {
+        String sortBy = sort.substring(1);
+        Pageable pageable = PageRequest.of(page - 1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        return new ResponseEntity<List<JobEntity>>(jobService.getAllJobWithPaging(pageable, status, currency), HttpStatus.OK);
     }
 
     @PostMapping(value = "/job", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -154,7 +156,6 @@ public class JobController {
     }
 
 
-
     @RequestMapping(value = "/job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobEntity>> getAllJobByCreatorId(@PathVariable("id") int id) {
@@ -163,15 +164,20 @@ public class JobController {
 
     @RequestMapping(value = "/job-by-creator-id", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
-        Pageable pageable = PageRequest.of(page-1,numOfElement,Sort.by("id"));
-        return new ResponseEntity<List<JobEntity>>(jobService.getAllJobByCreatorIdWithPaging(id,pageable), HttpStatus.OK);
+    ResponseEntity<List<JobEntity>> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,
+                                                                   @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page,
+                                                                   @RequestParam(value = "sort") String sort,
+                                                                   @RequestParam(value = "status") String status,
+                                                                   @RequestParam(value = "currency") String currency) {
+        String sortBy = sort.substring(1);
+        Pageable pageable = PageRequest.of(page - 1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        return new ResponseEntity<>(jobService.getAllJobByCreatorIdWithPaging(id, pageable, status, currency), HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/job/{id}/extend/{date}", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id, @PathVariable("date")int date) {
+    ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id, @PathVariable("date") int date) {
         if (jobService.getJobById(id) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
         }
@@ -179,19 +185,21 @@ public class JobController {
         LocalDateTime expireDate = job.getExpireDate();
         expireDate.plusDays(date);
         job.setExpireDate(expireDate);
-        return new ResponseEntity<JobEntity>( this.jobService.updateJob(job), HttpStatus.OK);
+        return new ResponseEntity<JobEntity>(this.jobService.updateJob(job), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job/{id}/publish", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
-        JobEntity tempJob = jobService.getJobById(id);
-        if (tempJob == null) {
+        JobEntity job = jobService.getJobById(id);
+        if (job == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
-        } else if(tempJob.getStatus().equals(CLOSED)) {
+        } else if (job.getStatus().equals(CLOSED)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Closed job cannot be reopen");
         }
-        JobEntity job = jobService.getJobById(id);
+        if (jobService.existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(job.getCreatorId(), job.getTitle())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This job title already exists");
+        }
         AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(job.getCreatorId());
         if (accountPackageEntity == null) {
             throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
@@ -202,7 +210,7 @@ public class JobController {
         } else {
             throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
         }
-        if (accountPackageEntity.getNumOfPost() == 0 ) {
+        if (accountPackageEntity.getNumOfPost() == 0) {
             accountPackageEntity.setExpired(true);
         }
         job.setStatus(PUBLISHED);
@@ -279,8 +287,6 @@ public class JobController {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
         }
-
-
 
 
         if (jobService.getJobById(job.getId()) != null) {
@@ -366,7 +372,6 @@ public class JobController {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
         }
-
 
 
         if (jobService.getJobById(job.getId()) == null) {

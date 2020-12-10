@@ -40,9 +40,6 @@ public class JobService implements IJobService {
     @Override
     public JobEntity createJob(JobEntity job) {
         jobValidation(job);
-        if (IJobRepository.existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(job.getCreatorId(), job.getTitle(), CLOSED)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This job title already exists");
-        }
         try {
             job.setProcessedJd(this.processJd(job.getDescription()));
         } catch (Exception e) {
@@ -83,8 +80,15 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public List<JobEntity> getAllJobWithPaging(Pageable pageable) {
-        return IJobRepository.findAllBy(pageable);
+    public boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(Integer creatorId, String title) {
+        return IJobRepository.existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(creatorId, title, CLOSED);
+    }
+
+    @Override
+    public List<JobEntity> getAllJobWithPaging(Pageable pageable, String status, String currency) {
+        status = StringUtils.isEmpty(status) ? "%" : status;
+        currency = StringUtils.isEmpty(currency) ? "%" : currency;
+        return IJobRepository.findAllByStatusLikeAndCurrencyLike(status, currency, pageable);
     }
 
     @Override
@@ -183,13 +187,10 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable) {
-        Optional<List<JobEntity>> lstJob = IJobRepository.findJobEntitiesByCreatorIdEquals(id, pageable);
-        if (!lstJob.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
-        }
-        return lstJob.get();
-
+    public List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable, String status, String currency) {
+        status = StringUtils.isEmpty(status) ? "%" : status;
+        currency = StringUtils.isEmpty(currency) ? "%" : currency;
+        return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusLikeAndCurrencyLike(id, status, currency, pageable);
     }
 
 
@@ -219,42 +220,26 @@ public class JobService implements IJobService {
         if (StringUtils.isEmpty(job.getTitle())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
         }
-        if (job.getApplyFrom() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
-        }
-
         if (job.getApplyTo() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
         }
-
-        if (job.getCreateDate() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is a required field");
-        }
-
         if (StringUtils.isEmpty(job.getCurrency())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
         }
-
-
         if (job.getVacancies() == null || job.getVacancies() <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vacancies must be greater than 0");
         }
-
         if (StringUtils.isEmpty(job.getJobType())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job Type is a required field");
         }
-
         if (StringUtils.isEmpty(job.getCategory())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category is a required field");
         }
-
         if (job.getSalaryFrom() == null || job.getSalaryTo() == null || job.getSalaryFrom() <= 0 || job.getSalaryTo() < job.getSalaryFrom()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary range is invalid");
         }
-
         if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
         }
-
     }
 }
