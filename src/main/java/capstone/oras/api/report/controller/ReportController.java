@@ -21,6 +21,7 @@ import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,7 +84,8 @@ public class ReportController {
                 }
             }
         }
-        return new ResponseEntity<List<TimeToHire>>(timeToHires, HttpStatus.OK);
+        timeToHires.sort(Comparator.comparing(TimeToHire::getHiredDate).reversed());
+        return new ResponseEntity<>(timeToHires, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/candidate-of-job/{account-id}", method = RequestMethod.GET)

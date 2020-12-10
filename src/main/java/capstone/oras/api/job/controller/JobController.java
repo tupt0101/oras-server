@@ -199,7 +199,7 @@ public class JobController {
         } else if (job.getStatus().equals(CLOSED)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Closed job cannot be reopen");
         }
-        if (jobService.existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(job.getCreatorId(), job.getTitle())) {
+        if (jobService.existsByCreatorIdEqualsAndTitleEqualsAndStatusIs(job.getCreatorId(), job.getTitle())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This job title already exists");
         }
         AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(job.getCreatorId());
