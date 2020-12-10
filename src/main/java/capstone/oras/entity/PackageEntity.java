@@ -14,7 +14,7 @@ public class PackageEntity {
     private String name;
     private Integer numOfPost;
     private Double price;
-    private String duration;
+    private Integer duration;
     private String currency;
     private String description;
     private String tag;
@@ -65,11 +65,11 @@ public class PackageEntity {
 
     @Basic
     @Column(name = "duration")
-    public String getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
