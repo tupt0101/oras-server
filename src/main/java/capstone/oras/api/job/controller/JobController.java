@@ -66,11 +66,12 @@ public class JobController {
     @ResponseBody
     ResponseEntity<List<JobEntity>> getAllJobWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page,
                                                         @RequestParam(value = "sort") String sort,
+                                                        @RequestParam(value = "title") String title,
                                                         @RequestParam(value = "status") String status,
                                                         @RequestParam(value = "currency") String currency) {
         String sortBy = sort.substring(1);
         Pageable pageable = PageRequest.of(page - 1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
-        return new ResponseEntity<List<JobEntity>>(jobService.getAllJobWithPaging(pageable, status, currency), HttpStatus.OK);
+        return new ResponseEntity<>(jobService.getAllJobWithPaging(pageable, title, status, currency), HttpStatus.OK);
     }
 
     @PostMapping(value = "/job", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -167,11 +168,12 @@ public class JobController {
     ResponseEntity<List<JobEntity>> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,
                                                                    @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page,
                                                                    @RequestParam(value = "sort") String sort,
+                                                                   @RequestParam(value = "title") String title,
                                                                    @RequestParam(value = "status") String status,
                                                                    @RequestParam(value = "currency") String currency) {
         String sortBy = sort.substring(1);
         Pageable pageable = PageRequest.of(page - 1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
-        return new ResponseEntity<>(jobService.getAllJobByCreatorIdWithPaging(id, pageable, status, currency), HttpStatus.OK);
+        return new ResponseEntity<>(jobService.getAllJobByCreatorIdWithPaging(id, pageable, title, status, currency), HttpStatus.OK);
     }
 
 

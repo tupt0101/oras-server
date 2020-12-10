@@ -85,10 +85,11 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public List<JobEntity> getAllJobWithPaging(Pageable pageable, String status, String currency) {
+    public List<JobEntity> getAllJobWithPaging(Pageable pageable, String title, String status, String currency) {
+        title = StringUtils.isEmpty(title) ? "%" : title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;
         currency = StringUtils.isEmpty(currency) ? "%" : currency;
-        return IJobRepository.findAllByStatusLikeAndCurrencyLike(status, currency, pageable);
+        return IJobRepository.findAllByTitleLikeAndStatusLikeAndCurrencyLike(title, status, currency, pageable);
     }
 
     @Override
@@ -187,19 +188,20 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable, String status, String currency) {
+    public List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable, String title, String status, String currency) {
+        title = StringUtils.isEmpty(title) ? "%" : title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;
         currency = StringUtils.isEmpty(currency) ? "%" : currency;
-        return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusLikeAndCurrencyLike(id, status, currency, pageable);
+        return IJobRepository.findJobEntitiesByCreatorIdEqualsAndTitleLikeAndStatusLikeAndCurrencyLike(id, title, status, currency, pageable);
     }
-
 
     @Override
     public List<CategoryEntity> getAllCategories() {
         return iCategoryRepository.findAll();
     }
 
-    private String processJd(String description) {
+    @Override
+    public String processJd(String description) {
         String uri = AI_PROCESS_HOST + "/process/jd";
         // Create HttpEntity
         HttpHeaders headers = new HttpHeaders();
