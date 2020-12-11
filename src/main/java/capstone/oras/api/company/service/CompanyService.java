@@ -1,6 +1,5 @@
 package capstone.oras.api.company.service;
 
-import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.IAccountRepository;
 import capstone.oras.dao.ICompanyRepository;
 import capstone.oras.entity.CompanyEntity;
@@ -8,11 +7,14 @@ import capstone.oras.model.custom.ListCompanyModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.List;
 
 import static capstone.oras.common.Constant.EmailForm.VERIFY_COMPANY_NOTI;
@@ -24,6 +26,8 @@ public class CompanyService implements ICompanyService{
     private ICompanyRepository ICompanyRepository;
     @Autowired
     private IAccountRepository iAccountRepository;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @Override
     public CompanyEntity createCompany(CompanyEntity companyEntity) {
@@ -83,7 +87,17 @@ public class CompanyService implements ICompanyService{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company does not exist.");
         }
         iAccountRepository.updateActiveByVerifyingCompany(id);
-        CommonUtils.sendMail(email, "Complete Registration!",VERIFY_COMPANY_NOTI);
+        this.sendMail(email, "Complete Registration!",VERIFY_COMPANY_NOTI);
         return ICompanyRepository.verifyCompanyPass(id);
+    }
+
+    public void sendMail(String email, String subject, String text) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        message.setSubject(subject);
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(email);
+        // use the true flag to indicate the text included is HTML
+        helper.setText(text, true);
+        javaMailSender.send(message);
     }
 }

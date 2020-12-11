@@ -172,7 +172,7 @@ public class AccountController {
             AccountEntity accountEntity = accountService.createAccount(signup.accountEntity);
             ConfirmationToken confirmationToken = new ConfirmationToken(accountEntity);
             confirmationTokenRepository.save(confirmationToken);
-            CommonUtils.sendMail(signup.accountEntity.getEmail(), "Complete Registration!",
+        this.sendMail(signup.accountEntity.getEmail(), "Complete Registration!",
                     confirmMail(confirmationToken.getConfirmationToken()));
             return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
         }
@@ -185,7 +185,7 @@ public class AccountController {
             AccountEntity accountEntity = accountService.findAccountByEmail(email);
             ConfirmationToken confirmationToken = new ConfirmationToken(accountEntity);
             confirmationTokenRepository.save(confirmationToken);
-            CommonUtils.sendMail(email, "Complete Registration!",
+        this.sendMail(email, "Complete Registration!",
                     confirmMail(confirmationToken.getConfirmationToken()));
             return new ResponseEntity<>(0, HttpStatus.OK);
         } catch (MessagingException e) {
@@ -350,7 +350,17 @@ public class AccountController {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         String pwd = RandomStringUtils.random(15, characters);
         accountEntity.setPassword(passwordEncoder.encode(pwd));
-        CommonUtils.sendMail(email, "Reset Password!", resetPasswordMail(pwd));
+        this.sendMail(email, "Reset Password!", resetPasswordMail(pwd));
         return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
+    }
+
+    public void sendMail(String email, String subject, String text) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        message.setSubject(subject);
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(email);
+        // use the true flag to indicate the text included is HTML
+        helper.setText(text, true);
+        javaMailSender.send(message);
     }
 }
