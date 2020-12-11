@@ -13,7 +13,9 @@ public interface IJobApplicationRepository extends JpaRepository<JobApplicationE
     Optional<List<JobApplicationEntity>> findJobApplicationEntitiesByJobIdEqualsAndCandidateIdEquals(int jobId, int candidateId);
     Optional<JobApplicationEntity> findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(int jobId, int candidateId);
     Optional<List<JobApplicationEntity>> findJobApplicationEntitiesByJobIdEquals(int jobId, Pageable pageable);
-    Optional<List<JobApplicationEntity>> findJobApplicationEntitiesByJobIdEqualsAndStatusLikeAndCandidateByCandidateId_FullnameIgnoreCaseLike(
+    List<JobApplicationEntity> findJobApplicationEntitiesByJobIdEqualsAndStatusLikeAndCandidateByCandidateId_FullnameIgnoreCaseLike(
             int jobId, Pageable pageable, String status, String candidateByCandidateId_Fullname);
+    int countJobApplicationEntitiesByJobIdEqualsAndStatusLikeAndCandidateByCandidateId_FullnameIgnoreCaseLike(
+            int jobId, String status, String candidateByCandidateId_Fullname);
 
 }

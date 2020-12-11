@@ -1,13 +1,15 @@
 package capstone.oras.api.accountPackage.controller;
 
 
-import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.accountPackage.service.IAccountPackageService;
+import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.packages.service.IPackageService;
 import capstone.oras.api.purchase.service.IPurchaseService;
+import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.AccountPackageEntity;
 import capstone.oras.entity.PurchaseEntity;
 import capstone.oras.entity.model.PurchaseAccountPackage;
+import capstone.oras.model.custom.ListAccountPackageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -117,9 +119,14 @@ public class AccountPackageController {
 
     @RequestMapping(value = "/account-packages-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<AccountPackageEntity>> getAllAccountPackageWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
-        Pageable pageable = PageRequest.of(page-1, numOfElement, Sort.by("validTo").descending());
-        return new ResponseEntity<List<AccountPackageEntity>>(accountPackageService.getAllAccountPackageWithPaging(pageable), HttpStatus.OK);
+    ResponseEntity<ListAccountPackageModel> getAllAccountPackageWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+                                                                           @RequestParam(value = "page") Integer page,
+                                                                           @RequestParam(value = "sort") String sort,
+                                                                           @RequestParam(value = "name") String name,
+                                                                           @RequestParam(value = "status") String status,
+                                                                           @RequestParam(value = "package") String pkg) {
+        Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
+        return new ResponseEntity<>(accountPackageService.getAllAccountPackageWithPaging(pageable, name, status, pkg), HttpStatus.OK);
     }
 
 

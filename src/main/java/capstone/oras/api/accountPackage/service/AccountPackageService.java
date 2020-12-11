@@ -2,9 +2,11 @@ package capstone.oras.api.accountPackage.service;
 
 import capstone.oras.dao.IAccountPackageRepository;
 import capstone.oras.entity.AccountPackageEntity;
+import capstone.oras.model.custom.ListAccountPackageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -35,8 +37,19 @@ public class AccountPackageService implements IAccountPackageService {
     }
 
     @Override
-    public List<AccountPackageEntity> getAllAccountPackageWithPaging(Pageable pageable) {
-        return IAccountPackageRepository.findAllBy(pageable);
+    public ListAccountPackageModel getAllAccountPackageWithPaging(Pageable pageable, String name, String status, String pkg) {
+        name = "%" + name + "%";
+        pkg = "%" + pkg + "%";
+        List<AccountPackageEntity> data;
+        int count;
+        if (StringUtils.isEmpty(status)) {
+            data = IAccountPackageRepository.findAllByAccountById_FullnameAndPackageById_Name(pageable, name, pkg);
+            count = IAccountPackageRepository.countByAccountById_FullnameAndPackageById_Name(name, pkg);
+        } else {
+            data = IAccountPackageRepository.findAllByAccountById_FullnameAndPackageById_NameAndExpiredIs(pageable, name, "Valid".equalsIgnoreCase(status), pkg);
+            count = IAccountPackageRepository.countByAccountById_FullnameAndPackageById_NameAndExpiredIs(name, "Valid".equalsIgnoreCase(status), pkg);
+        }
+        return new ListAccountPackageModel(count, data);
     }
 
     @Override

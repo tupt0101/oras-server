@@ -6,6 +6,7 @@ import capstone.oras.dao.IJobApplicationRepository;
 import capstone.oras.dao.IJobRepository;
 import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
+import capstone.oras.model.custom.ListJobApplicationModel;
 import capstone.oras.model.oras_ai.CalcSimilarityRequest;
 import capstone.oras.model.oras_ai.CalcSimilarityResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
 
@@ -116,12 +116,15 @@ public class JobApplicationService implements IJobApplicationService {
     }
 
     @Override
-    public List<JobApplicationEntity> findJobApplicationsByJobIdWithPaging(int id, Pageable pageable, String status, String name) {
+    public ListJobApplicationModel findJobApplicationsByJobIdWithPaging(int id, Pageable pageable, String status, String name) {
         status = StringUtils.isEmpty(status) ? "%" : status;
         name = "%" + name + "%";
-        Optional<List<JobApplicationEntity>> ret =
-                IJobApplicationRepository.findJobApplicationEntitiesByJobIdEqualsAndStatusLikeAndCandidateByCandidateId_FullnameIgnoreCaseLike(
+        List<JobApplicationEntity> data = IJobApplicationRepository
+                .findJobApplicationEntitiesByJobIdEqualsAndStatusLikeAndCandidateByCandidateId_FullnameIgnoreCaseLike(
                         id, pageable, status, name);
-        return ret.orElse(null);
+        int count = IJobApplicationRepository
+                .countJobApplicationEntitiesByJobIdEqualsAndStatusLikeAndCandidateByCandidateId_FullnameIgnoreCaseLike(
+                        id, status, name);
+        return new ListJobApplicationModel(count, data);
     }
 }
