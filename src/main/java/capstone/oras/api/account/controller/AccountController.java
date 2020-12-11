@@ -30,6 +30,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -121,8 +122,7 @@ public class AccountController {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
-
-            signup.accountEntity.setCreateDate(LocalDateTime.now());
+            signup.accountEntity.setCreateDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
             //get openjob token
             CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
             String token = "Bearer " + userDetailsService.getOpenJobToken();
