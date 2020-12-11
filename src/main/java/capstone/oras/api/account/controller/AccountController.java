@@ -12,6 +12,7 @@ import capstone.oras.entity.ConfirmationToken;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobCompanyEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
+import capstone.oras.model.custom.ListAccountModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -626,12 +627,12 @@ public class AccountController {
 
     @RequestMapping(value = "/accounts-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<AccountEntity>> getAllAccountWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
-                                                                @RequestParam(value = "page") Integer page,
-                                                                @RequestParam(value = "sort") String sort,
-                                                                @RequestParam(value = "status") String status,
-                                                                @RequestParam(value = "name") String name,
-                                                                @RequestParam(value = "role") String role) {
+    ResponseEntity<ListAccountModel> getAllAccountWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+                                                                   @RequestParam(value = "page") Integer page,
+                                                                   @RequestParam(value = "sort") String sort,
+                                                                   @RequestParam(value = "status") String status,
+                                                                   @RequestParam(value = "name") String name,
+                                                                   @RequestParam(value = "role") String role) {
         Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
         return new ResponseEntity<>(accountService.getAllAccountWithPaging(pageable, name, status, role), HttpStatus.OK);
     }

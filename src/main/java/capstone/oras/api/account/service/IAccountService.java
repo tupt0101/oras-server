@@ -1,6 +1,7 @@
 package capstone.oras.api.account.service;
 
 import capstone.oras.entity.AccountEntity;
+import capstone.oras.model.custom.ListAccountModel;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface IAccountService {
     AccountEntity createAccount(AccountEntity accountEntity);
     AccountEntity updateAccount(AccountEntity accountEntity);
     List<AccountEntity> getAllAccount();
-    List<AccountEntity> getAllAccountWithPaging(Pageable pageable, String name, String status, String role);
+    ListAccountModel getAllAccountWithPaging(Pageable pageable, String name, String status, String role);
     AccountEntity findAccountByEmail(String email);
     AccountEntity findAccountEntityById(int id);
     AccountEntity findAccountByCompanyId(int id);

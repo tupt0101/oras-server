@@ -10,6 +10,7 @@ public interface IPackageService {
     List<PackageEntity> getAllPackage();
     PackageEntity findPackageById(int id);
     Integer deactivatePackage(int id);
+    Integer activatePackage(int id);
     List<PackageEntity> getAllActivePackage();
 
 }

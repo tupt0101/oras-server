@@ -44,7 +44,15 @@ public class PackageService implements IPackageService {
         if (!IPackageRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This package ID does not exist.");
         }
-        return IPackageRepository.deactivatePackage(id);
+        return IPackageRepository.changePackageActive(id, false);
+    }
+
+    @Override
+    public Integer activatePackage(int id) {
+        if (!IPackageRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This package ID does not exist.");
+        }
+        return IPackageRepository.changePackageActive(id, true);
     }
 
     @Override

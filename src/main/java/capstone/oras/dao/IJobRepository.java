@@ -36,6 +36,7 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer>, Pagin
     List<JobEntity> findAllBy(Pageable pageable);
 
     List<JobEntity> findAllByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(String title, String status, String currency, Pageable pageable);
+    int countByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(String title, String status, String currency);
 
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEquals(int creatorId, Pageable pageable);
 
@@ -43,6 +44,8 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer>, Pagin
 
     List<JobEntity> findJobEntitiesByCreatorIdEqualsAndTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(
             int creatorId, String title, String status, String currency, Pageable pageable);
+    int countJobEntitiesByCreatorIdEqualsAndTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(
+            int creatorId, String title, String status, String currency);
 
     @Query(value = "update job set processed_jd = :processJd where id = :jobId", nativeQuery = true)
     @Modifying

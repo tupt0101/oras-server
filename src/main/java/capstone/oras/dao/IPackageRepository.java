@@ -14,7 +14,7 @@ public interface IPackageRepository extends JpaRepository<PackageEntity, Integer
     @Query(value = "update package set active = false where id = :id", nativeQuery = true)
     @Modifying
     @Transactional
-    Integer deactivatePackage(Integer id);
+    Integer changePackageActive(Integer id, boolean active);
 
     List<PackageEntity> findPackageEntitiesByActiveTrue();
 }
