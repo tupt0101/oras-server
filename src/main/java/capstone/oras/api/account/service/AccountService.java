@@ -59,9 +59,19 @@ public class AccountService implements IAccountService {
     @Override
     public List<AccountEntity> getAllAccountWithPaging(Pageable pageable, String name, String status, String role) {
         name = "%" + name + "%";
-        status = StringUtils.isEmpty(status) ? "%" : status;
         role = StringUtils.isEmpty(role) ? "%" : role;
-        return IAccountRepository.findAllByNameIgnoreCaseLikeAndStatusEqualsAndRoleEquals(pageable, status, name, role);
+        status = StringUtils.isEmpty(status) ? "%" : status;
+        boolean active = true;
+        switch (status) {
+            case "":
+                return IAccountRepository.findAllByFullnameIgnoreCaseLikeAndRoleLike(pageable, name, role);
+            case "Active":
+                active = true;
+                break;
+            case "Inactive":
+                active = false;
+        }
+        return IAccountRepository.findAllByFullnameIgnoreCaseLikeAndActiveIsAndRoleLike(pageable, name, active, role);
     }
 
     @Override
