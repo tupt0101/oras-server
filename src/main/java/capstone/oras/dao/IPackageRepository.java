@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface IPackageRepository extends JpaRepository<PackageEntity, Integer> {
-    @Query(value = "update package set active = false where id = :id", nativeQuery = true)
+    @Query(value = "update package set active = :active where id = :id", nativeQuery = true)
     @Modifying
     @Transactional
     Integer changePackageActive(Integer id, boolean active);
