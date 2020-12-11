@@ -2,9 +2,9 @@ package capstone.oras.oauth2.controller;
 
 import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.entity.AccountEntity;
+import capstone.oras.model.custom.LoginModel;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +26,12 @@ public class LoginController {
     @Autowired
     private IAccountService accountService;
 
-    private class LoginModel {
-        String username;
-        String password;
-    }
-
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     @CrossOrigin(origins = "http://localhost:8088")
     ResponseEntity<String> login(@RequestBody LoginModel model) throws Exception {
-        String email = model.username;
-        String password = model.password;
+        String email = model.getUsername();
+        String password = model.getPassword();
         AccountEntity accountEntity = accountService.findAccountByEmail(email);
         if (accountEntity == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is not registered");
