@@ -4,6 +4,7 @@ import capstone.oras.entity.CompanyEntity;
 import capstone.oras.model.custom.ListCompanyModel;
 import org.springframework.data.domain.Pageable;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface ICompanyService {
@@ -12,7 +13,7 @@ public interface ICompanyService {
     List<CompanyEntity> getAllCompany();
     ListCompanyModel getAllCompanyWithPaging(Pageable pageable, String status, String name);
     CompanyEntity findCompanyById(int id);
-    Integer verifyCompany(int id);
+    Integer verifyCompany(int id, String email) throws MessagingException;
     List<CompanyEntity> getAllCompanyWithNameAndIsVerified(String name);
     Boolean checkCompanyName(Integer id, String name);
 

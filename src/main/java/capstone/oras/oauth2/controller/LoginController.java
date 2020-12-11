@@ -26,18 +26,22 @@ public class LoginController {
     @Autowired
     private IAccountService accountService;
 
+    private class LoginModel {
+        String username;
+        String password;
+    }
 
-    HttpHeaders httpHeaders = new HttpHeaders();
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     @CrossOrigin(origins = "http://localhost:8088")
-    ResponseEntity<String> login(@RequestParam("username") String email, @RequestParam("password") String password) throws Exception {
+    ResponseEntity<String> login(@RequestBody LoginModel model) throws Exception {
+        String email = model.username;
+        String password = model.password;
         AccountEntity accountEntity = accountService.findAccountByEmail(email);
         if (accountEntity == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is not registered");
         } else if (!accountEntity.getConfirmMail()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please confirm your email to complete the registration");
+            throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, "Please confirm your email to complete the registration");
         } else if (!accountEntity.getActive()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not active");
         }

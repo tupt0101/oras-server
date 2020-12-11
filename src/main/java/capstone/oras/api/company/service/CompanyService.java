@@ -1,5 +1,6 @@
 package capstone.oras.api.company.service;
 
+import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.IAccountRepository;
 import capstone.oras.dao.ICompanyRepository;
 import capstone.oras.entity.CompanyEntity;
@@ -11,7 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.mail.MessagingException;
 import java.util.List;
+
+import static capstone.oras.common.Constant.EmailForm.VERIFY_COMPANY_NOTI;
 
 @Service
 public class CompanyService implements ICompanyService{
@@ -74,11 +78,12 @@ public class CompanyService implements ICompanyService{
     }
 
     @Override
-    public Integer verifyCompany(int id) {
+    public Integer verifyCompany(int id, String email) throws MessagingException {
         if (!ICompanyRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company does not exist.");
         }
         iAccountRepository.updateActiveByVerifyingCompany(id);
+        CommonUtils.sendMail(email, "Complete Registration!",VERIFY_COMPANY_NOTI);
         return ICompanyRepository.verifyCompanyPass(id);
     }
 }
