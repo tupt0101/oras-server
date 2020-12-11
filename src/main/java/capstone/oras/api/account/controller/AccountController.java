@@ -36,6 +36,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static capstone.oras.common.Constant.ORAS_HOST;
+import static capstone.oras.common.Constant.TIME_ZONE;
 
 
 @RestController
@@ -97,7 +98,7 @@ public class AccountController {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
-            accountEntity.setCreateDate(LocalDateTime.now());
+            accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
             return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
         }
     }
@@ -122,7 +123,7 @@ public class AccountController {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
-            signup.accountEntity.setCreateDate(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")));
+            signup.accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
             //get openjob token
             CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
             String token = "Bearer " + userDetailsService.getOpenJobToken();

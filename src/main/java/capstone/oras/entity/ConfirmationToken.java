@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static capstone.oras.common.Constant.TIME_ZONE;
+
 @Getter
 @Setter
 @Entity
@@ -32,7 +34,7 @@ public class ConfirmationToken {
 
     public ConfirmationToken(AccountEntity user) {
         this.user = user;
-        this.createDate = LocalDateTime.now();
+        this.createDate = LocalDateTime.now(TIME_ZONE);
         confirmationToken = UUID.randomUUID().toString();
     }
 }

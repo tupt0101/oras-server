@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static capstone.oras.common.Constant.JobStatus.*;
+
 public class CommonUtils {
     public static Date convertLocalDateTimeToDate(LocalDate localDate) {
         return Date.valueOf(localDate);
@@ -45,5 +47,21 @@ public class CommonUtils {
         String sortBy = sort.substring(1);
         return PageRequest.of(page != null ? page - 1 : 0, numOfElement != null ? numOfElement : Integer.MAX_VALUE,
                 sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+    }
+
+    public static String jobActivityTitle(String title, String status) {
+        String act = "";
+        switch (status) {
+            case DRAFT:
+                act = "Draft a job with title \"" + title + "\"";
+                break;
+            case PUBLISHED:
+                act = "Publish a job with title \"" + title + "\"";
+                break;
+            case CLOSED:
+                act = "Close a job with title \"" + title + "\"";
+                break;
+        }
+        return act;
     }
 }

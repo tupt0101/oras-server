@@ -25,6 +25,7 @@ import java.util.*;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
 import static capstone.oras.common.Constant.JobStatus.*;
+import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Service
 public class JobService implements IJobService {
@@ -45,7 +46,7 @@ public class JobService implements IJobService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        job.setCreateDate(LocalDateTime.now());
+        job.setCreateDate(LocalDateTime.now(TIME_ZONE));
         job.setTotalApplication(0);
         return IJobRepository.save(job);
     }
