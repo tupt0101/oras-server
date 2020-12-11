@@ -120,7 +120,7 @@ public class JobApplicationService implements IJobApplicationService {
         status = StringUtils.isEmpty(status) ? "%" : status;
         name = StringUtils.isEmpty(name) ? "%" : "%" + name + "%";
         Optional<List<JobApplicationEntity>> ret =
-                IJobApplicationRepository.findJobApplicationEntitiesByJobIdEqualsAndStatusLikeAndCandidateByCandidateId_FullnameLike(
+                IJobApplicationRepository.findJobApplicationEntitiesByJobIdEqualsAndStatusLikeAndCandidateByCandidateId_FullnameIgnoreCaseLike(
                         id, pageable, status, name);
         return ret.orElse(null);
     }
