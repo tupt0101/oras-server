@@ -367,7 +367,6 @@ public class AccountController {
     @RequestMapping(value = "/activate-account/{id}", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<AccountEntity> activeAccountViaCompany(@PathVariable("id") int companyId) throws MessagingException {
-
         if (companyId == 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id is a required field");
         } else if (companyService.findCompanyById(companyId) == null) {

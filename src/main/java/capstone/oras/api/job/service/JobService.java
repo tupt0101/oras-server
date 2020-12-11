@@ -142,7 +142,7 @@ public class JobService implements IJobService {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
         }
         List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(id, PUBLISHED).get();
-        lstJob.sort(Comparator.comparingInt(JobEntity::getId));
+        lstJob.sort(Comparator.comparing(JobEntity::getApplyFrom).reversed());
         int i = 0;
         for (JobEntity job : lstJob) {
             job.setTotalApplication(lstNoApp.get(i++)[1]);
