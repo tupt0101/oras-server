@@ -190,6 +190,13 @@ public class JobService implements IJobService {
     }
 
     @Override
+    public List<JobEntity> getPostedJobByCreatorId(int id) {
+        List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusIsNot(id, DRAFT);
+        lstJob.sort(Comparator.comparingInt(JobEntity::getId));
+        return lstJob;
+    }
+
+    @Override
     public List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable, String title, String status, String currency) {
         title = StringUtils.isEmpty(title) ? "%" : "%" + title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;

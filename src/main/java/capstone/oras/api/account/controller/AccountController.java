@@ -83,19 +83,14 @@ public class AccountController {
     @ResponseBody
     ResponseEntity<AccountEntity> createAccount(@RequestBody AccountEntity accountEntity) {
         if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is a required field");
         } else if (accountEntity.getPassword() == null || accountEntity.getPassword().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is a required field");
         } else if (accountService.findAccountByEmail(accountEntity.getEmail()) != null) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered");
         } else if (accountService.findAccountEntityById(accountEntity.getId()) != null) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
             accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
@@ -108,19 +103,14 @@ public class AccountController {
     @ResponseBody
     ResponseEntity<AccountEntity> signup(@RequestBody Signup signup) throws MessagingException {
         if (signup.accountEntity.getEmail() == null || signup.accountEntity.getEmail().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (signup.accountEntity.getFullname() == null || signup.accountEntity.getFullname().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is a required field");
         } else if (signup.accountEntity.getPassword() == null || signup.accountEntity.getPassword().isEmpty()) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is a required field");
         } else if (accountService.findAccountByEmail(signup.accountEntity.getEmail()) != null) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered");
         } else if (accountService.findAccountEntityById(signup.accountEntity.getId()) != null) {
-
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
             signup.accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
@@ -635,7 +625,7 @@ public class AccountController {
 
     @RequestMapping(value = "/accounts-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<AccountEntity>> getAllAccountWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
+    ResponseEntity<List<AccountEntity>> getAllAccountWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement, @RequestParam(value = "page") int page) {
         Pageable pageable = PageRequest.of(page - 1, numOfElement, Sort.by("createDate").descending());
         return new ResponseEntity<List<AccountEntity>>(accountService.getAllAccountWithPaging(pageable), HttpStatus.OK);
     }

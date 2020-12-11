@@ -1,13 +1,13 @@
 package capstone.oras.api.report.controller;
 
-import capstone.oras.api.account.service.AccountService;
-import capstone.oras.api.accountPackage.service.AccountPackageService;
-import capstone.oras.api.category.service.CategoryService;
+import capstone.oras.api.account.service.IAccountService;
+import capstone.oras.api.accountPackage.service.IAccountPackageService;
+import capstone.oras.api.category.service.ICategoryService;
 import capstone.oras.api.currency.CurrencyService;
-import capstone.oras.api.job.service.JobService;
+import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.JobApplicationService;
-import capstone.oras.api.packages.service.PackageService;
-import capstone.oras.api.purchase.service.PurchaseService;
+import capstone.oras.api.packages.service.IPackageService;
+import capstone.oras.api.purchase.service.IPurchaseService;
 import capstone.oras.api.report.model.*;
 import capstone.oras.entity.*;
 import capstone.oras.entity.model.Statistic;
@@ -38,22 +38,22 @@ public class ReportController {
     private JobApplicationService jobApplicationService;
 
     @Autowired
-    private JobService jobService;
+    private IJobService jobService;
 
     @Autowired
-    private CategoryService categoryService;
+    private ICategoryService categoryService;
 
     @Autowired
-    private PurchaseService purchaseService;
+    private IPurchaseService purchaseService;
 
     @Autowired
-    private PackageService packageService;
+    private IPackageService packageService;
 
     @Autowired
-    private AccountPackageService accountPackageService;
+    private IAccountPackageService accountPackageService;
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
     @Autowired
     private CurrencyService currencyService;
@@ -91,26 +91,26 @@ public class ReportController {
     @RequestMapping(value = "/candidate-of-job/{account-id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<CandidateOfJob>> getCandidateOfJob(@PathVariable("account-id") int accountId) {
-        List<JobEntity> listJob = jobService.getAllJobByCreatorId(accountId);
+        List<JobEntity> listJob = jobService.getPostedJobByCreatorId(accountId);
         List<CandidateOfJob> candidateOfJobList = new ArrayList<>();
         for (JobEntity jobEntity : listJob) {
-            List<JobApplicationEntity> hiredList = jobEntity.getJobApplicationsById().stream().filter(s -> HIRED.equals(s.getStatus())).collect(Collectors.toList());
+            List<JobApplicationEntity> hiredList = jobEntity.getJobApplicationsById().stream()
+                    .filter(s -> HIRED.equals(s.getStatus())).collect(Collectors.toList());
             CandidateOfJob candidateOfJob = new CandidateOfJob();
             candidateOfJob.setHired(hiredList.size());
             candidateOfJob.setTotalApplication(jobEntity.getJobApplicationsById().size());
             candidateOfJob.setJob(jobEntity);
             candidateOfJobList.add(candidateOfJob);
         }
-        return new ResponseEntity<List<CandidateOfJob>>(candidateOfJobList, HttpStatus.OK);
+        return new ResponseEntity<>(candidateOfJobList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/total-post-by-category", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<PostByCategory>> getTotalPostByCategory() {
-        List<CategoryEntity> listCategory = new ArrayList<>();
-        listCategory = categoryService.getAllCategory();
+        List<CategoryEntity> listCategory = categoryService.getAllCategory();
         List<PostByCategory> postByCategories = new ArrayList<>();
-        List<JobEntity> jobEntityList = jobService.getAllJob();
+        List<JobEntity> jobEntityList = jobService.getAllClosedAndPublishedJob();
         for (CategoryEntity categoryEntity : listCategory
         ) {
             List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
@@ -127,13 +127,12 @@ public class ReportController {
     @RequestMapping(value = "/total-post-of-account-by-category/{account-id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<PostByCategory>> getTotalPostOfAccountByCategory(@PathVariable("account-id") int accountId) {
-        List<CategoryEntity> listCategory = new ArrayList<>();
-        listCategory = categoryService.getAllCategory();
+        List<CategoryEntity> listCategory = categoryService.getAllCategory();
         List<PostByCategory> postByCategories = new ArrayList<>();
-        List<JobEntity> jobEntityList = jobService.getAllJobByCreatorId(accountId);
-        for (CategoryEntity categoryEntity : listCategory
-        ) {
-            List<JobEntity> listByCatagory = jobEntityList.stream().filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
+        List<JobEntity> jobEntityList = jobService.getPostedJobByCreatorId(accountId);
+        for (CategoryEntity categoryEntity : listCategory) {
+            List<JobEntity> listByCatagory = jobEntityList.stream()
+                    .filter(s -> categoryEntity.getName().equals(s.getCategory())).collect(Collectors.toList());
             if (listByCatagory.size() > 0) {
                 PostByCategory postByCategory = new PostByCategory();
                 postByCategory.setCategory(categoryEntity.getName());
@@ -141,7 +140,7 @@ public class ReportController {
                 postByCategories.add(postByCategory);
             }
         }
-        return new ResponseEntity<List<PostByCategory>>(postByCategories, HttpStatus.OK);
+        return new ResponseEntity<>(postByCategories, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/total-application-by-category", method = RequestMethod.GET)
@@ -267,18 +266,18 @@ public class ReportController {
     @RequestMapping(value = "/job-statistic-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<Statistic> getJobStatisticByCreatorId(@PathVariable("id") int id) {
-        List<JobEntity> listJob = jobService.getAllJobByCreatorId(id);
+        List<JobEntity> listJob = jobService.getPostedJobByCreatorId(id);
         Statistic statistic = new Statistic();
         int totalApplication = 0;
         int totalHiredApplicant = 0;
         int totalPublicJob = 0;
-        List<Collection<JobApplicationEntity>> listApplication = listJob.stream().map(s -> s.getJobApplicationsById()).collect(Collectors.toList());
+        List<Collection<JobApplicationEntity>> listApplication = listJob.stream().map(JobEntity::getJobApplicationsById).collect(Collectors.toList());
         for (Collection<JobApplicationEntity> applications : listApplication
         ) {
             totalApplication += applications.size();
-            totalHiredApplicant += applications.stream().filter(s -> s.getStatus().equals(HIRED)).collect(Collectors.toList()).size();
+            totalHiredApplicant += (int) applications.stream().filter(s -> s.getStatus().equals(HIRED)).count();
         }
-        totalPublicJob += listJob.stream().filter(s -> s.getStatus().equals(PUBLISHED)).collect(Collectors.toList()).size();
+        totalPublicJob += (int) listJob.stream().filter(s -> s.getStatus().equals(PUBLISHED)).count();
         statistic.setTotalJob(listJob.size());
         statistic.setTotalCandidate(totalApplication);
         statistic.setTotalHiredCandidate(totalHiredApplicant);

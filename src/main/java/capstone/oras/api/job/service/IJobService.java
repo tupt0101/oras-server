@@ -3,9 +3,10 @@ package capstone.oras.api.job.service;
 import capstone.oras.entity.CategoryEntity;
 import capstone.oras.entity.JobEntity;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public interface IJobService {
     JobEntity createJob(JobEntity job);
     JobEntity updateJob(JobEntity job);
@@ -16,6 +17,7 @@ public interface IJobService {
     List<JobEntity> getOpenJob();
     List<JobEntity> getJobByCreatorId(int id);
     List<JobEntity> getAllJobByCreatorId(int id);
+    List<JobEntity> getPostedJobByCreatorId(int id);
     List<CategoryEntity> getAllCategories();
     List<JobEntity> getClosedAndPublishedJobByCreatorId(int id);
     List<JobEntity> getClosedAndPublishedJob();
