@@ -2,12 +2,11 @@ package capstone.oras.api.company.controller;
 
 
 import capstone.oras.api.company.service.ICompanyService;
+import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.CompanyEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.*;
 import org.springframework.util.CollectionUtils;
@@ -89,9 +88,13 @@ public class CompanyController {
 
     @RequestMapping(value = "/companies-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<CompanyEntity>> getAllCompanyWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page) {
-        Pageable pageable = PageRequest.of(page - 1, numOfElement, Sort.by("id"));
-        return new ResponseEntity<List<CompanyEntity>>(companyService.getAllCompanyWithPaging(pageable), HttpStatus.OK);
+    ResponseEntity<List<CompanyEntity>> getAllCompanyWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+                                                                @RequestParam(value = "page") Integer page,
+                                                                @RequestParam(value = "sort") String sort,
+                                                                @RequestParam(value = "status") String status,
+                                                                @RequestParam(value = "name") String name) {
+        Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
+        return new ResponseEntity<>(companyService.getAllCompanyWithPaging(pageable, status, name), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/company/{id}", method = RequestMethod.GET)

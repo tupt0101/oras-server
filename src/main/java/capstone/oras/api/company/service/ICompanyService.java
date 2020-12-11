@@ -9,7 +9,7 @@ public interface ICompanyService {
     CompanyEntity createCompany(CompanyEntity companyEntity);
     CompanyEntity updateCompany(CompanyEntity companyEntity);
     List<CompanyEntity> getAllCompany();
-    List<CompanyEntity> getAllCompanyWithPaging(Pageable pageable);
+    List<CompanyEntity> getAllCompanyWithPaging(Pageable pageable, String status, String name);
     CompanyEntity findCompanyById(int id);
     Integer verifyCompany(int id);
     List<CompanyEntity> getAllCompanyWithNameAndIsVerified(String name);
