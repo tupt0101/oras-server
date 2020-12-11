@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.mail.MessagingException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -104,10 +105,14 @@ public class CompanyController {
         return new ResponseEntity<CompanyEntity>(companyService.findCompanyById(id), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/company/verify/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/company/verify", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<Integer> verifyCompany(@PathVariable("id") int id) {
-        return new ResponseEntity<>(companyService.verifyCompany(id), HttpStatus.OK);
+    ResponseEntity<Integer> verifyCompany(@Param("id") int id, @Param("email") String email) {
+        try {
+            return new ResponseEntity<>(companyService.verifyCompany(id, email), HttpStatus.OK);
+        } catch (MessagingException e) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
+        }
     }
 
     @RequestMapping(value = "/company-openjob", method = RequestMethod.POST)
