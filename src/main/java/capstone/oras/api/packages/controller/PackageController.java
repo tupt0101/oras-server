@@ -66,4 +66,10 @@ public class PackageController {
     public ResponseEntity<Integer> deactivatePackage(@RequestBody int id) {
         return new ResponseEntity<>(packageService.deactivatePackage(id), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/activate", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Integer> activatePackage(@RequestBody int id) {
+        return new ResponseEntity<>(packageService.activatePackage(id), HttpStatus.OK);
+    }
 }

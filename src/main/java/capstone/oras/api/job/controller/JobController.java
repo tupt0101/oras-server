@@ -11,6 +11,7 @@ import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.CategoryEntity;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
+import capstone.oras.model.custom.ListJobModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -64,12 +65,12 @@ public class JobController {
 
     @RequestMapping(value = "/jobs-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllJobWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
-                                                        @RequestParam(value = "page") Integer page,
-                                                        @RequestParam(value = "sort") String sort,
-                                                        @RequestParam(value = "title") String title,
-                                                        @RequestParam(value = "status") String status,
-                                                        @RequestParam(value = "currency") String currency) {
+    ResponseEntity<ListJobModel> getAllJobWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+                                                     @RequestParam(value = "page") Integer page,
+                                                     @RequestParam(value = "sort") String sort,
+                                                     @RequestParam(value = "title") String title,
+                                                     @RequestParam(value = "status") String status,
+                                                     @RequestParam(value = "currency") String currency) {
         Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
         return new ResponseEntity<>(jobService.getAllJobWithPaging(pageable, title, status, currency), HttpStatus.OK);
     }
@@ -142,12 +143,7 @@ public class JobController {
     @RequestMapping(value = "/open-job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
-        List<JobEntity> jobEntities = jobService.getAllPublishedJobByCreatorId(id);
-        if (!CollectionUtils.isEmpty(jobEntities)) {
-            jobEntities.sort(Comparator.comparing(JobEntity::getApplyFrom).reversed());
-        }
-
-        return new ResponseEntity<List<JobEntity>>(jobEntities, HttpStatus.OK);
+        return new ResponseEntity<>(jobService.getJobByCreatorId(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/closed-published-job-by-creator-id/{id}", method = RequestMethod.GET)
@@ -165,7 +161,7 @@ public class JobController {
 
     @RequestMapping(value = "/job-by-creator-id", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,
+    ResponseEntity<ListJobModel> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,
                                                                    @RequestParam(value = "numOfElement") Integer numOfElement,
                                                                    @RequestParam(value = "page") Integer page,
                                                                    @RequestParam(value = "sort") String sort,

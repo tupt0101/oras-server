@@ -2,6 +2,7 @@ package capstone.oras.api.account.service;
 
 import capstone.oras.dao.IAccountRepository;
 import capstone.oras.entity.AccountEntity;
+import capstone.oras.model.custom.ListAccountModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -57,20 +58,19 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public List<AccountEntity> getAllAccountWithPaging(Pageable pageable, String name, String status, String role) {
+    public ListAccountModel getAllAccountWithPaging(Pageable pageable, String name, String status, String role) {
+        List<AccountEntity> data;
+        int count;
         name = "%" + name + "%";
         role = StringUtils.isEmpty(role) ? "%" : role;
-        boolean active = true;
-        switch (status) {
-            case "":
-                return IAccountRepository.findAllByFullnameIgnoreCaseLikeAndRoleLike(pageable, name, role);
-            case "Active":
-                active = true;
-                break;
-            case "Inactive":
-                active = false;
+        if (StringUtils.isEmpty(status)) {
+            data = IAccountRepository.findAllByFullnameIgnoreCaseLikeAndRoleLike(pageable, name, role);
+            count = IAccountRepository.countByFullnameIgnoreCaseLikeAndRoleLike(name, role);
+        } else {
+            data = IAccountRepository.findAllByFullnameIgnoreCaseLikeAndActiveIsAndRoleLike(pageable, name, "Active".equalsIgnoreCase(status), role);
+            count = IAccountRepository.countByFullnameIgnoreCaseLikeAndActiveIsAndRoleLike(name, "Active".equalsIgnoreCase(status), role);
         }
-        return IAccountRepository.findAllByFullnameIgnoreCaseLikeAndActiveIsAndRoleLike(pageable, name, active, role);
+        return new ListAccountModel(count, data);
     }
 
     @Override

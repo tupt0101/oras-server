@@ -3,10 +3,12 @@ package capstone.oras.api.company.service;
 import capstone.oras.dao.IAccountRepository;
 import capstone.oras.dao.ICompanyRepository;
 import capstone.oras.entity.CompanyEntity;
+import capstone.oras.model.custom.ListCompanyModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -35,19 +37,18 @@ public class CompanyService implements ICompanyService{
     }
 
     @Override
-    public List<CompanyEntity> getAllCompanyWithPaging(Pageable pageable, String status, String name) {
+    public ListCompanyModel getAllCompanyWithPaging(Pageable pageable, String status, String name) {
         name = "%" + name + "%";
-        boolean verified = true;
-        switch (status) {
-            case "":
-                return ICompanyRepository.findAllByNameIgnoreCaseLike(pageable, name);
-            case "Verified":
-                verified = true;
-                break;
-            case "Unverified":
-                verified = false;
+        int count;
+        List<CompanyEntity> data;
+        if (StringUtils.isEmpty(status)) {
+            data =  ICompanyRepository.findAllByNameIgnoreCaseLike(pageable, name);
+            count =  ICompanyRepository.countByNameIgnoreCaseLike(name);
+        } else {
+            data = ICompanyRepository.findAllByVerifiedAndNameIgnoreCaseLike(pageable, "Verified".equalsIgnoreCase(status), name);
+            count = ICompanyRepository.countByVerifiedAndNameIgnoreCaseLike("Verified".equalsIgnoreCase(status), name);
         }
-        return ICompanyRepository.findAllByVerifiedAndNameIgnoreCaseLike(pageable, verified, name);
+        return new ListCompanyModel(count, data);
     }
 
     @Override

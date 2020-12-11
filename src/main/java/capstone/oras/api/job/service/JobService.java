@@ -6,6 +6,7 @@ import capstone.oras.dao.ICategoryRepository;
 import capstone.oras.dao.IJobRepository;
 import capstone.oras.entity.CategoryEntity;
 import capstone.oras.entity.JobEntity;
+import capstone.oras.model.custom.ListJobModel;
 import capstone.oras.model.oras_ai.ProcessJdRequest;
 import capstone.oras.model.oras_ai.ProcessJdResponse;
 import org.jsoup.Jsoup;
@@ -86,11 +87,13 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public List<JobEntity> getAllJobWithPaging(Pageable pageable, String title, String status, String currency) {
+    public ListJobModel getAllJobWithPaging(Pageable pageable, String title, String status, String currency) {
         title = "%" + title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;
         currency = StringUtils.isEmpty(currency) ? "%" : currency;
-        return IJobRepository.findAllByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(title, status, currency, pageable);
+        int count = IJobRepository.countByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(title, status, currency);
+        List<JobEntity> data = IJobRepository.findAllByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(title, status, currency, pageable);
+        return new ListJobModel(count, data);
     }
 
     @Override
@@ -197,11 +200,13 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public List<JobEntity> getAllJobByCreatorIdWithPaging(int id, Pageable pageable, String title, String status, String currency) {
+    public ListJobModel getAllJobByCreatorIdWithPaging(int id, Pageable pageable, String title, String status, String currency) {
         title = "%" + title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;
         currency = StringUtils.isEmpty(currency) ? "%" : currency;
-        return IJobRepository.findJobEntitiesByCreatorIdEqualsAndTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(id, title, status, currency, pageable);
+        List<JobEntity> data = IJobRepository.findJobEntitiesByCreatorIdEqualsAndTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(id, title, status, currency, pageable);
+        int count = IJobRepository.countJobEntitiesByCreatorIdEqualsAndTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(id, title, status, currency);
+        return new ListJobModel(count, data);
     }
 
     @Override
