@@ -10,7 +10,7 @@ public interface IAccountService {
     AccountEntity createAccount(AccountEntity accountEntity);
     AccountEntity updateAccount(AccountEntity accountEntity);
     List<AccountEntity> getAllAccount();
-    List<AccountEntity> getAllAccountWithPaging(Pageable pageable);
+    List<AccountEntity> getAllAccountWithPaging(Pageable pageable, String name, String status, String role);
     AccountEntity findAccountByEmail(String email);
     AccountEntity findAccountEntityById(int id);
     AccountEntity findAccountByCompanyId(int id);

@@ -4,6 +4,7 @@ import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.email.service.EmailSenderService;
 import capstone.oras.api.job.service.IJobService;
+import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.IConfirmationTokenRepository;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.CompanyEntity;
@@ -625,9 +626,14 @@ public class AccountController {
 
     @RequestMapping(value = "/accounts-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<AccountEntity>> getAllAccountWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement, @RequestParam(value = "page") int page) {
-        Pageable pageable = PageRequest.of(page - 1, numOfElement, Sort.by("createDate").descending());
-        return new ResponseEntity<List<AccountEntity>>(accountService.getAllAccountWithPaging(pageable), HttpStatus.OK);
+    ResponseEntity<List<AccountEntity>> getAllAccountWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+                                                                @RequestParam(value = "page") Integer page,
+                                                                @RequestParam(value = "sort") String sort,
+                                                                @RequestParam(value = "status") String status,
+                                                                @RequestParam(value = "name") String name,
+                                                                @RequestParam(value = "role") String role) {
+        Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
+        return new ResponseEntity<>(accountService.getAllAccountWithPaging(pageable, status, name, role), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/account/{id}", method = RequestMethod.GET)
