@@ -10,6 +10,7 @@ import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobAccountEntity;
 import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
+import capstone.oras.model.custom.ListJobApplicationModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -155,15 +156,15 @@ public class JobApplicationController {
 
     @RequestMapping(value = "/job-applications-by-job-id", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@RequestParam(value = "jobId") int jobId,
-                                                                           @RequestParam(value = "numOfElement") Integer numOfElement,
-                                                                           @RequestParam(value = "page") Integer page,
-                                                                           @RequestParam(value = "sort") String sort,
-                                                                           @RequestParam(value = "status") String status,
-                                                                           @RequestParam(value = "name") String name) {
+    ResponseEntity<ListJobApplicationModel> getAllJobApplicationByJobId(@RequestParam(value = "jobId") int jobId,
+                                                                        @RequestParam(value = "numOfElement") Integer numOfElement,
+                                                                        @RequestParam(value = "page") Integer page,
+                                                                        @RequestParam(value = "sort") String sort,
+                                                                        @RequestParam(value = "status") String status,
+                                                                        @RequestParam(value = "name") String name) {
         Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
-        List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId, pageable, status, name);
-        return new ResponseEntity<>(jobApplicationEntityList, HttpStatus.OK);
+        ListJobApplicationModel model = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId, pageable, status, name);
+        return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job-application-rank-cv", method = RequestMethod.POST)
