@@ -1,6 +1,5 @@
 package capstone.oras.common;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -8,12 +7,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.client.RestTemplate;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,8 +19,6 @@ import java.util.List;
 import static capstone.oras.common.Constant.JobStatus.*;
 
 public class CommonUtils {
-    @Autowired
-    private static JavaMailSender javaMailSender;
     public static Date convertLocalDateTimeToDate(LocalDate localDate) {
         return Date.valueOf(localDate);
     }
@@ -39,7 +32,7 @@ public class CommonUtils {
                 dateToConvert.getTime()).toLocalDateTime();
     }
 
-    public static RestTemplate initRestTemplate(){
+    public static RestTemplate initRestTemplate() {
         RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
         RestTemplate restTemplate = restTemplateBuilder.build();
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
@@ -70,15 +63,5 @@ public class CommonUtils {
                 break;
         }
         return act;
-    }
-
-    public static void sendMail(String email, String subject, String text) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        message.setSubject(subject);
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(email);
-        // use the true flag to indicate the text included is HTML
-        helper.setText(text, true);
-        javaMailSender.send(message);
     }
 }
