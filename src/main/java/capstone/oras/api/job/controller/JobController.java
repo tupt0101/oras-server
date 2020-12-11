@@ -27,6 +27,7 @@ import java.util.List;
 
 import static capstone.oras.common.Constant.JobStatus.CLOSED;
 import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
+import static capstone.oras.common.Constant.TIME_ZONE;
 
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
@@ -79,8 +80,8 @@ public class JobController {
         JobEntity jobEntity = jobService.createJob(job);
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setCreatorId(job.getCreatorId());
-        activityEntity.setTime(java.time.LocalDateTime.now());
-        activityEntity.setTitle("Create Job Draft");
+        activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
+        activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
         activityEntity.setJobId(jobEntity.getId());
         activityService.createActivity(activityEntity);
         return new ResponseEntity<>(jobEntity, HttpStatus.OK);
@@ -116,8 +117,8 @@ public class JobController {
         restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setCreatorId(job.getCreatorId());
-        activityEntity.setTime(java.time.LocalDateTime.now());
-        activityEntity.setTitle("Close Job");
+        activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
+        activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
         activityEntity.setJobId(id);
         job = jobService.closeJob(id);
         activityService.createActivity(activityEntity);
@@ -248,13 +249,13 @@ public class JobController {
         OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
         job.setOpenjobJobId(openJobEntity.getId());
         job.setExpireDate(accountPackageEntity.getValidTo());
-        job.setApplyFrom(LocalDateTime.now());
+        job.setApplyFrom(LocalDateTime.now(TIME_ZONE));
 
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setCreatorId(job.getCreatorId());
         job = jobService.updateJob(job);
-        activityEntity.setTime(java.time.LocalDateTime.now());
-        activityEntity.setTitle("Published a Job");
+        activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
+        activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
         activityEntity.setJobId(id);
         activityService.createActivity(activityEntity);
         accountPackageService.updateAccountPackage(accountPackageEntity);
@@ -301,7 +302,7 @@ public class JobController {
         }
 
 
-        job.setCreateDate(LocalDateTime.now());
+        job.setCreateDate(LocalDateTime.now(TIME_ZONE));
         JobEntity jobEntity = jobService.createJob(job);
 
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
@@ -470,7 +471,7 @@ public class JobController {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
 //        }
 //
-//        job.setCreateDate(LocalDateTime.now());
+//        job.setCreateDate(LocalDateTime.now(TIME_ZONE));
 //        JobEntity jobEntity = jobService.createJob(job);
 //
 //        OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();

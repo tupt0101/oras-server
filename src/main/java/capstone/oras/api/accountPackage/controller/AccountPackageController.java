@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
+import static capstone.oras.common.Constant.TIME_ZONE;
+
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(value = "/v1/account-package-management")
@@ -162,14 +164,14 @@ public class AccountPackageController {
         PurchaseEntity purchaseEntity = new PurchaseEntity();
         purchaseEntity.setAccountId(accountId);
         purchaseEntity.setAmount(0.0);
-        purchaseEntity.setPurchaseDate(LocalDateTime.now());
+        purchaseEntity.setPurchaseDate(LocalDateTime.now(TIME_ZONE));
         purchaseEntity.setStatus("success");
         purchaseEntity = purchaseService.createPurchase(purchaseEntity);
 
 
         AccountPackageEntity accountPackage = new AccountPackageEntity();
         accountPackage.setNumOfPost(1);
-        accountPackage.setValidTo(LocalDateTime.now().plusMonths(1));
+        accountPackage.setValidTo(LocalDateTime.now(TIME_ZONE).plusMonths(1));
         accountPackage.setPackageId(1);
         accountPackage.setAccountId(accountId);
         accountPackage.setExpired(false);

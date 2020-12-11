@@ -23,6 +23,8 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
+import static capstone.oras.common.Constant.TIME_ZONE;
+
 
 @Controller
 @RequestMapping(path = "/v1/paypal")
@@ -95,7 +97,7 @@ public class PaypalController {
                 purchaseEntity.setAccountId(accountId);
                 purchaseEntity.setAmount(Double.parseDouble(payment.getTransactions().get(0).getAmount().getTotal()));
                 purchaseEntity.setPayerId(payerId);
-                purchaseEntity.setPurchaseDate(LocalDateTime.now());
+                purchaseEntity.setPurchaseDate(LocalDateTime.now(TIME_ZONE));
                 purchaseEntity.setStatus("success");
                 purchaseEntity.setToken(token);
                 purchaseEntity.setPaymentId(paymentId);
@@ -105,7 +107,7 @@ public class PaypalController {
                 accountPackageEntity.setAccountId(accountId);
                 accountPackageEntity.setPackageId(packageId);
                 accountPackageEntity.setPurchaseId(purchaseEntity.getId());
-                accountPackageEntity.setValidTo(LocalDateTime.now().plusMonths(1));
+                accountPackageEntity.setValidTo(LocalDateTime.now(TIME_ZONE).plusMonths(1));
                 accountPackageEntity.setNumOfPost(packageService.findPackageById(packageId).getNumOfPost());
                 accountPackageService.createAccountPackage(accountPackageEntity);
 

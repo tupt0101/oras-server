@@ -3,7 +3,6 @@ package capstone.oras.api.packages.controller;
 import capstone.oras.api.packages.service.IPackageService;
 import capstone.oras.entity.PackageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -11,40 +10,34 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
 @RequestMapping(value = "/v1/package-management")
 public class PackageController {
-
-
-    @Autowired
     private IPackageService packageService;
 
-    HttpHeaders httpHeaders = new HttpHeaders();
+    @Autowired
+    public PackageController(IPackageService packageService) {
+        this.packageService = packageService;
+    }
 
     @RequestMapping(value = "/package", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<PackageEntity> createPackage(@RequestBody PackageEntity packageEntity) {
-
+    public ResponseEntity<PackageEntity> createPackage(@RequestBody PackageEntity packageEntity) {
         return new ResponseEntity<>(packageService.createPackage(packageEntity), HttpStatus.OK);
-
     }
 
     @RequestMapping(value = "/package", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<PackageEntity> updatePackage(@RequestBody PackageEntity packageEntity) {
-
+    public ResponseEntity<PackageEntity> updatePackage(@RequestBody PackageEntity packageEntity) {
         return new ResponseEntity<>(packageService.updatePackage(packageEntity), HttpStatus.OK);
-
     }
 
     @RequestMapping(value = "/packages", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<PackageEntity>> getAllPackage() {
-        List<PackageEntity> lst = packageService.getAllPackage().stream()
-                .filter(PackageEntity::isActive).collect(Collectors.toList());
+    public ResponseEntity<List<PackageEntity>> getAllPackage() {
+        List<PackageEntity> lst = packageService.getAllPackage();
         if (!CollectionUtils.isEmpty(lst)) {
             lst.sort(Comparator.comparingInt(PackageEntity::getId));
         }
@@ -53,24 +46,24 @@ public class PackageController {
 
     @RequestMapping(value = "/active-packages", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<PackageEntity>> getAllActivePackage() {
+    public ResponseEntity<List<PackageEntity>> getAllActivePackage() {
         List<PackageEntity> lst = packageService.getAllActivePackage();
         if (!CollectionUtils.isEmpty(lst)) {
             lst.sort(Comparator.comparingInt(PackageEntity::getId));
         }
-        return new ResponseEntity<List<PackageEntity>>(lst, HttpStatus.OK);
+        return new ResponseEntity<>(lst, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/package/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<PackageEntity> getPackageById(@PathVariable("id") int id) {
-        return new ResponseEntity<PackageEntity>(packageService.findPackageById(id), HttpStatus.OK);
+    public ResponseEntity<PackageEntity> getPackageById(@PathVariable("id") int id) {
+        return new ResponseEntity<>(packageService.findPackageById(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deactivate", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<Integer> deactivatePackage(@RequestBody int id) {
+    public ResponseEntity<Integer> deactivatePackage(@RequestBody int id) {
         return new ResponseEntity<>(packageService.deactivatePackage(id), HttpStatus.OK);
     }
 }

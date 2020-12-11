@@ -11,9 +11,11 @@ import java.util.List;
 
 @Service
 public class PackageService implements IPackageService {
-
-    @Autowired
     private IPackageRepository IPackageRepository;
+    @Autowired
+    public PackageService(IPackageRepository IPackageRepository) {
+        this.IPackageRepository = IPackageRepository;
+    }
 
     @Override
     public PackageEntity createPackage(PackageEntity packageEntity) {
@@ -47,8 +49,6 @@ public class PackageService implements IPackageService {
 
     @Override
     public List<PackageEntity> getAllActivePackage() {
-        if (IPackageRepository.findPackageEntitiesByActiveTrue().isPresent()) {
-            return IPackageRepository.findPackageEntitiesByActiveTrue().get();
-        } else return null;
+        return IPackageRepository.findPackageEntitiesByActiveTrue();
     }
 }

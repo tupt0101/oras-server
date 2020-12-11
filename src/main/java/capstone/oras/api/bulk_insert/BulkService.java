@@ -4,6 +4,7 @@ import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.job.service.IJobService;
+import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.IAccountRepository;
 import capstone.oras.dao.IConfirmationTokenRepository;
 import capstone.oras.dao.IJobRepository;
@@ -30,8 +31,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Logger;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
+import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Service
 public class BulkService implements IBulkService {
@@ -55,6 +58,8 @@ public class BulkService implements IBulkService {
     private RestTemplate restTemplate = new RestTemplate();
     private HttpHeaders headers = new HttpHeaders();
     private HttpEntity entity;
+    Logger logger = Logger.getLogger(BulkService.class.getName());
+
 
     @Override
     public Integer signup(List<BulkController.Signup> signups) {
@@ -73,7 +78,7 @@ public class BulkService implements IBulkService {
                 saveAccountAndCompany(signup);
                 res++;
             } catch (Exception e) {
-                System.out.println(signup.accountEntity.getFullname() + ": creation error");
+                logger.warning(signup.accountEntity.getFullname() + ": creation error");
                 System.out.println(e.getMessage());
             }
         }
@@ -88,13 +93,13 @@ public class BulkService implements IBulkService {
                 JobEntity jobEntity = saveJob(job);
                 ActivityEntity activityEntity = new ActivityEntity();
                 activityEntity.setCreatorId(job.getCreatorId());
-                activityEntity.setTime(java.time.LocalDateTime.now());
-                activityEntity.setTitle("Create Job Draft");
+                activityEntity.setTime(jobEntity.getCreateDate());
+                activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
                 activityEntity.setJobId(jobEntity.getId());
                 activityService.createActivity(activityEntity);
                 res++;
             } catch (Exception e) {
-                System.out.println(job.getTitle() + " by ID-" + job.getCreatorId() + ": creation error");
+                logger.warning(job.getTitle() + " by ID-" + job.getCreatorId() + ": creation error");
                 System.out.println(e.getMessage());
             }
         }
@@ -208,7 +213,7 @@ public class BulkService implements IBulkService {
 
     private LocalDateTime randomDatetimeBetween() {
         LocalDateTime startInclusive = LocalDateTime.of(2020, 1, 1, 0, 0);
-        LocalDateTime endExclusive = LocalDateTime.now();
+        LocalDateTime endExclusive = LocalDateTime.now(TIME_ZONE);
         long startEpochDay = startInclusive.toLocalDate().toEpochDay();
         long endEpochDay = endExclusive.toLocalDate().toEpochDay();
         long randomDay = ThreadLocalRandom

@@ -21,6 +21,7 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer>, Pagin
     boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIs(int creatorId, String title, String status);
 
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEquals(int creatorId);
+    List<JobEntity> findJobEntitiesByCreatorIdEqualsAndStatusIsNot(int creatorId, String status);
 
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEqualsAndStatusEquals(int creatorId, String status);
 

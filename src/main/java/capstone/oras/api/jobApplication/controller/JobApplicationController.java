@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
+import static capstone.oras.common.Constant.TIME_ZONE;
 
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
@@ -121,7 +122,7 @@ public class JobApplicationController {
         JobApplicationEntity applicationEntity = jobApplicationService.findJobApplicationById(id);
         if (applicationEntity != null) {
             applicationEntity.setStatus(HIRED);
-            applicationEntity.setHiredDate(LocalDateTime.now());
+            applicationEntity.setHiredDate(LocalDateTime.now(TIME_ZONE));
             this.jobApplicationService.updateJobApplication(applicationEntity);
             return new ResponseEntity<JobApplicationEntity>(this.jobApplicationService.updateJobApplication(applicationEntity), HttpStatus.OK);
         } else {

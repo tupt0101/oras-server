@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static capstone.oras.common.Constant.TIME_ZONE;
+
 @Configuration
 @EnableScheduling
 public class ScheduleSpringConfig {
@@ -61,12 +63,12 @@ public class ScheduleSpringConfig {
         }
         for (int i = 0; i < accountPackages.size(); i++) {
             AccountPackageEntity accountPackage = accountPackages.get(i);
-            if (accountPackage.getValidTo().isBefore(LocalDateTime.now())) {
+            if (accountPackage.getValidTo().isBefore(LocalDateTime.now(TIME_ZONE))) {
                 accountPackage.setExpired(true);
                 accountPackagesToUpdate.add(accountPackage);
                 ActivityEntity activityEntity = new ActivityEntity();
                 activityEntity.setCreatorId(accountPackage.getAccountId());
-                activityEntity.setTime(java.time.LocalDateTime.now());
+                activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
                 activityEntity.setTitle("Current Package Expired");
                 activityEntity.setJobId(null);
                 activityService.createActivity(activityEntity);
@@ -79,7 +81,7 @@ public class ScheduleSpringConfig {
     public void scanForExpiredJob() {
         List<JobEntity> jobEntities = jobService.getAllPublishedJob();
         for (JobEntity job : jobEntities) {
-            if (job.getExpireDate().isBefore(LocalDateTime.now()) || job.getApplyTo().isBefore(LocalDateTime.now())) {
+            if (job.getExpireDate().isBefore(LocalDateTime.now(TIME_ZONE)) || job.getApplyTo().isBefore(LocalDateTime.now(TIME_ZONE))) {
                 int openjobJobId = job.getOpenjobJobId();
                 //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
@@ -96,10 +98,10 @@ public class ScheduleSpringConfig {
                 restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
                 ActivityEntity activityEntity = new ActivityEntity();
                 activityEntity.setCreatorId(job.getCreatorId());
-                activityEntity.setTime(LocalDateTime.now());
-                if (job.getExpireDate().isBefore(LocalDateTime.now())) {
+                activityEntity.setTime(LocalDateTime.now(TIME_ZONE));
+                if (job.getExpireDate().isBefore(LocalDateTime.now(TIME_ZONE))) {
                     activityEntity.setTitle("Job Expired");
-                } else if (job.getApplyTo().isBefore(LocalDateTime.now())) {
+                } else if (job.getApplyTo().isBefore(LocalDateTime.now(TIME_ZONE))) {
                     activityEntity.setTitle("Job's Apply To Date Reached");
                 }
                 activityEntity.setJobId(job.getId());
