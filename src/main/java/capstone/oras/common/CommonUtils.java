@@ -1,6 +1,9 @@
 package capstone.oras.common;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -36,5 +39,11 @@ public class CommonUtils {
         messageConverters.add(converter);
         restTemplate.setMessageConverters(messageConverters);
         return restTemplate;
+    }
+
+    public static Pageable configPageable(Integer numOfElement, Integer page, String sort) {
+        String sortBy = sort.substring(1);
+        return PageRequest.of(page != null ? page - 1 : 0, numOfElement != null ? numOfElement : Integer.MAX_VALUE,
+                sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
     }
 }

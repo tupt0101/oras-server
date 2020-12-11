@@ -4,6 +4,7 @@ package capstone.oras.api.jobApplication.controller;
 import capstone.oras.api.candidate.service.ICandidateService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.IJobApplicationService;
+import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
@@ -11,9 +12,7 @@ import capstone.oras.entity.openjob.OpenjobAccountEntity;
 import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -156,12 +155,12 @@ public class JobApplicationController {
     @RequestMapping(value = "/job-applications-by-job-id", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationByJobId(@RequestParam(value = "jobId") int jobId,
-                                                                           @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page,
+                                                                           @RequestParam(value = "numOfElement") Integer numOfElement,
+                                                                           @RequestParam(value = "page") Integer page,
                                                                            @RequestParam(value = "sort") String sort,
                                                                            @RequestParam(value = "status") String status,
                                                                            @RequestParam(value = "name") String name) {
-        String sortBy = sort.substring(1);
-        Pageable pageable = PageRequest.of(page - 1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
         List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId, pageable, status, name);
         return new ResponseEntity<>(jobApplicationEntityList, HttpStatus.OK);
     }
@@ -169,7 +168,8 @@ public class JobApplicationController {
     @RequestMapping(value = "/job-application-rank-cv", method = RequestMethod.POST)
     @ResponseBody
     ResponseEntity<List<JobApplicationEntity>> rankApplication(@RequestParam(value = "jobId") int jobId,
-                                                               @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page,
+                                                               @RequestParam(value = "numOfElement") Integer numOfElement,
+                                                               @RequestParam(value = "page") Integer page,
                                                                @RequestParam(value = "sort") String sort,
                                                                @RequestParam(value = "status") String status,
                                                                @RequestParam(value = "name") String name) {
@@ -179,8 +179,7 @@ public class JobApplicationController {
         } catch (Exception e) {
             httpStatus = HttpStatus.NOT_MODIFIED;
         }
-        String sortBy = sort.substring(1);
-        Pageable pageable = PageRequest.of(page - 1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
         List<JobApplicationEntity> jobApplicationEntityList = jobApplicationService.findJobApplicationsByJobIdWithPaging(jobId, pageable, status, name);
         return new ResponseEntity<>(jobApplicationEntityList, httpStatus);
     }
