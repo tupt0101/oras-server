@@ -14,7 +14,8 @@ import java.util.Optional;
 
 @Repository
 public interface ICompanyRepository extends JpaRepository<CompanyEntity, Integer>, PagingAndSortingRepository<CompanyEntity, Integer> {
-    List<CompanyEntity> findAllByStatusLikeAndNameIgnoreCaseLike(Pageable pageable, String status, String name);
+    List<CompanyEntity> findAllByVerifiedAndNameIgnoreCaseLike(Pageable pageable, boolean verified, String name);
+    List<CompanyEntity> findAllByNameIgnoreCaseLike(Pageable pageable, String name);
     Optional<List<CompanyEntity>> findCompanyEntitiesByNameEqualsAndVerifiedEquals(String name, boolean verified);
     Optional<List<CompanyEntity>> findCompanyEntitiesByIdIsNotAndNameEqualsAndVerifiedEquals(Integer id, String name, boolean verified);
     @Query(value = "update company set verified = true where id = :id", nativeQuery = true)
