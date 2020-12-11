@@ -60,7 +60,6 @@ public class AccountService implements IAccountService {
     public List<AccountEntity> getAllAccountWithPaging(Pageable pageable, String name, String status, String role) {
         name = "%" + name + "%";
         role = StringUtils.isEmpty(role) ? "%" : role;
-        status = StringUtils.isEmpty(status) ? "%" : status;
         boolean active = true;
         switch (status) {
             case "":
