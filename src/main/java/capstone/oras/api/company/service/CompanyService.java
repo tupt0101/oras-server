@@ -41,7 +41,6 @@ public class CompanyService implements ICompanyService{
         switch (status) {
             case "":
                 return ICompanyRepository.findAllByNameIgnoreCaseLike(pageable, name);
-                break;
             case "Verified":
                 verified = true;
                 break;
