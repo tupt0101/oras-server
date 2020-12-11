@@ -89,7 +89,7 @@ public class JobService implements IJobService {
         title = StringUtils.isEmpty(title) ? "%" : "%" + title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;
         currency = StringUtils.isEmpty(currency) ? "%" : currency;
-        return IJobRepository.findAllByTitleLikeAndStatusLikeAndCurrencyLike(title, status, currency, pageable);
+        return IJobRepository.findAllByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(title, status, currency, pageable);
     }
 
     @Override
@@ -193,7 +193,7 @@ public class JobService implements IJobService {
         title = StringUtils.isEmpty(title) ? "%" : "%" + title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;
         currency = StringUtils.isEmpty(currency) ? "%" : currency;
-        return IJobRepository.findJobEntitiesByCreatorIdEqualsAndTitleLikeAndStatusLikeAndCurrencyLike(id, title, status, currency, pageable);
+        return IJobRepository.findJobEntitiesByCreatorIdEqualsAndTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(id, title, status, currency, pageable);
     }
 
     @Override
