@@ -128,7 +128,7 @@ public class PackageControllerTest {
         ResponseEntity<Integer> expected = new ResponseEntity<>(1, HttpStatus.OK);
         // mock function
         Mockito.when(packageRepository.existsById(id)).thenReturn(true);
-        Mockito.when(packageRepository.deactivatePackage(id)).thenReturn(1);
+        Mockito.when(packageRepository.changePackageActive(id, false)).thenReturn(1);
         // call method
         ResponseEntity<Integer> actual = controller.deactivatePackage(id);
         // assert
