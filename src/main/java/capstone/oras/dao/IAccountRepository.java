@@ -31,5 +31,6 @@ public interface IAccountRepository extends JpaRepository<AccountEntity, Integer
     @Transactional
     Integer updateActiveByVerifyingCompany(Integer companyId);
 
-    List<AccountEntity> findAllByNameIgnoreCaseLikeAndStatusEqualsAndRoleEquals(Pageable pageable, String name, String status, String role);
+    List<AccountEntity> findAllByFullnameIgnoreCaseLikeAndActiveIsAndRoleLike(Pageable pageable, String name, boolean active, String role);
+    List<AccountEntity> findAllByFullnameIgnoreCaseLikeAndRoleLike(Pageable pageable, String name, String role);
 }
