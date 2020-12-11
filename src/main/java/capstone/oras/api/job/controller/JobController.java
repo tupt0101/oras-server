@@ -5,6 +5,7 @@ import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.job.service.IJobService;
+import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.AccountPackageEntity;
 import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.CategoryEntity;
@@ -12,9 +13,7 @@ import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -64,13 +63,13 @@ public class JobController {
 
     @RequestMapping(value = "/jobs-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllJobWithPaging(@RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page,
+    ResponseEntity<List<JobEntity>> getAllJobWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+                                                        @RequestParam(value = "page") Integer page,
                                                         @RequestParam(value = "sort") String sort,
                                                         @RequestParam(value = "title") String title,
                                                         @RequestParam(value = "status") String status,
                                                         @RequestParam(value = "currency") String currency) {
-        String sortBy = sort.substring(1);
-        Pageable pageable = PageRequest.of(page - 1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
         return new ResponseEntity<>(jobService.getAllJobWithPaging(pageable, title, status, currency), HttpStatus.OK);
     }
 
@@ -166,13 +165,13 @@ public class JobController {
     @RequestMapping(value = "/job-by-creator-id", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobEntity>> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,
-                                                                   @RequestParam(value = "numOfElement") int numOfElement, @RequestParam(value = "page") int page,
+                                                                   @RequestParam(value = "numOfElement") Integer numOfElement,
+                                                                   @RequestParam(value = "page") Integer page,
                                                                    @RequestParam(value = "sort") String sort,
                                                                    @RequestParam(value = "title") String title,
                                                                    @RequestParam(value = "status") String status,
                                                                    @RequestParam(value = "currency") String currency) {
-        String sortBy = sort.substring(1);
-        Pageable pageable = PageRequest.of(page - 1, numOfElement, sort.startsWith("-") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
         return new ResponseEntity<>(jobService.getAllJobByCreatorIdWithPaging(id, pageable, title, status, currency), HttpStatus.OK);
     }
 
