@@ -633,7 +633,7 @@ public class AccountController {
                                                                 @RequestParam(value = "name") String name,
                                                                 @RequestParam(value = "role") String role) {
         Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
-        return new ResponseEntity<>(accountService.getAllAccountWithPaging(pageable, status, name, role), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.getAllAccountWithPaging(pageable, name, status, role), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/account/{id}", method = RequestMethod.GET)
