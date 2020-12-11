@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -37,9 +36,19 @@ public class CompanyService implements ICompanyService{
 
     @Override
     public List<CompanyEntity> getAllCompanyWithPaging(Pageable pageable, String status, String name) {
-        status = StringUtils.isEmpty(status) ? "%" : status;
         name = "%" + name + "%";
-        return ICompanyRepository.findAllByStatusLikeAndNameIgnoreCaseLike(pageable, status, name);
+        boolean verified = true;
+        switch (status) {
+            case "":
+                return ICompanyRepository.findAllByNameIgnoreCaseLike(pageable, name);
+                break;
+            case "Verified":
+                verified = true;
+                break;
+            case "Unverified":
+                verified = false;
+        }
+        return ICompanyRepository.findAllByVerifiedAndNameIgnoreCaseLike(pageable, verified, name);
     }
 
     @Override
