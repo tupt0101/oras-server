@@ -54,9 +54,11 @@ public class JobController {
     private CustomUserDetailsService userDetailsService;
 
     @Autowired
-    public JobController(IJobService jobService) {
+    public JobController(IJobService jobService, IActivityService activityService) {
         this.jobService = jobService;
+        this.activityService = activityService;
     }
+
 
     @RequestMapping(value = "/jobs", method = RequestMethod.GET)
     @ResponseBody
@@ -84,12 +86,12 @@ public class JobController {
     @ResponseBody
     public ResponseEntity<JobEntity> createJob(@RequestBody JobEntity job) {
         JobEntity jobEntity = jobService.createJob(job);
-//        ActivityEntity activityEntity = new ActivityEntity();
-//        activityEntity.setCreatorId(job.getCreatorId());
-//        activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
-//        activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
-//        activityEntity.setJobId(jobEntity.getId());
-//        activityService.createActivity(activityEntity);
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setCreatorId(job.getCreatorId());
+        activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
+        activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
+        activityEntity.setJobId(jobEntity.getId());
+        activityService.createActivity(activityEntity);
         return new ResponseEntity<>(jobEntity, HttpStatus.OK);
     }
 
