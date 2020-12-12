@@ -28,6 +28,13 @@ public class AccountService implements IAccountService {
     @Autowired
     private IAccountRepository IAccountRepository;
 
+    @Autowired
+    public AccountService(capstone.oras.dao.IAccountRepository IAccountRepository) {
+        this.IAccountRepository = IAccountRepository;
+    }
+
+
+
     @Override
     public String login(String email, String password) {
 //        AccountEntity accountEntity = accountRepository.findAccountEntitiesByEmailEqualsAndPasswordEquals(email, password);

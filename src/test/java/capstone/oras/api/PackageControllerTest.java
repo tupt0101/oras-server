@@ -39,13 +39,13 @@ public class PackageControllerTest {
         // test data
         PackageEntity testData = createTestData();
         // expected return
-        ResponseEntity<PackageEntity> expected = new ResponseEntity<>(new PackageEntity(), HttpStatus.OK);
+        ResponseEntity<PackageEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
         // mock function
         Mockito.when(packageRepository.save(testData)).thenReturn(testData);
         // call method
         ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getBody().getDescription(), actual.getBody().getDescription());
     }
 
     @Test
@@ -154,6 +154,6 @@ public class PackageControllerTest {
         e.setNumOfPost(1);
         e.setPrice((double) 10);
         e.setTag("TEST");
-        return new PackageEntity();
+        return e;
     }
 }

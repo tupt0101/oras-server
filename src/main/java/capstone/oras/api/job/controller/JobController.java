@@ -53,9 +53,14 @@ public class JobController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+    @Autowired
+    public JobController(IJobService jobService) {
+        this.jobService = jobService;
+    }
+
     @RequestMapping(value = "/jobs", method = RequestMethod.GET)
     @ResponseBody
-    List<JobEntity> getAllJob() {
+    public List<JobEntity> getAllJob() {
         List<JobEntity> lst = jobService.getAllJob();
         if (!CollectionUtils.isEmpty(lst)) {
             lst.sort(Comparator.comparingInt(JobEntity::getId));
@@ -65,7 +70,7 @@ public class JobController {
 
     @RequestMapping(value = "/jobs-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<ListJobModel> getAllJobWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+    public ResponseEntity<ListJobModel> getAllJobWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
                                                      @RequestParam(value = "page") Integer page,
                                                      @RequestParam(value = "sort") String sort,
                                                      @RequestParam(value = "title") String title,
@@ -77,26 +82,26 @@ public class JobController {
 
     @PostMapping(value = "/job", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<JobEntity> createJob(@RequestBody JobEntity job) {
+    public ResponseEntity<JobEntity> createJob(@RequestBody JobEntity job) {
         JobEntity jobEntity = jobService.createJob(job);
-        ActivityEntity activityEntity = new ActivityEntity();
-        activityEntity.setCreatorId(job.getCreatorId());
-        activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
-        activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
-        activityEntity.setJobId(jobEntity.getId());
-        activityService.createActivity(activityEntity);
+//        ActivityEntity activityEntity = new ActivityEntity();
+//        activityEntity.setCreatorId(job.getCreatorId());
+//        activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
+//        activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
+//        activityEntity.setJobId(jobEntity.getId());
+//        activityService.createActivity(activityEntity);
         return new ResponseEntity<>(jobEntity, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<JobEntity> updateJob(@RequestBody JobEntity job) {
+    public ResponseEntity<JobEntity> updateJob(@RequestBody JobEntity job) {
         return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job/{id}/close", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<JobEntity> closeJob(@PathVariable("id") int id) {
+    public ResponseEntity<JobEntity> closeJob(@PathVariable("id") int id) {
         if (jobService.getJobById(id) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to update");
         }
@@ -130,38 +135,38 @@ public class JobController {
 
     @RequestMapping(value = "/job/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<JobEntity> getJobById(@PathVariable("id") int id) {
+    public ResponseEntity<JobEntity> getJobById(@PathVariable("id") int id) {
         return new ResponseEntity<JobEntity>(jobService.getJobById(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/open-jobs", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllOpenJob() {
+    public ResponseEntity<List<JobEntity>> getAllOpenJob() {
         return new ResponseEntity<List<JobEntity>>(jobService.getOpenJob(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/open-job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
+    public ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
         return new ResponseEntity<>(jobService.getJobByCreatorId(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/closed-published-job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllClosedAndPublishedJobByCreatorId(@PathVariable("id") int id) {
+    public ResponseEntity<List<JobEntity>> getAllClosedAndPublishedJobByCreatorId(@PathVariable("id") int id) {
         return new ResponseEntity<List<JobEntity>>(jobService.getClosedAndPublishedJobByCreatorId(id), HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllJobByCreatorId(@PathVariable("id") int id) {
+    public ResponseEntity<List<JobEntity>> getAllJobByCreatorId(@PathVariable("id") int id) {
         return new ResponseEntity<List<JobEntity>>(jobService.getAllJobByCreatorId(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job-by-creator-id", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<ListJobModel> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,
+    public ResponseEntity<ListJobModel> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,
                                                                    @RequestParam(value = "numOfElement") Integer numOfElement,
                                                                    @RequestParam(value = "page") Integer page,
                                                                    @RequestParam(value = "sort") String sort,
@@ -175,7 +180,7 @@ public class JobController {
 
     @RequestMapping(value = "/job/{id}/extend/{date}", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id, @PathVariable("date") int date) {
+    public ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id, @PathVariable("date") int date) {
         if (jobService.getJobById(id) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
         }
@@ -188,7 +193,7 @@ public class JobController {
 
     @RequestMapping(value = "/job/{id}/publish", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
+    public ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
         JobEntity job = jobService.getJobById(id);
         if (job == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
@@ -261,7 +266,7 @@ public class JobController {
 
     @PostMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<JobEntity> createJobMulti(@RequestBody JobEntity job) {
+    public ResponseEntity<JobEntity> createJobMulti(@RequestBody JobEntity job) {
         if (job.getCreatorId() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
@@ -346,7 +351,7 @@ public class JobController {
 
     @PutMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<JobEntity> updateJobMulti(@RequestBody JobEntity job) {
+    public ResponseEntity<JobEntity> updateJobMulti(@RequestBody JobEntity job) {
         if (job.getCreatorId() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");

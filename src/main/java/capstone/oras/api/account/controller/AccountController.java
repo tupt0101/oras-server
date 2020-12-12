@@ -14,12 +14,9 @@ import capstone.oras.entity.openjob.OpenjobCompanyEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.model.custom.ListAccountModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
-import com.amazonaws.services.xray.model.Http;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -34,13 +31,12 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static capstone.oras.common.Constant.EmailForm.*;
-import static capstone.oras.common.Constant.ORAS_HOST;
+import static capstone.oras.common.Constant.EmailForm.confirmMail;
+import static capstone.oras.common.Constant.EmailForm.resetPasswordMail;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 
@@ -73,6 +69,7 @@ public class AccountController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+
     static class Signup {
         public AccountEntity accountEntity;
         public CompanyEntity companyEntity;
@@ -86,7 +83,7 @@ public class AccountController {
 
     @RequestMapping(value = "/account", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<AccountEntity> createAccount(@RequestBody AccountEntity accountEntity) {
+    public ResponseEntity<AccountEntity> createAccount(@RequestBody AccountEntity accountEntity) {
         if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
@@ -106,7 +103,7 @@ public class AccountController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<AccountEntity> signup(@RequestBody Signup signup) throws MessagingException {
+    public ResponseEntity<AccountEntity> signup(@RequestBody Signup signup) throws MessagingException {
         if (signup.accountEntity.getEmail() == null || signup.accountEntity.getEmail().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (signup.accountEntity.getFullname() == null || signup.accountEntity.getFullname().isEmpty()) {
@@ -180,7 +177,7 @@ public class AccountController {
 
     @RequestMapping(value = "/resend-email", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<Integer> resendEmail(@Param("email") String email){
+    public ResponseEntity<Integer> resendEmail(@Param("email") String email){
         try {
             AccountEntity accountEntity = accountService.findAccountByEmail(email);
             ConfirmationToken confirmationToken = new ConfirmationToken(accountEntity);
@@ -223,7 +220,7 @@ public class AccountController {
 
     @RequestMapping(value = "/deactivate-account/{accountId}", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<AccountEntity> deactiveAccount(@PathVariable("accountId") int accountId) {
+    public ResponseEntity<AccountEntity> deactiveAccount(@PathVariable("accountId") int accountId) {
 
         // refactor code de update 1 field thoi dung native query nang cao hieu suat
         AccountEntity accountEntity = accountService.findAccountEntityById(accountId);
@@ -250,7 +247,7 @@ public class AccountController {
 
     @RequestMapping(value = "/activate-by-account-id/{accountId}", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<AccountEntity> activeAccount(@PathVariable("accountId") int accountId) {
+    public ResponseEntity<AccountEntity> activeAccount(@PathVariable("accountId") int accountId) {
         // refactor code de update 1 field thoi dung native query nang cao hieu suat
         AccountEntity accountEntity = accountService.findAccountEntityById(accountId);
         accountEntity.setActive(true);
@@ -259,7 +256,7 @@ public class AccountController {
 
     @RequestMapping(value = "/account", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<AccountEntity> updateAccount(@RequestBody AccountEntity accountEntity) {
+    public ResponseEntity<AccountEntity> updateAccount(@RequestBody AccountEntity accountEntity) {
 
         if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
@@ -274,7 +271,7 @@ public class AccountController {
 
     @RequestMapping(value = "/change-password-account", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<AccountEntity> changePassword(@RequestBody PasswordChanges passwordChanges) {
+    public ResponseEntity<AccountEntity> changePassword(@RequestBody PasswordChanges passwordChanges) {
         AccountEntity accountEntity = accountService.findAccountEntityById(passwordChanges.accountId);
         if (accountEntity == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account doesn't exist");
@@ -289,13 +286,13 @@ public class AccountController {
 
     @RequestMapping(value = "/update-account", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<Integer> customUpdateAccount(@RequestBody AccountEntity accountEntity) {
+    public ResponseEntity<Integer> customUpdateAccount(@RequestBody AccountEntity accountEntity) {
         return new ResponseEntity<>(accountService.updateFullNameAndPhoneNo(accountEntity), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<AccountEntity>> getAllAccount() {
+    public ResponseEntity<List<AccountEntity>> getAllAccount() {
         List<AccountEntity> lst = accountService.getAllAccount();
         if (!CollectionUtils.isEmpty(lst)) {
             lst.sort(Comparator.comparingInt(AccountEntity::getId));
@@ -305,7 +302,7 @@ public class AccountController {
 
     @RequestMapping(value = "/accounts-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<ListAccountModel> getAllAccountWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+    public ResponseEntity<ListAccountModel> getAllAccountWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
                                                                    @RequestParam(value = "page") Integer page,
                                                                    @RequestParam(value = "sort") String sort,
                                                                    @RequestParam(value = "status") String status,
@@ -317,13 +314,13 @@ public class AccountController {
 
     @RequestMapping(value = "/account/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<AccountEntity> getAccountById(@PathVariable("id") int id) {
+    public ResponseEntity<AccountEntity> getAccountById(@PathVariable("id") int id) {
         return new ResponseEntity<AccountEntity>(accountService.findAccountEntityById(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/account-by-email", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<AccountEntity> getAccountByEmail(@RequestParam("email") String email, HttpServletResponse response) {
+    public ResponseEntity<AccountEntity> getAccountByEmail(@RequestParam("email") String email, HttpServletResponse response) {
         response.addHeader("Access-Control-Allow-Origin", "*");
         return new ResponseEntity<AccountEntity>(accountService.findAccountByEmail(email), HttpStatus.OK);
     }

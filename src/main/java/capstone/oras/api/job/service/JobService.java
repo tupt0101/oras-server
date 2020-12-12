@@ -37,6 +37,12 @@ public class JobService implements IJobService {
     @Autowired
     private IAccountService accountService;
 
+    @Autowired
+    public JobService(capstone.oras.dao.IJobRepository IJobRepository, IAccountService accountService) {
+        this.IJobRepository = IJobRepository;
+        this.accountService = accountService;
+    }
+
     RestTemplate restTemplate = CommonUtils.initRestTemplate();
 
     @Override
@@ -253,6 +259,15 @@ public class JobService implements IJobService {
         }
         if (job.getSalaryFrom() == null || job.getSalaryTo() == null || job.getSalaryFrom() <= 0 || job.getSalaryTo() < job.getSalaryFrom()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary range is invalid");
+        }
+        if (StringUtils.isEmpty(job.getDescription())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description is a required field");
+        }
+        if (StringUtils.isEmpty(job.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is a required field");
+        }
+        if (job.getSalaryHidden() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary hidden is a required field");
         }
         if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
