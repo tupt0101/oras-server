@@ -99,17 +99,19 @@ public class PackageEntity {
         if (o == null || getClass() != o.getClass()) return false;
         PackageEntity that = (PackageEntity) o;
         return id == that.id &&
+                active == that.active &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(numOfPost, that.numOfPost) &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(duration, that.duration) &&
                 Objects.equals(currency, that.currency) &&
-                Objects.equals(description, that.description);
+                Objects.equals(description, that.description) &&
+                Objects.equals(tag, that.tag);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, numOfPost, price, duration, currency, description);
+        return Objects.hash(id, name, numOfPost, price, duration, currency, description, tag, active);
     }
 
     @Basic
