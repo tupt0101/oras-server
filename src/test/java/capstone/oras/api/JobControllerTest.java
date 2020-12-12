@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -69,7 +70,6 @@ public class JobControllerTest {
         // mock function
         Mockito.when(accountRepository.findById(1)).thenReturn(account);
         Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
         // call method
         ResponseEntity<JobEntity> actual = jobController.createJob(testData);
         // assert
@@ -81,17 +81,19 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setTitle(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
     }
 
 
@@ -100,17 +102,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setTitle("");
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -119,17 +124,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setDescription(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -138,17 +146,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setDescription("");
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -157,17 +168,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setStatus(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -176,17 +190,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setStatus("");
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -195,17 +212,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setApplyTo(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -214,17 +234,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setVacancies(0);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vacancies must be greater than 0");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -233,17 +256,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setVacancies(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vacancies must be greater than 0");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -252,17 +278,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setSalaryHidden(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary hidden is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -271,17 +300,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setCurrency(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -290,17 +322,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setCreatorId(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -311,15 +346,22 @@ public class JobControllerTest {
         testData.setCreatorId(3);
         Optional<AccountEntity> account = Optional.of(createAccountForTest());
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
+        String actualMsg = "";
         // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        Mockito.lenient().when(accountRepository.findById(1)).thenReturn(account);
+        Mockito.lenient().when(jobRepository.save(testData)).thenReturn(testData);
+        Mockito.lenient().when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -328,17 +370,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setCategory(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -347,17 +392,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setJobType(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job Type is a required field");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -366,17 +414,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setSalaryFrom(500.0);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary range is invalid");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -385,17 +436,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setSalaryFrom(0.0);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary range is invalid");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -404,17 +458,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setSalaryFrom(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary range is invalid");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -423,17 +480,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setSalaryTo(0.0);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary range is invalid");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
@@ -442,17 +502,20 @@ public class JobControllerTest {
         //test data
         JobEntity testData = createTestData();
         testData.setSalaryTo(null);
-        Optional<AccountEntity> account = Optional.of(createAccountForTest());
+
         // expected return
-        ResponseEntity<JobEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(accountRepository.findById(1)).thenReturn(account);
-        Mockito.when(jobRepository.save(testData)).thenReturn(testData);
-        Mockito.when(activityRepository.save(new ActivityEntity())).thenReturn(new ActivityEntity());
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary range is invalid");
+        String actualMsg = "";
         // call method
-        ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+        try {
+            ResponseEntity<JobEntity> actual = jobController.createJob(testData);
+
+        } catch (ResponseStatusException e) {
+             actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
+
     }
 
 
