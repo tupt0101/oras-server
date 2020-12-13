@@ -46,8 +46,8 @@ public class AccountPackageService implements IAccountPackageService {
             data = IAccountPackageRepository.findAllByAccountById_FullnameLikeAndPackageById_NameLike(pageable, name, pkg);
             count = IAccountPackageRepository.countByAccountById_FullnameLikeAndPackageById_NameLike(name, pkg);
         } else {
-            data = IAccountPackageRepository.findAllByAccountById_FullnameLikeAndPackageById_NameLikeAndExpiredIs(pageable, name, pkg, "Valid".equalsIgnoreCase(status));
-            count = IAccountPackageRepository.countByAccountById_FullnameLikeAndPackageById_NameLikeAndExpiredIs(name, pkg, "Valid".equalsIgnoreCase(status));
+            data = IAccountPackageRepository.findAllByAccountById_FullnameLikeAndPackageById_NameLikeAndExpiredIs(pageable, name, pkg, "Expired".equalsIgnoreCase(status));
+            count = IAccountPackageRepository.countByAccountById_FullnameLikeAndPackageById_NameLikeAndExpiredIs(name, pkg, "Expired".equalsIgnoreCase(status));
         }
         return new ListAccountPackageModel(count, data);
     }
