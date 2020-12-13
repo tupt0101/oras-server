@@ -15,10 +15,10 @@ public interface IAccountPackageRepository extends JpaRepository<AccountPackageE
     Optional<List<AccountPackageEntity>> findAccountPackageEntitiesByAccountIdEquals(int id);
     Optional<List<AccountPackageEntity>> findAccountPackageEntitiesByExpiredFalse();
     List<AccountPackageEntity> findAllBy(Pageable pageable);
-    List<AccountPackageEntity> findAllByAccountById_FullnameAndPackageById_NameAndExpiredIs(Pageable pageable, String accountById_Fullname, boolean isExpired, String packageById_Name);
-    int countByAccountById_FullnameAndPackageById_NameAndExpiredIs(String accountById_Fullname, boolean isExpired, String packageById_Name);
-    List<AccountPackageEntity> findAllByAccountById_FullnameAndPackageById_Name(Pageable pageable, String accountById_Fullname, String packageById_Name);
-    int countByAccountById_FullnameAndPackageById_Name(String accountById_Fullname, String packageById_Name);
+    List<AccountPackageEntity> findAllByAccountById_FullnameLikeAndPackageById_NameLikeAndExpiredIs(Pageable pageable, String accountById_Fullname, boolean isExpired, String packageById_Name);
+    int countByAccountById_FullnameLikeAndPackageById_NameLikeAndExpiredIs(String accountById_Fullname, boolean isExpired, String packageById_Name);
+    List<AccountPackageEntity> findAllByAccountById_FullnameLikeAndPackageById_NameLike(Pageable pageable, String accountById_Fullname, String packageById_Name);
+    int countByAccountById_FullnameLikeAndPackageById_NameLike(String accountById_Fullname, String packageById_Name);
     List<AccountPackageEntity> findAccountPackageEntitiesByPackageId(int id);
 
 }

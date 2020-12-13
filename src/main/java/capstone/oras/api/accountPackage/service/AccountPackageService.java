@@ -43,11 +43,11 @@ public class AccountPackageService implements IAccountPackageService {
         List<AccountPackageEntity> data;
         int count;
         if (StringUtils.isEmpty(status)) {
-            data = IAccountPackageRepository.findAllByAccountById_FullnameAndPackageById_Name(pageable, name, pkg);
-            count = IAccountPackageRepository.countByAccountById_FullnameAndPackageById_Name(name, pkg);
+            data = IAccountPackageRepository.findAllByAccountById_FullnameLikeAndPackageById_NameLike(pageable, name, pkg);
+            count = IAccountPackageRepository.countByAccountById_FullnameLikeAndPackageById_NameLike(name, pkg);
         } else {
-            data = IAccountPackageRepository.findAllByAccountById_FullnameAndPackageById_NameAndExpiredIs(pageable, name, "Valid".equalsIgnoreCase(status), pkg);
-            count = IAccountPackageRepository.countByAccountById_FullnameAndPackageById_NameAndExpiredIs(name, "Valid".equalsIgnoreCase(status), pkg);
+            data = IAccountPackageRepository.findAllByAccountById_FullnameLikeAndPackageById_NameLikeAndExpiredIs(pageable, name, "Valid".equalsIgnoreCase(status), pkg);
+            count = IAccountPackageRepository.countByAccountById_FullnameLikeAndPackageById_NameLikeAndExpiredIs(name, "Valid".equalsIgnoreCase(status), pkg);
         }
         return new ListAccountPackageModel(count, data);
     }
