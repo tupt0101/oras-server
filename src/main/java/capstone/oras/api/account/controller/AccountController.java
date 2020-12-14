@@ -14,12 +14,9 @@ import capstone.oras.entity.openjob.OpenjobCompanyEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.model.custom.ListAccountModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
-import com.amazonaws.services.xray.model.Http;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -34,13 +31,12 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static capstone.oras.common.Constant.EmailForm.*;
-import static capstone.oras.common.Constant.ORAS_HOST;
+import static capstone.oras.common.Constant.EmailForm.confirmMail;
+import static capstone.oras.common.Constant.EmailForm.resetPasswordMail;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 
@@ -50,7 +46,7 @@ import static capstone.oras.common.Constant.TIME_ZONE;
 public class AccountController {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public PasswordEncoder passwordEncoder;
 
     @Autowired
     IConfirmationTokenRepository confirmationTokenRepository;
@@ -73,6 +69,11 @@ public class AccountController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+    public AccountController(IAccountService accountService, PasswordEncoder passwordEncoder) {
+        this.accountService = accountService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     static class Signup {
         public AccountEntity accountEntity;
         public CompanyEntity companyEntity;
@@ -86,7 +87,7 @@ public class AccountController {
 
     @RequestMapping(value = "/account", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<AccountEntity> createAccount(@RequestBody AccountEntity accountEntity) {
+    public ResponseEntity<AccountEntity> createAccount(@RequestBody AccountEntity accountEntity) {
         if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (accountEntity.getFullname() == null || accountEntity.getFullname().isEmpty()) {
@@ -99,6 +100,7 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
             accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
+            accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
             return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
         }
     }
@@ -106,7 +108,7 @@ public class AccountController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     @ResponseBody
-    ResponseEntity<AccountEntity> signup(@RequestBody Signup signup) throws MessagingException {
+    public ResponseEntity<AccountEntity> signup(@RequestBody Signup signup) throws MessagingException {
         if (signup.accountEntity.getEmail() == null || signup.accountEntity.getEmail().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (signup.accountEntity.getFullname() == null || signup.accountEntity.getFullname().isEmpty()) {
@@ -180,7 +182,7 @@ public class AccountController {
 
     @RequestMapping(value = "/resend-email", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<Integer> resendEmail(@Param("email") String email){
+    public ResponseEntity<Integer> resendEmail(@Param("email") String email){
         try {
             AccountEntity accountEntity = accountService.findAccountByEmail(email);
             ConfirmationToken confirmationToken = new ConfirmationToken(accountEntity);
@@ -223,7 +225,7 @@ public class AccountController {
 
     @RequestMapping(value = "/deactivate-account/{accountId}", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<AccountEntity> deactiveAccount(@PathVariable("accountId") int accountId) {
+    public ResponseEntity<AccountEntity> deactiveAccount(@PathVariable("accountId") int accountId) {
 
         // refactor code de update 1 field thoi dung native query nang cao hieu suat
         AccountEntity accountEntity = accountService.findAccountEntityById(accountId);
@@ -250,7 +252,7 @@ public class AccountController {
 
     @RequestMapping(value = "/activate-by-account-id/{accountId}", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<AccountEntity> activeAccount(@PathVariable("accountId") int accountId) {
+    public ResponseEntity<AccountEntity> activeAccount(@PathVariable("accountId") int accountId) {
         // refactor code de update 1 field thoi dung native query nang cao hieu suat
         AccountEntity accountEntity = accountService.findAccountEntityById(accountId);
         accountEntity.setActive(true);
@@ -259,7 +261,7 @@ public class AccountController {
 
     @RequestMapping(value = "/account", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<AccountEntity> updateAccount(@RequestBody AccountEntity accountEntity) {
+    public ResponseEntity<AccountEntity> updateAccount(@RequestBody AccountEntity accountEntity) {
 
         if (accountEntity.getEmail() == null || accountEntity.getEmail().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
