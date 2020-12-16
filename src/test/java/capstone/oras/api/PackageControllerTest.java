@@ -52,8 +52,9 @@ public class PackageControllerTest {
         testData.setDuration(0);
         // expected return
         ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Duration is invalid");
-        String actualMsg = "";        // mock function
-// call method
+        String actualMsg = "";
+        // mock function
+        // call method
         try {
             ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
         } catch (ResponseStatusException e) {
@@ -88,8 +89,9 @@ public class PackageControllerTest {
         testData.setCurrency(null);
         // expected return
         ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
-        String actualMsg = "";        // mock function
-// call method
+        String actualMsg = "";
+        // mock function
+        // call method
         try {
             ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
         } catch (ResponseStatusException e) {
@@ -106,8 +108,9 @@ public class PackageControllerTest {
         testData.setCurrency("");
         // expected return
         ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
-        String actualMsg = "";        // mock function
-// call method
+        String actualMsg = "";
+        // mock function
+        // call method
         try {
             ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
         } catch (ResponseStatusException e) {
@@ -124,8 +127,9 @@ public class PackageControllerTest {
         testData.setPrice(-10.0);
         // expected return
         ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Price is invalid");
-        String actualMsg = "";        // mock function
-// call method
+        String actualMsg = "";
+        // mock function
+        // call method
         try {
             ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
         } catch (ResponseStatusException e) {
@@ -142,8 +146,9 @@ public class PackageControllerTest {
         testData.setPrice(null);
         // expected return
         ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Price is invalid");
-        String actualMsg = "";        // mock function
-// call method
+        String actualMsg = "";
+        // mock function
+        // call method
         try {
             ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
         } catch (ResponseStatusException e) {
@@ -160,8 +165,9 @@ public class PackageControllerTest {
         testData.setName(null);
         // expected return
         ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
-        String actualMsg = "";        // mock function
-// call method
+        String actualMsg = "";
+        // mock function
+        // call method
         try {
             ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
         } catch (ResponseStatusException e) {
@@ -178,8 +184,9 @@ public class PackageControllerTest {
         testData.setName("");
         // expected return
         ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
-        String actualMsg = "";        // mock function
-// call method
+        String actualMsg = "";
+        // mock function
+        // call method
         try {
             ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
         } catch (ResponseStatusException e) {
@@ -196,8 +203,9 @@ public class PackageControllerTest {
         testData.setNumOfPost(0);
         // expected return
         ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of Post is invalid");
-        String actualMsg = "";        // mock function
-// call method
+        String actualMsg = "";
+        // mock function
+        // call method
         try {
             ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
         } catch (ResponseStatusException e) {
@@ -214,8 +222,9 @@ public class PackageControllerTest {
         testData.setNumOfPost(null);
         // expected return
         ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of Post is invalid");
-        String actualMsg = "";        // mock function
-// call method
+        String actualMsg = "";
+        // mock function
+        // call method
         try {
             ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
         } catch (ResponseStatusException e) {

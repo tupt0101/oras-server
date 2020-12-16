@@ -114,7 +114,25 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered");
         } else if (accountService.findAccountEntityById(signup.accountEntity.getId()) != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
-        } else {
+        } else if (signup.accountEntity.getPhoneNo() == null || signup.accountEntity.getPhoneNo().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
+        }
+
+        else if (signup.companyEntity.getEmail() == null || signup.companyEntity.getEmail().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
+        } else if (signup.companyEntity.getName() == null || signup.companyEntity.getName().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
+        } else if (signup.companyEntity.getTaxCode() == null || signup.companyEntity.getTaxCode().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
+        } else if (signup.companyEntity.getPhoneNo() == null || signup.companyEntity.getPhoneNo().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
+        } else if (signup.companyEntity.getLocation() == null || signup.companyEntity.getLocation().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
+        } else if (companyService.checkCompanyName(signup.companyEntity.getId(), signup.companyEntity.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
+        }
+
+        else {
             signup.accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
             //get openjob token
             CustomUserDetailsService userDetailsService = new CustomUserDetailsService();

@@ -1,14 +1,12 @@
 package capstone.oras.model.custom;
 
-import capstone.oras.entity.CompanyEntity;
-
 import java.util.List;
 
 public class ListCompanyModel {
     Integer total;
-    List<CompanyEntity> data;
+    List<CustomCompanyEntity> data;
 
-    public ListCompanyModel(Integer total, List<CompanyEntity> data) {
+    public ListCompanyModel(Integer total, List<CustomCompanyEntity> data) {
         this.total = total;
         this.data = data;
     }
@@ -21,11 +19,11 @@ public class ListCompanyModel {
         this.total = total;
     }
 
-    public List<CompanyEntity> getData() {
+    public List<CustomCompanyEntity> getData() {
         return data;
     }
 
-    public void setData(List<CompanyEntity> data) {
+    public void setData(List<CustomCompanyEntity> data) {
         this.data = data;
     }
 }

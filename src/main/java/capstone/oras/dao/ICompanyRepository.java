@@ -1,6 +1,7 @@
 package capstone.oras.dao;
 
 import capstone.oras.entity.CompanyEntity;
+import capstone.oras.model.custom.CustomCompanyEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,9 +15,15 @@ import java.util.Optional;
 
 @Repository
 public interface ICompanyRepository extends JpaRepository<CompanyEntity, Integer>, PagingAndSortingRepository<CompanyEntity, Integer> {
-    List<CompanyEntity> findAllByVerifiedAndNameIgnoreCaseLike(Pageable pageable, boolean verified, String name);
+    @Query(value = "SELECT c.*, a.fullname, a.email as account_email, a.create_date FROM company c inner join account a ON a.company_id = c.id WHERE c.name NOT LIKE '%asd%' AND c.verified = true",
+            nativeQuery = true)
+    List<CustomCompanyEntity> asdb(Pageable pageable, boolean verified, String name);
     int countByVerifiedAndNameIgnoreCaseLike(boolean verified, String name);
-    List<CompanyEntity> findAllByNameIgnoreCaseLike(Pageable pageable, String name);
+    @Query(value = "SELECT c, a.fullname, a.email as account_email, a.create_date" +
+            "FROM company c inner join account a ON a.company_id = c.id" +
+            "WHERE c.name NOT LIKE '%:name%'",
+            nativeQuery = true)
+    List<CustomCompanyEntity> findAllByNameIgnoreCaseLike(Pageable pageable, String name);
     int countByNameIgnoreCaseLike(String name);
     Optional<List<CompanyEntity>> findCompanyEntitiesByNameEqualsAndVerifiedEquals(String name, boolean verified);
     Optional<List<CompanyEntity>> findCompanyEntitiesByIdIsNotAndNameEqualsAndVerifiedEquals(Integer id, String name, boolean verified);

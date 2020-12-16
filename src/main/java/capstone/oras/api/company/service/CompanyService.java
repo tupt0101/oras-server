@@ -3,6 +3,7 @@ package capstone.oras.api.company.service;
 import capstone.oras.dao.IAccountRepository;
 import capstone.oras.dao.ICompanyRepository;
 import capstone.oras.entity.CompanyEntity;
+import capstone.oras.model.custom.CustomCompanyEntity;
 import capstone.oras.model.custom.ListCompanyModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -48,12 +49,12 @@ public class CompanyService implements ICompanyService{
     public ListCompanyModel getAllCompanyWithPaging(Pageable pageable, String status, String name) {
         name = "%" + name + "%";
         int count;
-        List<CompanyEntity> data;
+        List<CustomCompanyEntity> data;
         if (StringUtils.isEmpty(status)) {
             data =  ICompanyRepository.findAllByNameIgnoreCaseLike(pageable, name);
             count =  ICompanyRepository.countByNameIgnoreCaseLike(name);
         } else {
-            data = ICompanyRepository.findAllByVerifiedAndNameIgnoreCaseLike(pageable, "Verified".equalsIgnoreCase(status), name);
+            data = ICompanyRepository.asdb(pageable, "Verified".equalsIgnoreCase(status), name);
             count = ICompanyRepository.countByVerifiedAndNameIgnoreCaseLike("Verified".equalsIgnoreCase(status), name);
         }
         return new ListCompanyModel(count, data);
