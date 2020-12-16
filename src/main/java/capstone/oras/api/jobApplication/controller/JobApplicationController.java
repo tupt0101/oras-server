@@ -213,6 +213,7 @@ public class JobApplicationController {
         List<OpenjobJobApplicationEntity> jobApplicationEntityList = Arrays.asList(jobApplicationsList.getBody());
         List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
         JobEntity jobEntity = jobService.getJobById(jobId);
+        jobEntity.setTotalApplication(jobApplicationEntityList.size());
         for (int i = 0; i < jobApplicationEntityList.size(); i++) {
             OpenjobJobApplicationEntity openjobJobApplication = jobApplicationEntityList.get(i);
             JobApplicationEntity jobApplicationEntity = new JobApplicationEntity();
@@ -273,6 +274,7 @@ public class JobApplicationController {
 //
 //        }
 
+        jobService.updateJob(jobEntity);
         return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.createJobApplications(jobApplicationsOras), HttpStatus.OK);
 
 
