@@ -3,6 +3,7 @@ package capstone.oras;
 import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.job.service.IJobService;
+import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.AccountPackageEntity;
 import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.JobEntity;
@@ -84,13 +85,12 @@ public class ScheduleSpringConfig {
             if (job.getExpireDate().isBefore(LocalDateTime.now(TIME_ZONE)) || job.getApplyTo().isBefore(LocalDateTime.now(TIME_ZONE))) {
                 int openjobJobId = job.getOpenjobJobId();
                 //get openjob token
-//        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-                String token = "Bearer " + userDetailsService.getOpenJobToken();
+                String token = CommonUtils.getOjToken();
                 // post job to openjob
                 String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders headers = new HttpHeaders();
-                headers.set("Authorization", token);
+                headers.setBearerAuth(token);
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
                 HttpEntity entity = new HttpEntity(headers);
