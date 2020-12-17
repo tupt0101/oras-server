@@ -21,8 +21,6 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
-
     @Autowired
     private IAccountRepository repo;
 
