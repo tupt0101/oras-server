@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -142,12 +143,19 @@ public class CompanyController {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
-//        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<CompanyEntity> entity = new HttpEntity<>(companyEntity, headers);
         System.out.println(entity.getHeaders());
-        CompanyEntity openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
+        CompanyEntity openJobEntity;
+        try {
+            openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
+        }
+
 //        ResponseEntity<CompanyEntity> openJobEntity = restTemplate.exchange(uri,HttpMethod.POST, entity, CompanyEntity.class);
 
         return new ResponseEntity(openJobEntity, HttpStatus.OK);

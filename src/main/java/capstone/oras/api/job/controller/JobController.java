@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -122,7 +123,13 @@ public class JobController {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity entity = new HttpEntity(headers);
         // close job on openjob
-        restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+        try {
+            restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+        }
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setCreatorId(job.getCreatorId());
         activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
@@ -249,7 +256,14 @@ public class JobController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        OpenjobJobEntity openJobEntity;
+        try {
+            openJobEntity= restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        }
         job.setOpenjobJobId(openJobEntity.getId());
         job.setExpireDate(accountPackageEntity.getValidTo());
         job.setApplyFrom(LocalDateTime.now(TIME_ZONE));
@@ -344,7 +358,13 @@ public class JobController {
 
 
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        try {
+            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        }
         job.setOpenjobJobId(openjobJobEntity.getId());
 //        jobService.updateJob(job);
         return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
@@ -425,7 +445,13 @@ public class JobController {
 
 
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        try {
+            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        }
         job.setOpenjobJobId(openjobJobEntity.getId());
 //        jobService.updateJob(job);
         return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);

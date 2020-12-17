@@ -17,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -95,7 +96,13 @@ public class ScheduleSpringConfig {
                 headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
                 HttpEntity entity = new HttpEntity(headers);
                 // close job on openjob
-                restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+                try {
+                    restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+                } catch (HttpClientErrorException.Unauthorized e) {
+                    CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+                    entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+                    restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+                }
                 ActivityEntity activityEntity = new ActivityEntity();
                 activityEntity.setCreatorId(job.getCreatorId());
                 activityEntity.setTime(LocalDateTime.now(TIME_ZONE));
