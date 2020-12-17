@@ -24,6 +24,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -146,7 +147,14 @@ public class AccountController {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             HttpEntity entity = new HttpEntity(headers);
-            CompanyEntity openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+            CompanyEntity openJobEntity;
+            try {
+                openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+            } catch (HttpClientErrorException.Unauthorized e) {
+                CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+                entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+                openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+            }
             if (openJobEntity == null) {
                 OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
                 openjobCompanyEntity.setAccountId(1);
@@ -173,7 +181,13 @@ public class AccountController {
                 }
                 uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
                 HttpEntity<OpenjobCompanyEntity> httpCompanyEntity = new HttpEntity<>(openjobCompanyEntity, headers);
-                openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
+                try {
+                    openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
+                } catch (HttpClientErrorException.Unauthorized e) {
+                    CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+                    entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+                    openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
+                }
                 signup.companyEntity.setOpenjobCompanyId(openjobCompanyEntity.getId());
             } else {
                 signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
@@ -257,7 +271,13 @@ public class AccountController {
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             HttpEntity entity = new HttpEntity(headers);
             // close job on openjob
-            restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+            try {
+                restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+            } catch (HttpClientErrorException.Unauthorized e) {
+                CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+                entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+                restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+            }
             jobService.closeJob(jobEntity.getId());
         }
         return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);

@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -212,7 +213,14 @@ public class JobService implements IJobService {
         jobDesc.setJd(Jsoup.parse(description).text());
         HttpEntity entity = new HttpEntity(jobDesc, headers);
         // Call process
-        ProcessJdResponse processedJD = restTemplate.postForEntity(uri, entity, ProcessJdResponse.class).getBody();
+        ProcessJdResponse processedJD;
+        try {
+            processedJD = restTemplate.postForEntity(uri, entity, ProcessJdResponse.class).getBody();
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            processedJD = restTemplate.postForEntity(uri, entity, ProcessJdResponse.class).getBody();
+        }
         return processedJD == null ? "" : processedJD.getPrc_jd();
     }
 
