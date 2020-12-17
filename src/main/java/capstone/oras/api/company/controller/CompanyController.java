@@ -4,7 +4,7 @@ package capstone.oras.api.company.controller;
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.CompanyEntity;
-import capstone.oras.model.custom.ListCompanyModel;
+import capstone.oras.model.custom.ListAccountModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -90,7 +90,7 @@ public class CompanyController {
 
     @RequestMapping(value = "/companies-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<ListCompanyModel> getAllCompanyWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+    ResponseEntity<ListAccountModel> getAllCompanyWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
                                                              @RequestParam(value = "page") Integer page,
                                                              @RequestParam(value = "sort") String sort,
                                                              @RequestParam(value = "status") String status,

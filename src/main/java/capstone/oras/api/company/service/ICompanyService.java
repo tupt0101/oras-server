@@ -1,7 +1,7 @@
 package capstone.oras.api.company.service;
 
 import capstone.oras.entity.CompanyEntity;
-import capstone.oras.model.custom.ListCompanyModel;
+import capstone.oras.model.custom.ListAccountModel;
 import org.springframework.data.domain.Pageable;
 
 import javax.mail.MessagingException;
@@ -11,7 +11,7 @@ public interface ICompanyService {
     CompanyEntity createCompany(CompanyEntity companyEntity);
     CompanyEntity updateCompany(CompanyEntity companyEntity);
     List<CompanyEntity> getAllCompany();
-    ListCompanyModel getAllCompanyWithPaging(Pageable pageable, String status, String name);
+    ListAccountModel getAllCompanyWithPaging(Pageable pageable, String status, String name);
     CompanyEntity findCompanyById(int id);
     Integer verifyCompany(int id, String email) throws MessagingException;
     List<CompanyEntity> getAllCompanyWithNameAndIsVerified(String name);

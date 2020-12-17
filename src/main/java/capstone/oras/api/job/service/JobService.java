@@ -81,10 +81,7 @@ public class JobService implements IJobService {
 
     @Override
     public List<JobEntity> getAllPublishedJobByCreatorId(int creatorId) {
-        if (IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED).isPresent()) {
-            return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED).get();
-
-        } else return null;
+        return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED);
     }
 
     @Override
@@ -133,11 +130,11 @@ public class JobService implements IJobService {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
         }
         List<JobEntity> lstJob = IJobRepository.findAllByStatus(PUBLISHED).get();
-        lstJob.sort(Comparator.comparingInt(JobEntity::getId));
         int i = 0;
         for (JobEntity job : lstJob) {
             job.setTotalApplication(lstNoApp.get(i++)[1]);
         }
+        lstJob.sort(Comparator.comparingInt(JobEntity::getId));
         return lstJob;
     }
 
@@ -147,12 +144,12 @@ public class JobService implements IJobService {
         if (lstNoApp.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
         }
-        List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(id, PUBLISHED).get();
-        lstJob.sort(Comparator.comparing(JobEntity::getApplyFrom).reversed());
+        List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(id, PUBLISHED);
         int i = 0;
         for (JobEntity job : lstJob) {
             job.setTotalApplication(lstNoApp.get(i++)[1]);
         }
+        lstJob.sort(Comparator.comparing(JobEntity::getApplyFrom).reversed());
         return lstJob;
     }
 

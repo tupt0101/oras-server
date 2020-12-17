@@ -1,12 +1,13 @@
 package capstone.oras.dao;
 
+import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.CompanyEntity;
-import capstone.oras.model.custom.CustomCompanyEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -15,15 +16,18 @@ import java.util.Optional;
 
 @Repository
 public interface ICompanyRepository extends JpaRepository<CompanyEntity, Integer>, PagingAndSortingRepository<CompanyEntity, Integer> {
-    @Query(value = "SELECT c.*, a.fullname, a.email as account_email, a.create_date FROM company c inner join account a ON a.company_id = c.id WHERE c.name NOT LIKE '%asd%' AND c.verified = true",
-            nativeQuery = true)
-    List<CustomCompanyEntity> asdb(Pageable pageable, boolean verified, String name);
+    @Query(value = "SELECT a " +
+            "from CompanyEntity c left join AccountEntity a " +
+            "on c.id = a.companyId " +
+            "where upper(c.name) like upper(:name) " +
+            "and c.verified = :verified")
+    List<AccountEntity> accountCompanyPagingFilter(Pageable pageable, @Param("verified") boolean verified, @Param("name") String name);
     int countByVerifiedAndNameIgnoreCaseLike(boolean verified, String name);
-    @Query(value = "SELECT c, a.fullname, a.email as account_email, a.create_date" +
-            "FROM company c inner join account a ON a.company_id = c.id" +
-            "WHERE c.name NOT LIKE '%:name%'",
-            nativeQuery = true)
-    List<CustomCompanyEntity> findAllByNameIgnoreCaseLike(Pageable pageable, String name);
+    @Query(value = "SELECT a " +
+            "from CompanyEntity c left join AccountEntity a " +
+            "on c.id = a.companyId " +
+            "where upper(c.name) like upper(:name)")
+    List<AccountEntity> accountCompanyPagingFilterName(Pageable pageable, @Param("name") String name);
     int countByNameIgnoreCaseLike(String name);
     Optional<List<CompanyEntity>> findCompanyEntitiesByNameEqualsAndVerifiedEquals(String name, boolean verified);
     Optional<List<CompanyEntity>> findCompanyEntitiesByIdIsNotAndNameEqualsAndVerifiedEquals(Integer id, String name, boolean verified);
