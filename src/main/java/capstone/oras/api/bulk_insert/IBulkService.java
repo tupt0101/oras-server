@@ -9,4 +9,5 @@ import java.util.List;
 public interface IBulkService {
     Integer signup(List<BulkController.Signup> signups);
     Integer createJob(List<JobEntity> jobs);
+    Integer publishJob(List<Integer> jobId, List<Integer> creatorId);
 }

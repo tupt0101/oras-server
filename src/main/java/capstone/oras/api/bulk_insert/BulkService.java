@@ -12,6 +12,7 @@ import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.CompanyEntity;
 import capstone.oras.entity.JobEntity;
 import capstone.oras.entity.openjob.OpenjobCompanyEntity;
+import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.model.oras_ai.ProcessJdRequest;
 import capstone.oras.model.oras_ai.ProcessJdResponse;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
@@ -27,13 +28,13 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
+import static capstone.oras.common.Constant.JobStatus.DRAFT;
+import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Service
@@ -59,6 +60,7 @@ public class BulkService implements IBulkService {
     private HttpHeaders headers = new HttpHeaders();
     private HttpEntity entity;
     Logger logger = Logger.getLogger(BulkService.class.getName());
+    private final String JOB_URI = "https://openjob-server.herokuapp.com/v1/job-management/job";
 
 
     @Override
@@ -66,7 +68,7 @@ public class BulkService implements IBulkService {
         int res = 0;
         //get openjob token
         CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -106,13 +108,88 @@ public class BulkService implements IBulkService {
         return res;
     }
 
+    @Override
+    public Integer publishJob(List<Integer> jobId, List<Integer> creatorId) {
+        int res = 0;
+        List<JobEntity> listJob = new ArrayList<>();
+        Map<Integer, List<JobEntity>> creatorJobMap = new HashMap<>();
+        for (Integer creator: creatorId) {
+            List<JobEntity> jobByCreator = jobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creator, DRAFT);
+            listJob.addAll(jobByCreator);
+            creatorJobMap.put(creator, jobByCreator);
+        }
+        List<JobEntity> tmpJobList;
+        for (Integer job: jobId) {
+            if (listJob.stream().anyMatch(j -> j.getId() == job)) {
+                continue;
+            }
+            JobEntity jobById = jobRepository.findJobEntitiesByIdEqualsAndStatusEquals(job, DRAFT);
+            listJob.add(jobById);
+            tmpJobList = creatorJobMap.get(jobById.getCreatorId());
+            tmpJobList.add(jobById);
+            creatorJobMap.replace(jobById.getCreatorId(), tmpJobList);
+        }
+        String token = CommonUtils.getOjToken();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        for (Map.Entry entry: creatorJobMap.entrySet()) {
+            int companyId = accountService.findAccountEntityById((Integer) entry.getKey()).getCompanyId();
+            int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
+            for (JobEntity job: (List<JobEntity>) entry.getValue()) {
+                try {
+                    postJob(job, openjobCompanyId);
+                    res++;
+                } catch (Exception e) {
+                    logger.warning(job.getId() + "-" + job.getTitle() + " by ID-" + job.getCreatorId() + ": publishing error");
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        return res;
+    }
+
+    private void postJob(JobEntity job, Integer openjobCompanyId) {
+        OpenjobJobEntity openjobJobEntity;
+        job.setStatus(PUBLISHED);
+        openjobJobEntity = new OpenjobJobEntity();
+        openjobJobEntity.setApplyTo(job.getApplyTo());
+        openjobJobEntity.setAccountId(1);
+        openjobJobEntity.setCategory(job.getCategory());
+        openjobJobEntity.setCompanyId(openjobCompanyId);
+        openjobJobEntity.setCreateDate(job.getCreateDate());
+        openjobJobEntity.setCurrency(job.getCurrency());
+        openjobJobEntity.setDescription(job.getDescription());
+        openjobJobEntity.setJobType(job.getJobType());
+        openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
+        openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
+        openjobJobEntity.setSalaryTo(job.getSalaryTo());
+        openjobJobEntity.setStatus(job.getStatus());
+        openjobJobEntity.setTitle(job.getTitle());
+        openjobJobEntity.setVacancies(job.getVacancies());
+        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
+        openjobJobEntity= restTemplate.postForObject(JOB_URI, entity, OpenjobJobEntity.class);
+        if (openjobJobEntity != null) {
+            job.setOpenjobJobId(openjobJobEntity.getId());
+        }
+        job.setExpireDate(LocalDateTime.of(2021,1,1,0,0));
+        job.setApplyFrom(LocalDateTime.now(TIME_ZONE));
+        ActivityEntity activityEntity = new ActivityEntity();
+        activityEntity.setCreatorId(job.getCreatorId());
+        job = jobService.updateJob(job);
+        activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
+        activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
+        activityEntity.setJobId(job.getId());
+        activityService.createActivity(activityEntity);
+    }
+
     private JobEntity saveJob(JobEntity job) {
         jobValidation(job);
-//        try {
-//            job.setProcessedJd(this.processJd(job.getDescription()));
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
+        try {
+            job.setProcessedJd(this.processJd(job.getDescription()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         job.setCreateDate(randomDatetimeBetween());
         job.setTotalApplication(0);
         return jobRepository.save(job);
