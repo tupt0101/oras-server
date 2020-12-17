@@ -110,9 +110,7 @@ public class JobApplicationService implements IJobApplicationService {
 
     @Override
     public JobApplicationEntity findJobApplicationByJobIdAndCandidateId(int jobId, int candidateId) {
-        if (IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId).isPresent()) {
-            return IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId).get();
-        } else return null;
+        return IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId);
     }
 
     @Override
