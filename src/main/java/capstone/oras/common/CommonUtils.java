@@ -1,5 +1,6 @@
 package capstone.oras.common;
 
+import capstone.oras.oauth2.controller.TokenDto;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
@@ -19,6 +21,19 @@ import java.util.List;
 import static capstone.oras.common.Constant.JobStatus.*;
 
 public class CommonUtils {
+    private static String ojToken;
+
+    public static String getOjToken() {
+        if (StringUtils.isEmpty(ojToken)) {
+            ojToken = getOpenJobToken();
+        }
+        return ojToken;
+    }
+
+    public static void setOjToken(String ojToken) {
+        CommonUtils.ojToken = ojToken;
+    }
+
     public static Date convertLocalDateTimeToDate(LocalDate localDate) {
         return Date.valueOf(localDate);
     }
@@ -63,5 +78,17 @@ public class CommonUtils {
                 break;
         }
         return act;
+    }
+
+    public static String getOpenJobToken() {
+        final String uri = "https://openjob-server.herokuapp.com/login?username=admin@gmail.com&password=password";
+        RestTemplate restTemplate = new RestTemplate();
+        TokenDto dto;
+        try {
+            dto = restTemplate.getForObject(uri, TokenDto.class);
+            return dto.getToken();
+        } catch (Exception e) {
+            return "";
+        }
     }
 }

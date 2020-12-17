@@ -111,13 +111,13 @@ public class JobController {
         int openjobJobId = job.getOpenjobJobId();
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         // post job to openjob
         String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
         System.out.println(uri);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity entity = new HttpEntity(headers);
@@ -240,12 +240,12 @@ public class JobController {
         openjobJobEntity.setVacancies(job.getVacancies());
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         // post job to openjob
         String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
@@ -333,12 +333,12 @@ public class JobController {
 
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         // post job to openjob
         String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
@@ -414,12 +414,12 @@ public class JobController {
 
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         // post job to openjob
         String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
@@ -502,12 +502,12 @@ public class JobController {
 //
 //        //get openjob token
 ////        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-//        String token = "Bearer " + userDetailsService.getOpenJobToken();
+//        String token = CommonUtils.getOjToken();
 //        // post job to openjob
 //        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
 //        RestTemplate restTemplate = new RestTemplate();
 //        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", token);
+//        headers.setBearerAuth(token);
 //        headers.setContentType(MediaType.APPLICATION_JSON);
 //        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 //
@@ -588,12 +588,12 @@ public class JobController {
 //
 //        //get openjob token
 ////        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-//        String token = "Bearer " + userDetailsService.getOpenJobToken();
+//        String token = CommonUtils.getOjToken();
 //        // post job to openjob
 //        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
 //        RestTemplate restTemplate = new RestTemplate();
 //        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", token);
+//        headers.setBearerAuth(token);
 //        headers.setContentType(MediaType.APPLICATION_JSON);
 //        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 //

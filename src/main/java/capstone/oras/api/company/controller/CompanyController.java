@@ -136,12 +136,12 @@ public class CompanyController {
         }
         //get openjob token
         CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         // post company to openjob
         String uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        headers.setBearerAuth(token);
 //        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
