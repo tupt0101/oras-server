@@ -3,6 +3,7 @@ package capstone.oras.api.company.controller;
 
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.common.CommonUtils;
+import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.CompanyEntity;
 import capstone.oras.model.custom.ListAccountModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
@@ -114,6 +115,11 @@ public class CompanyController {
         } catch (MessagingException e) {
             throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
         }
+    }
+    @RequestMapping(value = "/company/account-company/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<AccountEntity> getAccountCompany(@PathVariable("id") Integer id) {
+        return new ResponseEntity<>(companyService.getAccountCompany(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/company-openjob", method = RequestMethod.POST)
