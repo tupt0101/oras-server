@@ -11,10 +11,11 @@ import java.util.List;
 public interface ICompanyService {
     CompanyEntity createCompany(CompanyEntity companyEntity);
     CompanyEntity updateCompany(CompanyEntity companyEntity);
+    CompanyEntity updateCompanyByAdmin(CompanyEntity companyEntity) throws MessagingException;
     List<CompanyEntity> getAllCompany();
     ListAccountModel getAllCompanyWithPaging(Pageable pageable, String status, String name);
     CompanyEntity findCompanyById(int id);
-    Integer verifyCompany(int id, String email) throws MessagingException;
+    void verifyCompany(int id, String email) throws MessagingException;
     List<CompanyEntity> getAllCompanyWithNameAndIsVerified(String name);
     Boolean checkCompanyName(Integer id, String name);
     AccountEntity getAccountCompany(int id);

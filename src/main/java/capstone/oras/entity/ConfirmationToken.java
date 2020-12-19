@@ -37,4 +37,36 @@ public class ConfirmationToken {
         this.createDate = LocalDateTime.now(TIME_ZONE);
         confirmationToken = UUID.randomUUID().toString();
     }
+
+    public long getTokenid() {
+        return tokenid;
+    }
+
+    public void setTokenid(long tokenid) {
+        this.tokenid = tokenid;
+    }
+
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public AccountEntity getUser() {
+        return user;
+    }
+
+    public void setUser(AccountEntity user) {
+        this.user = user;
+    }
 }

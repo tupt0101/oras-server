@@ -18,7 +18,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 
-import static capstone.oras.common.Constant.EmailForm.VERIFY_COMPANY_NOTI;
+import static capstone.oras.common.Constant.EmailForm.*;
 
 @Service
 public class CompanyService implements ICompanyService{
@@ -38,6 +38,37 @@ public class CompanyService implements ICompanyService{
     @Override
     public CompanyEntity updateCompany(CompanyEntity companyEntity) {
         return ICompanyRepository.save(companyEntity);
+    }
+
+    @Override
+    public CompanyEntity updateCompanyByAdmin(CompanyEntity companyEntity) throws MessagingException {
+        String toEmail = getAccountCompany(companyEntity.getId()).getEmail();
+        CompanyEntity current = findCompanyById(companyEntity.getId());
+        if (current == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company doesn't exist");
+        }
+        CompanyEntity raw = new CompanyEntity();
+        raw.setName(current.getName());
+        raw.setEmail(current.getEmail());
+        raw.setPhoneNo(current.getPhoneNo());
+        raw.setLocation(current.getLocation());
+        raw.setDescription(current.getDescription());
+        if (StringUtils.isEmpty(companyEntity.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
+        }
+        if (StringUtils.isEmpty(companyEntity.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
+        }
+        if (StringUtils.isEmpty(companyEntity.getPhoneNo())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone number is a required field");
+        }
+        if (StringUtils.isEmpty(companyEntity.getLocation())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
+        }
+        CompanyEntity ret;
+        ret = ICompanyRepository.save(companyEntity);
+        this.sendMail(toEmail, "Your company information has been changed", updateCompanyNoti(companyEntity, raw));
+        return ret;
     }
 
     @Override
@@ -62,7 +93,7 @@ public class CompanyService implements ICompanyService{
 
     @Override
     public CompanyEntity findCompanyById(int id) {
-        if (ICompanyRepository.findById(id).isPresent()) {
+        if (ICompanyRepository.existsById(id)) {
             return ICompanyRepository.findById(id).get();
         } else return null;
     }
@@ -83,13 +114,13 @@ public class CompanyService implements ICompanyService{
     }
 
     @Override
-    public Integer verifyCompany(int id, String email) throws MessagingException {
+    public void verifyCompany(int id, String email) throws MessagingException {
         if (!ICompanyRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company does not exist.");
         }
+        ICompanyRepository.verifyCompanyPass(id);
         iAccountRepository.updateActiveByVerifyingCompany(id);
         this.sendMail(email, "Complete Registration!",VERIFY_COMPANY_NOTI);
-        return ICompanyRepository.verifyCompanyPass(id);
     }
 
     @Override
