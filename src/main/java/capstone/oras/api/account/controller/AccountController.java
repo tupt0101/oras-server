@@ -2,7 +2,6 @@ package capstone.oras.api.account.controller;
 
 import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.api.company.service.ICompanyService;
-import capstone.oras.api.email.service.EmailSenderService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.IConfirmationTokenRepository;
@@ -53,9 +52,6 @@ public class AccountController {
     IConfirmationTokenRepository confirmationTokenRepository;
 
     @Autowired
-    private EmailSenderService emailSenderService;
-
-    @Autowired
     private JavaMailSender javaMailSender;
 
     @Autowired
@@ -66,9 +62,6 @@ public class AccountController {
 
     @Autowired
     private IJobService jobService;
-
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
 
 
     static class Signup {
@@ -326,6 +319,16 @@ public class AccountController {
     @ResponseBody
     public ResponseEntity<Integer> customUpdateAccount(@RequestBody AccountEntity accountEntity) {
         return new ResponseEntity<>(accountService.updateFullNameAndPhoneNo(accountEntity), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/account-by-admin", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Integer> updateAccountByAdmin(@RequestBody AccountEntity accountEntity) {
+        try {
+            return new ResponseEntity<>(accountService.updateFullNameAndPhoneNoByAdmin(accountEntity), HttpStatus.OK);
+        } catch (MessagingException e) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
+        }
     }
 
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)

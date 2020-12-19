@@ -67,7 +67,16 @@ public class CompanyController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
         }
         return new ResponseEntity<>(companyService.updateCompany(companyEntity), HttpStatus.OK);
+    }
 
+    @RequestMapping(value = "/company-by-admin", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<CompanyEntity> updateCompanyByAdmin(@RequestBody CompanyEntity companyEntity) {
+        try {
+            return new ResponseEntity<>(companyService.updateCompanyByAdmin(companyEntity), HttpStatus.OK);
+        } catch (MessagingException e) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
+        }
     }
 
     @RequestMapping(value = "/check-company-name", method = RequestMethod.GET)
@@ -109,9 +118,9 @@ public class CompanyController {
 
     @RequestMapping(value = "/company/verify", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<Integer> verifyCompany(@Param("id") int id, @Param("email") String email) {
+    void verifyCompany(@Param("id") int id, @Param("email") String email) {
         try {
-            return new ResponseEntity<>(companyService.verifyCompany(id, email), HttpStatus.OK);
+            companyService.verifyCompany(id, email);
         } catch (MessagingException e) {
             throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
         }
