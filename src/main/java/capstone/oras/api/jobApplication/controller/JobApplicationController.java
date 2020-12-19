@@ -5,23 +5,20 @@ import capstone.oras.api.candidate.service.ICandidateService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.IJobApplicationService;
 import capstone.oras.common.CommonUtils;
-import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
-import capstone.oras.entity.JobEntity;
-import capstone.oras.entity.openjob.OpenjobAccountEntity;
-import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.model.custom.ListJobApplicationModel;
-import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
 import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
 import static capstone.oras.common.Constant.TIME_ZONE;
@@ -190,90 +187,89 @@ public class JobApplicationController {
     @RequestMapping(value = "/job-applications-openjob/{jobId}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationMulti(@PathVariable("jobId") int jobId) {
-        //get openjob token
-        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
-        // post company to openjob
-        Integer ojId = jobService.getJobById(jobId).getOpenjobJobId();
-        if (ojId == null) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This job have not published yet");
-        }
-        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + ojId;
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
-        //        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
-        ResponseEntity<OpenjobJobApplicationEntity[]> jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
-        if (jobApplicationsList.getBody() == null) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No application");
-        }
-        List<OpenjobJobApplicationEntity> jobApplicationEntityList = Arrays.asList(jobApplicationsList.getBody());
-        List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
-        JobEntity jobEntity = jobService.getJobById(jobId);
-        for (int i = 0; i < jobApplicationEntityList.size(); i++) {
-            OpenjobJobApplicationEntity openjobJobApplication = jobApplicationEntityList.get(i);
-            JobApplicationEntity jobApplicationEntity = new JobApplicationEntity();
-            int candidateId;
-            // check to see if candidate already in system by email
-            if (candidateService.findCandidatesByEmail(openjobJobApplication.getAccountByAccountId().getEmail()) == null) {
-                OpenjobAccountEntity openjobAccountEntity = openjobJobApplication.getAccountByAccountId();
-                CandidateEntity candidateEntity = new CandidateEntity();
-//                candidateEntity.setId(openjobAccountEntity.getId());
-                candidateEntity.setPhoneNo(openjobAccountEntity.getPhoneNo());
-                candidateEntity.setEmail(openjobAccountEntity.getEmail());
-                candidateEntity.setFullname(openjobAccountEntity.getFullname());
-                candidateEntity.setAddress(openjobAccountEntity.getAddress());
-                candidateId = candidateService.createCandidate(candidateEntity).getId();
-                jobApplicationEntity.setCandidateId(candidateId);
-            } else {
-                candidateId = candidateService.findCandidatesByEmail(openjobJobApplication.getAccountByAccountId().getEmail()).get(0).getId();
-                jobApplicationEntity.setCandidateId(candidateId);
-
-            }
-
-
-            //need to check if application already exist(check by candidateID and jobId if exist bot
-            JobApplicationEntity tempJobApplication = jobApplicationService.findJobApplicationByJobIdAndCandidateId(jobId, candidateId);
-            if (tempJobApplication == null) {
-                jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
-//            jobApplicationEntity.setCandidateId(openjobJobApplication.getAccountId());
-                jobApplicationEntity.setCv(openjobJobApplication.getCv());
-                jobApplicationEntity.setJobId(jobId);
-                jobApplicationEntity.setSource("openjob");
-                jobApplicationEntity.setMatchingRate(0.0);
-//               jobApplicationEntity.setId(openjobJobApplication.getId());
-                jobApplicationEntity.setStatus("Applied");
-                jobApplicationsOras.add(jobApplicationEntity);
-            } else if (!tempJobApplication.getApplyDate().isEqual(openjobJobApplication.getApplyAt())) {
-                tempJobApplication.setApplyDate(openjobJobApplication.getApplyAt());
-                tempJobApplication.setCv(openjobJobApplication.getCv());
-                tempJobApplication.setMatchingRate(0.0);
-                jobApplicationsOras.add(tempJobApplication);
-            }
-
-
-        }
-//        for (int i = 0; i < accountEntityList.size(); i++) {
-//            OpenjobAccountEntity openjobAccountEntity = accountEntityList.get(i);
-//            CandidateEntity candidateEntity = new CandidateEntity();
-//            candidateEntity.setId(openjobAccountEntity.getId());
-//            candidateEntity.setPhoneNo(openjobAccountEntity.getPhoneNo());
-//            candidateEntity.setEmail(openjobAccountEntity.getEmail());
-//            candidateEntity.setFullname(openjobAccountEntity.getFullname());
-//            candidateEntity.setAddress(openjobAccountEntity.getAddress());
-//            candidateService.createCandidate(candidateEntity);
+//        //get openjob token
+//        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
+//        String token = "Bearer " + userDetailsService.getOpenJobToken();
+//        // post company to openjob
+//        Integer ojId = jobService.getJobById(jobId).getOpenjobJobId();
+//        if (ojId == null) {
+//            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This job have not published yet");
 //        }
-
-
+//        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + ojId;
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", token);
+//        //        headers.setBearerAuth(token);
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+//        HttpEntity<String> entity = new HttpEntity<String>(headers);
+//        ResponseEntity<OpenjobJobApplicationEntity[]> jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
+//        if (jobApplicationsList.getBody() == null) {
+//            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No application");
+//        }
+//        List<OpenjobJobApplicationEntity> jobApplicationEntityList = Arrays.asList(jobApplicationsList.getBody());
+//        List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
+//        JobEntity jobEntity = jobService.getJobById(jobId);
 //        for (int i = 0; i < jobApplicationEntityList.size(); i++) {
+//            OpenjobJobApplicationEntity openjobJobApplication = jobApplicationEntityList.get(i);
+//            JobApplicationEntity jobApplicationEntity = new JobApplicationEntity();
+//            int candidateId;
+//            // check to see if candidate already in system by email
+//            if (candidateService.findCandidatesByEmail(openjobJobApplication.getAccountByAccountId().getEmail()) == null) {
+//                OpenjobAccountEntity openjobAccountEntity = openjobJobApplication.getAccountByAccountId();
+//                CandidateEntity candidateEntity = new CandidateEntity();
+////                candidateEntity.setId(openjobAccountEntity.getId());
+//                candidateEntity.setPhoneNo(openjobAccountEntity.getPhoneNo());
+//                candidateEntity.setEmail(openjobAccountEntity.getEmail());
+//                candidateEntity.setFullname(openjobAccountEntity.getFullname());
+//                candidateEntity.setAddress(openjobAccountEntity.getAddress());
+//                candidateId = candidateService.createCandidate(candidateEntity).getId();
+//                jobApplicationEntity.setCandidateId(candidateId);
+//            } else {
+//                candidateId = candidateService.findCandidatesByEmail(openjobJobApplication.getAccountByAccountId().getEmail()).get(0).getId();
+//                jobApplicationEntity.setCandidateId(candidateId);
+//
+//            }
+//
+//
+//            //need to check if application already exist(check by candidateID and jobId if exist bot
+//            JobApplicationEntity tempJobApplication = jobApplicationService.findJobApplicationByJobIdAndCandidateId(jobId, candidateId);
+//            if (tempJobApplication == null) {
+//                jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
+////            jobApplicationEntity.setCandidateId(openjobJobApplication.getAccountId());
+//                jobApplicationEntity.setCv(openjobJobApplication.getCv());
+//                jobApplicationEntity.setJobId(jobId);
+//                jobApplicationEntity.setSource("openjob");
+//                jobApplicationEntity.setMatchingRate(0.0);
+////               jobApplicationEntity.setId(openjobJobApplication.getId());
+//                jobApplicationEntity.setStatus("Applied");
+//                jobApplicationsOras.add(jobApplicationEntity);
+//            } else if (!tempJobApplication.getApplyDate().isEqual(openjobJobApplication.getApplyAt())) {
+//                tempJobApplication.setApplyDate(openjobJobApplication.getApplyAt());
+//                tempJobApplication.setCv(openjobJobApplication.getCv());
+//                tempJobApplication.setMatchingRate(0.0);
+//                jobApplicationsOras.add(tempJobApplication);
+//            }
 //
 //
 //        }
-
-        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.createJobApplications(jobApplicationsOras), HttpStatus.OK);
+////        for (int i = 0; i < accountEntityList.size(); i++) {
+////            OpenjobAccountEntity openjobAccountEntity = accountEntityList.get(i);
+////            CandidateEntity candidateEntity = new CandidateEntity();
+////            candidateEntity.setId(openjobAccountEntity.getId());
+////            candidateEntity.setPhoneNo(openjobAccountEntity.getPhoneNo());
+////            candidateEntity.setEmail(openjobAccountEntity.getEmail());
+////            candidateEntity.setFullname(openjobAccountEntity.getFullname());
+////            candidateEntity.setAddress(openjobAccountEntity.getAddress());
+////            candidateService.createCandidate(candidateEntity);
+////        }
+//
+//
+////        for (int i = 0; i < jobApplicationEntityList.size(); i++) {
+////
+////
+////        }
+        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.createJobApplications(jobId), HttpStatus.OK);
 
 
 //        return new ResponseEntity<List<JobApplicationEntity>>(jobApplicationService.getAllJobApplication(), HttpStatus.OK);

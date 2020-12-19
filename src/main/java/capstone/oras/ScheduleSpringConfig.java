@@ -3,6 +3,7 @@ package capstone.oras;
 import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.job.service.IJobService;
+import capstone.oras.api.jobApplication.service.JobApplicationService;
 import capstone.oras.entity.AccountPackageEntity;
 import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.JobEntity;
@@ -37,6 +38,9 @@ public class ScheduleSpringConfig {
 
     @Autowired
     IActivityService activityService;
+
+    @Autowired
+    JobApplicationService jobApplicationService;
 
     @Autowired
     IJobService jobService;
@@ -110,5 +114,13 @@ public class ScheduleSpringConfig {
             }
         }
     }
-
+    @Scheduled(fixedRate = 86400000)
+    public void scanJobApplication() {
+        List<JobEntity> jobEntities = jobService.getAllPublishedJob();
+        for (JobEntity job : jobEntities) {
+            if (job.getExpireDate().isBefore(LocalDateTime.now(TIME_ZONE)) || job.getApplyTo().isBefore(LocalDateTime.now(TIME_ZONE))) {
+                jobApplicationService.createJobApplications(job.getId());
+            }
+        }
+    }
 }
