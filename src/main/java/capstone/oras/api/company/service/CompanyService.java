@@ -92,6 +92,11 @@ public class CompanyService implements ICompanyService{
         return ICompanyRepository.verifyCompanyPass(id);
     }
 
+    @Override
+    public AccountEntity getAccountCompany(int id) {
+        return ICompanyRepository.accountCompanyById(id);
+    }
+
     public void sendMail(String email, String subject, String text) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         message.setSubject(subject);

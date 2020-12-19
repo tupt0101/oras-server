@@ -28,6 +28,11 @@ public interface ICompanyRepository extends JpaRepository<CompanyEntity, Integer
             "on c.id = a.companyId " +
             "where upper(c.name) like upper(:name)")
     List<AccountEntity> accountCompanyPagingFilterName(Pageable pageable, @Param("name") String name);
+    @Query(value = "SELECT a " +
+            "from CompanyEntity c left join AccountEntity a " +
+            "on c.id = a.companyId " +
+            "where c.id = :id")
+    AccountEntity accountCompanyById(@Param("id") int id);
     int countByNameIgnoreCaseLike(String name);
     Optional<List<CompanyEntity>> findCompanyEntitiesByNameEqualsAndVerifiedEquals(String name, boolean verified);
     Optional<List<CompanyEntity>> findCompanyEntitiesByIdIsNotAndNameEqualsAndVerifiedEquals(Integer id, String name, boolean verified);
