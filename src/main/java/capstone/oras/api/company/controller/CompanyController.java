@@ -3,8 +3,9 @@ package capstone.oras.api.company.controller;
 
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.common.CommonUtils;
+import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.CompanyEntity;
-import capstone.oras.model.custom.ListCompanyModel;
+import capstone.oras.model.custom.ListAccountModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -65,7 +67,16 @@ public class CompanyController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
         }
         return new ResponseEntity<>(companyService.updateCompany(companyEntity), HttpStatus.OK);
+    }
 
+    @RequestMapping(value = "/company-by-admin", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<CompanyEntity> updateCompanyByAdmin(@RequestBody CompanyEntity companyEntity) {
+        try {
+            return new ResponseEntity<>(companyService.updateCompanyByAdmin(companyEntity), HttpStatus.OK);
+        } catch (MessagingException e) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
+        }
     }
 
     @RequestMapping(value = "/check-company-name", method = RequestMethod.GET)
@@ -90,7 +101,7 @@ public class CompanyController {
 
     @RequestMapping(value = "/companies-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<ListCompanyModel> getAllCompanyWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+    ResponseEntity<ListAccountModel> getAllCompanyWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
                                                              @RequestParam(value = "page") Integer page,
                                                              @RequestParam(value = "sort") String sort,
                                                              @RequestParam(value = "status") String status,
@@ -107,12 +118,17 @@ public class CompanyController {
 
     @RequestMapping(value = "/company/verify", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<Integer> verifyCompany(@Param("id") int id, @Param("email") String email) {
+    void verifyCompany(@Param("id") int id, @Param("email") String email) {
         try {
-            return new ResponseEntity<>(companyService.verifyCompany(id, email), HttpStatus.OK);
+            companyService.verifyCompany(id, email);
         } catch (MessagingException e) {
             throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
         }
+    }
+    @RequestMapping(value = "/company/account-company/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    ResponseEntity<AccountEntity> getAccountCompany(@PathVariable("id") Integer id) {
+        return new ResponseEntity<>(companyService.getAccountCompany(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/company-openjob", method = RequestMethod.POST)
@@ -136,18 +152,25 @@ public class CompanyController {
         }
         //get openjob token
         CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         // post company to openjob
         String uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
-//        headers.setBearerAuth(token);
+        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<CompanyEntity> entity = new HttpEntity<>(companyEntity, headers);
         System.out.println(entity.getHeaders());
-        CompanyEntity openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
+        CompanyEntity openJobEntity;
+        try {
+            openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
+        }
+
 //        ResponseEntity<CompanyEntity> openJobEntity = restTemplate.exchange(uri,HttpMethod.POST, entity, CompanyEntity.class);
 
         return new ResponseEntity(openJobEntity, HttpStatus.OK);

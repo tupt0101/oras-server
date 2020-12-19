@@ -1,5 +1,6 @@
 package capstone.oras;
 
+import capstone.oras.common.CommonUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,12 +15,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableResourceServer
 @EnableSwagger2
 public class OrasApplication {
-	@Bean
-	public PasswordEncoder getPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 //		SpringApplication app = new SpringApplication(OrasApplication.class);
 //		String port = System.getenv("PORT");
 //		if (port != null){
@@ -27,8 +28,9 @@ public class OrasApplication {
 //		}
 //		app.setDefaultProperties(Collections.singletonMap("server.port",port));
 //		app.run();
-		SpringApplication.run(OrasApplication.class, args);
-	}
+        CommonUtils.getOjToken();
+        SpringApplication.run(OrasApplication.class, args);
+    }
 
 // 2	@Bean
 //	public EmbeddedServletContainerCustomizer containerCustomizer() {

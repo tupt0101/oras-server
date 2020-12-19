@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -36,6 +37,12 @@ public class JobService implements IJobService {
     private ICategoryRepository iCategoryRepository;
     @Autowired
     private IAccountService accountService;
+
+    @Autowired
+    public JobService(capstone.oras.dao.IJobRepository IJobRepository, IAccountService accountService) {
+        this.IJobRepository = IJobRepository;
+        this.accountService = accountService;
+    }
 
     RestTemplate restTemplate = CommonUtils.initRestTemplate();
 
@@ -75,10 +82,7 @@ public class JobService implements IJobService {
 
     @Override
     public List<JobEntity> getAllPublishedJobByCreatorId(int creatorId) {
-        if (IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED).isPresent()) {
-            return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED).get();
-
-        } else return null;
+        return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED);
     }
 
     @Override
@@ -122,31 +126,15 @@ public class JobService implements IJobService {
 
     @Override
     public List<JobEntity> getOpenJob() {
-        List<Integer[]> lstNoApp = IJobRepository.findEntityAndTotalApplication();
-        if (lstNoApp.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
-        }
-        List<JobEntity> lstJob = IJobRepository.findAllByStatus(PUBLISHED).get();
-        lstJob.sort(Comparator.comparingInt(JobEntity::getId));
-        int i = 0;
-        for (JobEntity job : lstJob) {
-            job.setTotalApplication(lstNoApp.get(i++)[1]);
-        }
+        List<JobEntity> lstJob = IJobRepository.findAllByStatus(PUBLISHED);
+        lstJob.sort(Comparator.comparing(JobEntity::getApplyFrom).reversed());
         return lstJob;
     }
 
     @Override
     public List<JobEntity> getJobByCreatorId(int id) {
-        List<Integer[]> lstNoApp = IJobRepository.findEntityAndTotalApplication(id);
-        if (lstNoApp.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
-        }
-        List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(id, PUBLISHED).get();
+        List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(id, PUBLISHED);
         lstJob.sort(Comparator.comparing(JobEntity::getApplyFrom).reversed());
-        int i = 0;
-        for (JobEntity job : lstJob) {
-            job.setTotalApplication(lstNoApp.get(i++)[1]);
-        }
         return lstJob;
     }
 
@@ -225,7 +213,14 @@ public class JobService implements IJobService {
         jobDesc.setJd(Jsoup.parse(description).text());
         HttpEntity entity = new HttpEntity(jobDesc, headers);
         // Call process
-        ProcessJdResponse processedJD = restTemplate.postForEntity(uri, entity, ProcessJdResponse.class).getBody();
+        ProcessJdResponse processedJD;
+        try {
+            processedJD = restTemplate.postForEntity(uri, entity, ProcessJdResponse.class).getBody();
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            processedJD = restTemplate.postForEntity(uri, entity, ProcessJdResponse.class).getBody();
+        }
         return processedJD == null ? "" : processedJD.getPrc_jd();
     }
 
@@ -253,6 +248,15 @@ public class JobService implements IJobService {
         }
         if (job.getSalaryFrom() == null || job.getSalaryTo() == null || job.getSalaryFrom() <= 0 || job.getSalaryTo() < job.getSalaryFrom()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary range is invalid");
+        }
+        if (StringUtils.isEmpty(job.getDescription())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description is a required field");
+        }
+        if (StringUtils.isEmpty(job.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is a required field");
+        }
+        if (job.getSalaryHidden() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Salary hidden is a required field");
         }
         if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");

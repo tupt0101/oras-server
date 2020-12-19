@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -53,9 +54,16 @@ public class JobController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+    @Autowired
+    public JobController(IJobService jobService, IActivityService activityService) {
+        this.jobService = jobService;
+        this.activityService = activityService;
+    }
+
+
     @RequestMapping(value = "/jobs", method = RequestMethod.GET)
     @ResponseBody
-    List<JobEntity> getAllJob() {
+    public List<JobEntity> getAllJob() {
         List<JobEntity> lst = jobService.getAllJob();
         if (!CollectionUtils.isEmpty(lst)) {
             lst.sort(Comparator.comparingInt(JobEntity::getId));
@@ -65,7 +73,7 @@ public class JobController {
 
     @RequestMapping(value = "/jobs-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<ListJobModel> getAllJobWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+    public ResponseEntity<ListJobModel> getAllJobWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
                                                      @RequestParam(value = "page") Integer page,
                                                      @RequestParam(value = "sort") String sort,
                                                      @RequestParam(value = "title") String title,
@@ -77,7 +85,7 @@ public class JobController {
 
     @PostMapping(value = "/job", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<JobEntity> createJob(@RequestBody JobEntity job) {
+    public ResponseEntity<JobEntity> createJob(@RequestBody JobEntity job) {
         JobEntity jobEntity = jobService.createJob(job);
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setCreatorId(job.getCreatorId());
@@ -90,13 +98,13 @@ public class JobController {
 
     @RequestMapping(value = "/job", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<JobEntity> updateJob(@RequestBody JobEntity job) {
+    public ResponseEntity<JobEntity> updateJob(@RequestBody JobEntity job) {
         return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job/{id}/close", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<JobEntity> closeJob(@PathVariable("id") int id) {
+    public ResponseEntity<JobEntity> closeJob(@PathVariable("id") int id) {
         if (jobService.getJobById(id) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to update");
         }
@@ -104,18 +112,24 @@ public class JobController {
         int openjobJobId = job.getOpenjobJobId();
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         // post job to openjob
         String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
         System.out.println(uri);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity entity = new HttpEntity(headers);
         // close job on openjob
-        restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+        try {
+            restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+        }
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setCreatorId(job.getCreatorId());
         activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
@@ -130,38 +144,38 @@ public class JobController {
 
     @RequestMapping(value = "/job/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<JobEntity> getJobById(@PathVariable("id") int id) {
+    public ResponseEntity<JobEntity> getJobById(@PathVariable("id") int id) {
         return new ResponseEntity<JobEntity>(jobService.getJobById(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/open-jobs", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllOpenJob() {
+    public ResponseEntity<List<JobEntity>> getAllOpenJob() {
         return new ResponseEntity<List<JobEntity>>(jobService.getOpenJob(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/open-job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
+    public ResponseEntity<List<JobEntity>> getJobByCreatorId(@PathVariable("id") int id) {
         return new ResponseEntity<>(jobService.getJobByCreatorId(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/closed-published-job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllClosedAndPublishedJobByCreatorId(@PathVariable("id") int id) {
+    public ResponseEntity<List<JobEntity>> getAllClosedAndPublishedJobByCreatorId(@PathVariable("id") int id) {
         return new ResponseEntity<List<JobEntity>>(jobService.getClosedAndPublishedJobByCreatorId(id), HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobEntity>> getAllJobByCreatorId(@PathVariable("id") int id) {
+    public ResponseEntity<List<JobEntity>> getAllJobByCreatorId(@PathVariable("id") int id) {
         return new ResponseEntity<List<JobEntity>>(jobService.getAllJobByCreatorId(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job-by-creator-id", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<ListJobModel> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,
+    public ResponseEntity<ListJobModel> getAllJobByCreatorIdWithPaging(@RequestParam("id") int id,
                                                                    @RequestParam(value = "numOfElement") Integer numOfElement,
                                                                    @RequestParam(value = "page") Integer page,
                                                                    @RequestParam(value = "sort") String sort,
@@ -175,7 +189,7 @@ public class JobController {
 
     @RequestMapping(value = "/job/{id}/extend/{date}", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id, @PathVariable("date") int date) {
+    public ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id, @PathVariable("date") int date) {
         if (jobService.getJobById(id) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
         }
@@ -188,7 +202,7 @@ public class JobController {
 
     @RequestMapping(value = "/job/{id}/publish", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
+    public ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id) {
         JobEntity job = jobService.getJobById(id);
         if (job == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
@@ -233,16 +247,23 @@ public class JobController {
         openjobJobEntity.setVacancies(job.getVacancies());
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         // post job to openjob
         String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        OpenjobJobEntity openJobEntity;
+        try {
+            openJobEntity= restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        }
         job.setOpenjobJobId(openJobEntity.getId());
         job.setExpireDate(accountPackageEntity.getValidTo());
         job.setApplyFrom(LocalDateTime.now(TIME_ZONE));
@@ -261,7 +282,7 @@ public class JobController {
 
     @PostMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<JobEntity> createJobMulti(@RequestBody JobEntity job) {
+    public ResponseEntity<JobEntity> createJobMulti(@RequestBody JobEntity job) {
         if (job.getCreatorId() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
@@ -326,18 +347,24 @@ public class JobController {
 
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         // post job to openjob
         String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
 
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        try {
+            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        }
         job.setOpenjobJobId(openjobJobEntity.getId());
 //        jobService.updateJob(job);
         return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
@@ -346,7 +373,7 @@ public class JobController {
 
     @PutMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    ResponseEntity<JobEntity> updateJobMulti(@RequestBody JobEntity job) {
+    public ResponseEntity<JobEntity> updateJobMulti(@RequestBody JobEntity job) {
         if (job.getCreatorId() == null) {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
@@ -407,18 +434,24 @@ public class JobController {
 
         //get openjob token
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = "Bearer " + userDetailsService.getOpenJobToken();
+        String token = CommonUtils.getOjToken();
         // post job to openjob
         String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
 
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        try {
+            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+        }
         job.setOpenjobJobId(openjobJobEntity.getId());
 //        jobService.updateJob(job);
         return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
@@ -495,12 +528,12 @@ public class JobController {
 //
 //        //get openjob token
 ////        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-//        String token = "Bearer " + userDetailsService.getOpenJobToken();
+//        String token = CommonUtils.getOjToken();
 //        // post job to openjob
 //        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
 //        RestTemplate restTemplate = new RestTemplate();
 //        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", token);
+//        headers.setBearerAuth(token);
 //        headers.setContentType(MediaType.APPLICATION_JSON);
 //        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 //
@@ -581,12 +614,12 @@ public class JobController {
 //
 //        //get openjob token
 ////        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-//        String token = "Bearer " + userDetailsService.getOpenJobToken();
+//        String token = CommonUtils.getOjToken();
 //        // post job to openjob
 //        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
 //        RestTemplate restTemplate = new RestTemplate();
 //        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", token);
+//        headers.setBearerAuth(token);
 //        headers.setContentType(MediaType.APPLICATION_JSON);
 //        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 //

@@ -5,6 +5,7 @@ import capstone.oras.entity.PackageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @Service
 public class PackageService implements IPackageService {
     private IPackageRepository IPackageRepository;
+
     @Autowired
     public PackageService(IPackageRepository IPackageRepository) {
         this.IPackageRepository = IPackageRepository;
@@ -19,6 +21,7 @@ public class PackageService implements IPackageService {
 
     @Override
     public PackageEntity createPackage(PackageEntity packageEntity) {
+        packageValidation(packageEntity);
         return IPackageRepository.save(packageEntity);
     }
 
@@ -58,5 +61,19 @@ public class PackageService implements IPackageService {
     @Override
     public List<PackageEntity> getAllActivePackage() {
         return IPackageRepository.findPackageEntitiesByActiveTrue();
+    }
+
+    private void packageValidation(PackageEntity packageEntity) {
+        if (StringUtils.isEmpty(packageEntity.getCurrency())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
+        } else if (StringUtils.isEmpty(packageEntity.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
+        } else if (packageEntity.getDuration() == null || packageEntity.getDuration() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Duration is invalid");
+        } else if (packageEntity.getNumOfPost() == null || packageEntity.getNumOfPost() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of Post is invalid");
+        } else if (packageEntity.getPrice() == null || packageEntity.getPrice() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Price is invalid");
+        }
     }
 }

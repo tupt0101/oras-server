@@ -15,9 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 
 
@@ -35,11 +32,11 @@ public class PackageControllerTest {
     }
 
     @Test
-    public void testCreatePackage() {
+    public void testCreatePackage1() {
         // test data
         PackageEntity testData = createTestData();
         // expected return
-        ResponseEntity<PackageEntity> expected = new ResponseEntity<>(new PackageEntity(), HttpStatus.OK);
+        ResponseEntity<PackageEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
         // mock function
         Mockito.when(packageRepository.save(testData)).thenReturn(testData);
         // call method
@@ -49,100 +46,192 @@ public class PackageControllerTest {
     }
 
     @Test
-    public void testUpdatePackage() {
+    public void testCreatePackage2() {
         // test data
         PackageEntity testData = createTestData();
+        testData.setDuration(0);
         // expected return
-        ResponseEntity<PackageEntity> expected = new ResponseEntity<>(new PackageEntity(), HttpStatus.OK);
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Duration is invalid");
+        String actualMsg = "";
         // mock function
-        Mockito.when(packageRepository.save(testData)).thenReturn(testData);
         // call method
-        ResponseEntity<PackageEntity> actual = controller.updatePackage(testData);
+        try {
+            ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
+        } catch (ResponseStatusException e) {
+            actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
     }
 
     @Test
-    public void testGetAllPackage() {
-        // test data
-        PackageEntity data = createTestData();
-        List<PackageEntity> testData = Collections.singletonList(data);
-        // expected return
-        ResponseEntity<List<PackageEntity>> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(packageRepository.findAll()).thenReturn(testData);
-        // call method
-        ResponseEntity<List<PackageEntity>> actual = controller.getAllPackage();
-        // assert
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    public void testGetAllActivePackage() {
-        // test data
-        PackageEntity data = createTestData();
-        List<PackageEntity> testData = Collections.singletonList(data);
-        // expected return
-        ResponseEntity<List<PackageEntity>> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(packageRepository.findPackageEntitiesByActiveTrue()).thenReturn(testData);
-        // call method
-        ResponseEntity<List<PackageEntity>> actual = controller.getAllActivePackage();
-        // assert
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    public void testGetPackageById() {
+    public void testCreatePackage3() {
         // test data
         PackageEntity testData = createTestData();
-        int id = 1;
+        testData.setDuration(null);
         // expected return
-        ResponseEntity<PackageEntity> expected = new ResponseEntity<>(testData, HttpStatus.OK);
-        // mock function
-        Mockito.when(packageRepository.findById(id)).thenReturn(java.util.Optional.of(testData));
-        // call method
-        ResponseEntity<PackageEntity> actual = controller.getPackageById(id);
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Duration is invalid");
+        String actualMsg = "";        // mock function
+// call method
+        try {
+            ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
+        } catch (ResponseStatusException e) {
+            actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
     }
 
     @Test
-    public void testGetPackageByIdNull() {
-        int id = 1;
+    public void testCreatePackage4() {
+        // test data
+        PackageEntity testData = createTestData();
+        testData.setCurrency(null);
         // expected return
-        ResponseEntity<PackageEntity> expected = new ResponseEntity<>(null, HttpStatus.OK);
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
+        String actualMsg = "";
         // mock function
-        Mockito.when(packageRepository.findById(id)).thenReturn(java.util.Optional.empty());
         // call method
-        ResponseEntity<PackageEntity> actual = controller.getPackageById(id);
+        try {
+            ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
+        } catch (ResponseStatusException e) {
+            actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
     }
 
     @Test
-    public void testDeactivatePackage() {
+    public void testCreatePackage5() {
         // test data
-        int id = 1;
+        PackageEntity testData = createTestData();
+        testData.setCurrency("");
         // expected return
-        ResponseEntity<Integer> expected = new ResponseEntity<>(1, HttpStatus.OK);
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
+        String actualMsg = "";
         // mock function
-        Mockito.when(packageRepository.existsById(id)).thenReturn(true);
-        Mockito.when(packageRepository.changePackageActive(id, false)).thenReturn(1);
         // call method
-        ResponseEntity<Integer> actual = controller.deactivatePackage(id);
+        try {
+            ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
+        } catch (ResponseStatusException e) {
+            actualMsg = e.getMessage();
+        }
         // assert
-        assertEquals(expected, actual);
+        assertEquals(expected.getMessage(), actualMsg);
     }
 
-    @Test(expected = ResponseStatusException.class)
-    public void testDeactivatePackageError() {
+    @Test
+    public void testCreatePackage6() {
         // test data
-        int id = 1;
+        PackageEntity testData = createTestData();
+        testData.setPrice(-10.0);
+        // expected return
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Price is invalid");
+        String actualMsg = "";
         // mock function
-        Mockito.when(packageRepository.existsById(id)).thenReturn(false);
         // call method
-        controller.deactivatePackage(id);
+        try {
+            ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
+        } catch (ResponseStatusException e) {
+            actualMsg = e.getMessage();
+        }
+        // assert
+        assertEquals(expected.getMessage(), actualMsg);
+    }
+
+    @Test
+    public void testCreatePackage7() {
+        // test data
+        PackageEntity testData = createTestData();
+        testData.setPrice(null);
+        // expected return
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Price is invalid");
+        String actualMsg = "";
+        // mock function
+        // call method
+        try {
+            ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
+        } catch (ResponseStatusException e) {
+            actualMsg = e.getMessage();
+        }
+        // assert
+        assertEquals(expected.getMessage(), actualMsg);
+    }
+
+    @Test
+    public void testCreatePackage8() {
+        // test data
+        PackageEntity testData = createTestData();
+        testData.setName(null);
+        // expected return
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
+        String actualMsg = "";
+        // mock function
+        // call method
+        try {
+            ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
+        } catch (ResponseStatusException e) {
+            actualMsg = e.getMessage();
+        }
+        // assert
+        assertEquals(expected.getMessage(), actualMsg);
+    }
+
+    @Test
+    public void testCreatePackage9() {
+        // test data
+        PackageEntity testData = createTestData();
+        testData.setName("");
+        // expected return
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
+        String actualMsg = "";
+        // mock function
+        // call method
+        try {
+            ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
+        } catch (ResponseStatusException e) {
+            actualMsg = e.getMessage();
+        }
+        // assert
+        assertEquals(expected.getMessage(), actualMsg);
+    }
+
+    @Test
+    public void testCreatePackage10() {
+        // test data
+        PackageEntity testData = createTestData();
+        testData.setNumOfPost(0);
+        // expected return
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of Post is invalid");
+        String actualMsg = "";
+        // mock function
+        // call method
+        try {
+            ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
+        } catch (ResponseStatusException e) {
+            actualMsg = e.getMessage();
+        }
+        // assert
+        assertEquals(expected.getMessage(), actualMsg);
+    }
+
+    @Test
+    public void testCreatePackage11() {
+        // test data
+        PackageEntity testData = createTestData();
+        testData.setNumOfPost(null);
+        // expected return
+        ResponseStatusException expected = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of Post is invalid");
+        String actualMsg = "";
+        // mock function
+        // call method
+        try {
+            ResponseEntity<PackageEntity> actual = controller.createPackage(testData);
+        } catch (ResponseStatusException e) {
+            actualMsg = e.getMessage();
+        }
+        // assert
+        assertEquals(expected.getMessage(), actualMsg);
     }
 
     private PackageEntity createTestData() {
@@ -154,6 +243,7 @@ public class PackageControllerTest {
         e.setNumOfPost(1);
         e.setPrice((double) 10);
         e.setTag("TEST");
-        return new PackageEntity();
+        e.setDuration(30);
+        return e;
     }
 }

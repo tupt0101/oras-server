@@ -6,27 +6,33 @@ import capstone.oras.model.custom.ListAccountModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.List;
+
+import static capstone.oras.common.Constant.EmailForm.updateAccountNoti;
 
 @Service
 public class AccountService implements IAccountService {
 
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-//
-//    @Autowired
-//    private MyUserDetailService userDetailService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @Autowired
     private IAccountRepository IAccountRepository;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Autowired
+    public AccountService(capstone.oras.dao.IAccountRepository IAccountRepository) {
+        this.IAccountRepository = IAccountRepository;
+    }
+
+
 
     public AccountService(PasswordEncoder passwordEncoder, capstone.oras.dao.IAccountRepository IAccountRepository) {
         this.passwordEncoder = passwordEncoder;
@@ -96,7 +102,8 @@ public class AccountService implements IAccountService {
     public AccountEntity findAccountByCompanyId(int id) {
         if (IAccountRepository.findAccountEntityByCompanyIdEquals(id).isPresent()) {
             return IAccountRepository.findAccountEntityByCompanyIdEquals(id).get();
-        } else return null;    }
+        } else return null;
+    }
 
     @Override
     public Integer updateFullNameAndPhoneNo(AccountEntity accountEntity) {
@@ -122,6 +129,31 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    public Integer updateFullNameAndPhoneNoByAdmin(AccountEntity accountEntity) throws MessagingException {
+        String fullName = accountEntity.getFullname();
+        String phoneNo = accountEntity.getPhoneNo();
+        int id = accountEntity.getId();
+        AccountEntity raw = findAccountEntityById(id);
+        if (raw == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account doesn't exist");
+        }
+        if (StringUtils.isEmpty(fullName)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is a required field");
+        }
+        if (StringUtils.isEmpty(phoneNo)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone number is a required field");
+        }
+        int ret;
+        try {
+            ret = IAccountRepository.updateFullNameAndPhoneNo(id, fullName, phoneNo);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        this.sendMail(raw.getEmail(), "Your personal information has been changed", updateAccountNoti(fullName, phoneNo, raw.getFullname(), raw.getPhoneNo()));
+        return ret;
+    }
+
+    @Override
     public Integer updatePassword(AccountEntity accountEntity) {
         return null;
     }
@@ -134,4 +166,14 @@ public class AccountService implements IAccountService {
 //        accountEntity.setFullname(fullname);
 //        return IAccountRepository.save(accountEntity);
 //    }
+
+    public void sendMail(String email, String subject, String text) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        message.setSubject(subject);
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(email);
+        // use the true flag to indicate the text included is HTML
+        helper.setText(text, true);
+        javaMailSender.send(message);
+    }
 }

@@ -2,7 +2,6 @@ package capstone.oras.api.account.controller;
 
 import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.api.company.service.ICompanyService;
-import capstone.oras.api.email.service.EmailSenderService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.IConfirmationTokenRepository;
@@ -24,6 +23,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -52,9 +52,6 @@ public class AccountController {
     IConfirmationTokenRepository confirmationTokenRepository;
 
     @Autowired
-    private EmailSenderService emailSenderService;
-
-    @Autowired
     private JavaMailSender javaMailSender;
 
     @Autowired
@@ -66,8 +63,6 @@ public class AccountController {
     @Autowired
     private IJobService jobService;
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
 
     public AccountController(IAccountService accountService, PasswordEncoder passwordEncoder) {
         this.accountService = accountService;
@@ -119,21 +114,46 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered");
         } else if (accountService.findAccountEntityById(signup.accountEntity.getId()) != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
-        } else {
+        } else if (signup.accountEntity.getPhoneNo() == null || signup.accountEntity.getPhoneNo().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
+        }
+
+        else if (signup.companyEntity.getEmail() == null || signup.companyEntity.getEmail().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
+        } else if (signup.companyEntity.getName() == null || signup.companyEntity.getName().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
+        } else if (signup.companyEntity.getTaxCode() == null || signup.companyEntity.getTaxCode().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
+        } else if (signup.companyEntity.getPhoneNo() == null || signup.companyEntity.getPhoneNo().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
+        } else if (signup.companyEntity.getLocation() == null || signup.companyEntity.getLocation().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
+        } else if (companyService.checkCompanyName(signup.companyEntity.getId(), signup.companyEntity.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
+        }
+
+        else {
             signup.accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
             //get openjob token
             CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-            String token = "Bearer " + userDetailsService.getOpenJobToken();
+            String token = CommonUtils.getOjToken();
             // post company to openjob
             String uri = "https://openjob-server.herokuapp.com/v1/company-management/company-by-name/" + signup.companyEntity.getName();
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", token);
+            headers.setBearerAuth(token);
 //        headers.setBearerAuth(token);
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             HttpEntity entity = new HttpEntity(headers);
-            CompanyEntity openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+            CompanyEntity openJobEntity;
+            try {
+                openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+            } catch (HttpClientErrorException.Unauthorized e) {
+                CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+                entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+                openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+            }
             if (openJobEntity == null) {
                 OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
                 openjobCompanyEntity.setAccountId(1);
@@ -160,7 +180,13 @@ public class AccountController {
                 }
                 uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
                 HttpEntity<OpenjobCompanyEntity> httpCompanyEntity = new HttpEntity<>(openjobCompanyEntity, headers);
-                openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
+                try {
+                    openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
+                } catch (HttpClientErrorException.Unauthorized e) {
+                    CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+                    entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+                    openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
+                }
                 signup.companyEntity.setOpenjobCompanyId(openjobCompanyEntity.getId());
             } else {
                 signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
@@ -234,17 +260,23 @@ public class AccountController {
         for (JobEntity jobEntity : jobEntities) {
             int openjobJobId = jobEntity.getOpenjobJobId();
             //get openjob token
-            String token = "Bearer " + userDetailsService.getOpenJobToken();
+            String token = CommonUtils.getOjToken();
             // close job to openjob
             String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", token);
+            headers.setBearerAuth(token);
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             HttpEntity entity = new HttpEntity(headers);
             // close job on openjob
-            restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+            try {
+                restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+            } catch (HttpClientErrorException.Unauthorized e) {
+                CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+                entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+                restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+            }
             jobService.closeJob(jobEntity.getId());
         }
         return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
@@ -276,7 +308,7 @@ public class AccountController {
 
     @RequestMapping(value = "/change-password-account", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<AccountEntity> changePassword(@RequestBody PasswordChanges passwordChanges) {
+    public ResponseEntity<AccountEntity> changePassword(@RequestBody PasswordChanges passwordChanges) {
         AccountEntity accountEntity = accountService.findAccountEntityById(passwordChanges.accountId);
         if (accountEntity == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account doesn't exist");
@@ -291,13 +323,23 @@ public class AccountController {
 
     @RequestMapping(value = "/update-account", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<Integer> customUpdateAccount(@RequestBody AccountEntity accountEntity) {
+    public ResponseEntity<Integer> customUpdateAccount(@RequestBody AccountEntity accountEntity) {
         return new ResponseEntity<>(accountService.updateFullNameAndPhoneNo(accountEntity), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/account-by-admin", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Integer> updateAccountByAdmin(@RequestBody AccountEntity accountEntity) {
+        try {
+            return new ResponseEntity<>(accountService.updateFullNameAndPhoneNoByAdmin(accountEntity), HttpStatus.OK);
+        } catch (MessagingException e) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
+        }
     }
 
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<AccountEntity>> getAllAccount() {
+    public ResponseEntity<List<AccountEntity>> getAllAccount() {
         List<AccountEntity> lst = accountService.getAllAccount();
         if (!CollectionUtils.isEmpty(lst)) {
             lst.sort(Comparator.comparingInt(AccountEntity::getId));
@@ -307,7 +349,7 @@ public class AccountController {
 
     @RequestMapping(value = "/accounts-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<ListAccountModel> getAllAccountWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+    public ResponseEntity<ListAccountModel> getAllAccountWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
                                                                    @RequestParam(value = "page") Integer page,
                                                                    @RequestParam(value = "sort") String sort,
                                                                    @RequestParam(value = "status") String status,
@@ -319,13 +361,13 @@ public class AccountController {
 
     @RequestMapping(value = "/account/{id}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<AccountEntity> getAccountById(@PathVariable("id") int id) {
+    public ResponseEntity<AccountEntity> getAccountById(@PathVariable("id") int id) {
         return new ResponseEntity<AccountEntity>(accountService.findAccountEntityById(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/account-by-email", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<AccountEntity> getAccountByEmail(@RequestParam("email") String email, HttpServletResponse response) {
+    public ResponseEntity<AccountEntity> getAccountByEmail(@RequestParam("email") String email, HttpServletResponse response) {
         response.addHeader("Access-Control-Allow-Origin", "*");
         return new ResponseEntity<AccountEntity>(accountService.findAccountByEmail(email), HttpStatus.OK);
     }

@@ -4,6 +4,7 @@ import capstone.oras.entity.AccountEntity;
 import capstone.oras.model.custom.ListAccountModel;
 import org.springframework.data.domain.Pageable;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface IAccountService {
@@ -16,5 +17,6 @@ public interface IAccountService {
     AccountEntity findAccountEntityById(int id);
     AccountEntity findAccountByCompanyId(int id);
     Integer updateFullNameAndPhoneNo(AccountEntity accountEntity);
+    Integer updateFullNameAndPhoneNoByAdmin(AccountEntity accountEntity) throws MessagingException;
     Integer updatePassword(AccountEntity accountEntity);
 }

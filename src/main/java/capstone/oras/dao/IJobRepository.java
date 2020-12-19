@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Repository
 public interface IJobRepository extends JpaRepository<JobEntity, Integer>, PagingAndSortingRepository<JobEntity, Integer> {
-    Optional<List<JobEntity>> findAllByStatus(String status);
+    List<JobEntity> findAllByStatus(String status);
 
     boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIsNot(int creatorId, String title, String status);
     boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIs(int creatorId, String title, String status);
@@ -23,7 +23,8 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer>, Pagin
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEquals(int creatorId);
     List<JobEntity> findJobEntitiesByCreatorIdEqualsAndStatusIsNot(int creatorId, String status);
 
-    Optional<List<JobEntity>> findJobEntitiesByCreatorIdEqualsAndStatusEquals(int creatorId, String status);
+    List<JobEntity> findJobEntitiesByCreatorIdEqualsAndStatusEquals(int creatorId, String status);
+    JobEntity findJobEntitiesByIdEqualsAndStatusEquals(int id, String status);
 
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEqualsAndStatusIn(int creatorId, List<String> status);
 

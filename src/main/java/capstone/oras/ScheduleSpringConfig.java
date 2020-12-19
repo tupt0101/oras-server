@@ -17,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -88,18 +89,23 @@ public class ScheduleSpringConfig {
             if (job.getExpireDate().isBefore(LocalDateTime.now(TIME_ZONE)) || job.getApplyTo().isBefore(LocalDateTime.now(TIME_ZONE))) {
                 int openjobJobId = job.getOpenjobJobId();
                 //get openjob token
-//        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-                String token = "Bearer " + userDetailsService.getOpenJobToken();
+                String token = CommonUtils.getOjToken();
                 // post job to openjob
                 String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders headers = new HttpHeaders();
-                headers.set("Authorization", token);
+                headers.setBearerAuth(token);
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
                 HttpEntity entity = new HttpEntity(headers);
                 // close job on openjob
-                restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+                try {
+                    restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+                } catch (HttpClientErrorException.Unauthorized e) {
+                    CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+                    entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+                    restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
+                }
                 ActivityEntity activityEntity = new ActivityEntity();
                 activityEntity.setCreatorId(job.getCreatorId());
                 activityEntity.setTime(LocalDateTime.now(TIME_ZONE));

@@ -38,7 +38,7 @@ public class JobApplicationController {
     private IJobService jobService;
 
 
-    HttpHeaders httpHeaders = new HttpHeaders();
+    HttpHeaders headers = new HttpHeaders();
 
     @RequestMapping(value = "/job-application", method = RequestMethod.POST)
     @ResponseBody

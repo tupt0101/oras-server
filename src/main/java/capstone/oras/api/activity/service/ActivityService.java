@@ -13,6 +13,10 @@ public class ActivityService implements IActivityService {
     @Autowired
     private IActivityRepository IActivityRepository;
 
+    @Autowired
+    public ActivityService(capstone.oras.dao.IActivityRepository IActivityRepository) {
+        this.IActivityRepository = IActivityRepository;
+    }
 
     @Override
     public ActivityEntity createActivity(ActivityEntity activityEntity) {

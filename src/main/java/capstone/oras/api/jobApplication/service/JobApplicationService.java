@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -170,19 +171,22 @@ public class JobApplicationService implements IJobApplicationService {
         CalcSimilarityRequest request = new CalcSimilarityRequest(job_id, jd);
         HttpEntity entity = new HttpEntity(request, headers);
         // Call process
+        CalcSimilarityResponse ret;
         try {
-            CalcSimilarityResponse ret = restTemplate.postForEntity(uri, entity, CalcSimilarityResponse.class).getBody();
-            return ret.getMessage();
-        } catch (Exception ex) {
+            ret = restTemplate.postForEntity(uri, entity, CalcSimilarityResponse.class).getBody();
+        } catch (HttpClientErrorException.Unauthorized ex) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            ret = restTemplate.postForEntity(uri, entity, CalcSimilarityResponse.class).getBody();
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Disconnect to server");
         }
+        return ret.getMessage();
     }
 
     @Override
     public JobApplicationEntity findJobApplicationByJobIdAndCandidateId(int jobId, int candidateId) {
-        if (IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId).isPresent()) {
-            return IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId).get();
-        } else return null;
+        return IJobApplicationRepository.findJobApplicationEntityByJobIdEqualsAndCandidateIdEquals(jobId, candidateId);
     }
 
     @Override

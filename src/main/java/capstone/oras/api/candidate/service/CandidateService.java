@@ -42,8 +42,6 @@ public class CandidateService implements ICandidateService{
 
     @Override
     public List<CandidateEntity> findCandidatesByEmail(String email) {
-        if (ICandidateRepository.findCandidateEntitiesByEmailEquals(email).isPresent()) {
-            return ICandidateRepository.findCandidateEntitiesByEmailEquals(email).get();
-        } else return null;
+        return ICandidateRepository.findCandidateEntitiesByEmailEquals(email);
     }
 }
