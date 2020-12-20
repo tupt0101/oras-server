@@ -7,7 +7,8 @@ import capstone.oras.dao.ICompanyRepository;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.BuffCompanyEntity;
 import capstone.oras.entity.CompanyEntity;
-import capstone.oras.model.custom.ListAccountModel;
+import capstone.oras.model.custom.AccountBuffModel;
+import capstone.oras.model.custom.ListAccountBuffModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -25,8 +26,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static capstone.oras.common.Constant.EmailForm.*;
 
@@ -91,7 +94,7 @@ public class CompanyService implements ICompanyService{
     }
 
     @Override
-    public ListAccountModel getAllCompanyWithPaging(Pageable pageable, String status, String name) {
+    public ListAccountBuffModel getAllCompanyWithPaging(Pageable pageable, String status, String name) {
         name = "%" + name + "%";
         int count;
         List<AccountEntity> data;
@@ -103,11 +106,18 @@ public class CompanyService implements ICompanyService{
             count = companyRepository.countByVerifiedAndNameIgnoreCaseLike("Verified".equalsIgnoreCase(status), name);
         }
         // replace with company in buffer
-        List<BuffCompanyEntity> buffers = bufferCompanyRepository.findAll(pageable.getSort());
-        for (BuffCompanyEntity buffer: buffers) {
-
+        List<AccountBuffModel> result = new ArrayList<>();
+        AccountBuffModel buff;
+        for (AccountEntity comp: data) {
+            buff = new AccountBuffModel();
+            BeanUtils.copyProperties(comp, buff);
+            if (!buff.getCompanyById().getVerified()) {
+                Optional<BuffCompanyEntity> temp = bufferCompanyRepository.findById(comp.getCompanyId());
+                buff.setBuffCompany(temp.orElse(null));
+            }
+            result.add(buff);
         }
-        return new ListAccountModel(count, data);
+        return new ListAccountBuffModel(count, result);
     }
 
     @Override

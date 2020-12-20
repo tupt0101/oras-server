@@ -3,7 +3,7 @@ package capstone.oras.api.company.service;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.BuffCompanyEntity;
 import capstone.oras.entity.CompanyEntity;
-import capstone.oras.model.custom.ListAccountModel;
+import capstone.oras.model.custom.ListAccountBuffModel;
 import org.springframework.data.domain.Pageable;
 
 import javax.mail.MessagingException;
@@ -14,7 +14,7 @@ public interface ICompanyService {
     CompanyEntity updateCompany(CompanyEntity companyEntity);
     CompanyEntity updateCompanyByAdmin(CompanyEntity companyEntity) throws MessagingException;
     List<CompanyEntity> getAllCompany();
-    ListAccountModel getAllCompanyWithPaging(Pageable pageable, String status, String name);
+    ListAccountBuffModel getAllCompanyWithPaging(Pageable pageable, String status, String name);
     CompanyEntity findCompanyById(int id);
     void verifyCompany(int id, String email) throws MessagingException;
     List<CompanyEntity> getAllCompanyWithNameAndIsVerified(String name);
