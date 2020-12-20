@@ -2,10 +2,12 @@ package capstone.oras.api.company.controller;
 
 
 import capstone.oras.api.company.service.ICompanyService;
+import capstone.oras.api.notification.service.INotificationService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.BuffCompanyEntity;
 import capstone.oras.entity.CompanyEntity;
+import capstone.oras.entity.NotificationEntity;
 import capstone.oras.model.custom.ListAccountBuffModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static capstone.oras.common.Constant.NotiType.MODIFY;
+import static capstone.oras.common.Constant.TIME_ZONE;
 
 @RestController
 @CrossOrigin(value = "http://localhost:9527")
@@ -30,6 +36,8 @@ public class CompanyController {
 
     @Autowired
     private ICompanyService companyService;
+    @Autowired
+    private INotificationService notificationService;
 
     @RequestMapping(value = "/company", method = RequestMethod.POST)
     @ResponseBody
@@ -193,6 +201,14 @@ public class CompanyController {
             System.out.println("Save buffer company: success");
         }
         System.out.println("End updateCompanyByUser");
+        // send notification
+        NotificationEntity noti = new NotificationEntity();
+        noti.setCreateDate(LocalDateTime.now(TIME_ZONE));
+        noti.setNew(true);
+        noti.setReceiverId(0);
+        noti.setTargetId(companyEntity.getId());
+        noti.setType(MODIFY);
+        notificationService.createNotification(noti);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }

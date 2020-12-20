@@ -145,8 +145,8 @@ public class CompanyService implements ICompanyService{
     @Override
     public void verifyCompany(int id, String email) throws MessagingException {
         CompanyEntity companyEntity = new CompanyEntity();
-        String mailSubject = "";
-        String mailText = "";
+        String mailSubject;
+        String mailText;
         if (!companyRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company does not exist.");
         }
