@@ -3,16 +3,13 @@ package capstone.oras.api.account.controller;
 import capstone.oras.api.account.service.IAccountService;
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.job.service.IJobService;
+import capstone.oras.api.notification.service.INotificationService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.IConfirmationTokenRepository;
-import capstone.oras.entity.AccountEntity;
-import capstone.oras.entity.CompanyEntity;
-import capstone.oras.entity.ConfirmationToken;
-import capstone.oras.entity.JobEntity;
+import capstone.oras.entity.*;
 import capstone.oras.entity.openjob.OpenjobCompanyEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.model.custom.ListAccountModel;
-import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +34,7 @@ import java.util.List;
 
 import static capstone.oras.common.Constant.EmailForm.confirmMail;
 import static capstone.oras.common.Constant.EmailForm.resetPasswordMail;
+import static capstone.oras.common.Constant.NotiType.REGISTER;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 
@@ -62,6 +60,9 @@ public class AccountController {
 
     @Autowired
     private IJobService jobService;
+
+    @Autowired
+    private INotificationService notificationService;
 
 
     public AccountController(IAccountService accountService, PasswordEncoder passwordEncoder) {
@@ -116,9 +117,7 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else if (signup.accountEntity.getPhoneNo() == null || signup.accountEntity.getPhoneNo().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
-        }
-
-        else if (signup.companyEntity.getEmail() == null || signup.companyEntity.getEmail().isEmpty()) {
+        } else if (signup.companyEntity.getEmail() == null || signup.companyEntity.getEmail().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
         } else if (signup.companyEntity.getName() == null || signup.companyEntity.getName().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
@@ -131,97 +130,96 @@ public class AccountController {
         } else if (companyService.checkCompanyName(signup.companyEntity.getId(), signup.companyEntity.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
         }
-
-        else {
-            signup.accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
-            signup.companyEntity.setModifyDate(LocalDateTime.now(TIME_ZONE));
-            //get openjob token
-            CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-            String token = CommonUtils.getOjToken();
-            // post company to openjob
-            String uri = "https://openjob-server.herokuapp.com/v1/company-management/company-by-name/" + signup.companyEntity.getName();
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(token);
-//        headers.setBearerAuth(token);
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            HttpEntity entity = new HttpEntity(headers);
-            CompanyEntity openJobEntity;
+        signup.accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
+        signup.companyEntity.setModifyDate(LocalDateTime.now(TIME_ZONE));
+        //get openjob token
+        String token = CommonUtils.getOjToken();
+        // post company to openjob
+        String uri = "https://openjob-server.herokuapp.com/v1/company-management/company-by-name/" + signup.companyEntity.getName();
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity entity = new HttpEntity(headers);
+        CompanyEntity openJobEntity;
+        try {
+            openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+        }
+        if (openJobEntity == null) {
+            OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
+            openjobCompanyEntity.setAccountId(1);
+            if (!signup.companyEntity.getAvatar().isEmpty() || signup.companyEntity.getAvatar() != null) {
+                openjobCompanyEntity.setAvatar(signup.companyEntity.getAvatar());
+            }
+            if (!signup.companyEntity.getDescription().isEmpty() || signup.companyEntity.getDescription() != null) {
+                openjobCompanyEntity.setDescription(signup.companyEntity.getDescription());
+            }
+            if (!signup.companyEntity.getEmail().isEmpty() || signup.companyEntity.getEmail() != null) {
+                openjobCompanyEntity.setEmail(signup.companyEntity.getEmail());
+            }
+            if (!signup.companyEntity.getLocation().isEmpty() || signup.companyEntity.getLocation() != null) {
+                openjobCompanyEntity.setLocation(signup.companyEntity.getLocation());
+            }
+            if (!signup.companyEntity.getName().isEmpty() || signup.companyEntity.getName() != null) {
+                openjobCompanyEntity.setName(signup.companyEntity.getName());
+            }
+            if (!signup.companyEntity.getPhoneNo().isEmpty() || signup.companyEntity.getPhoneNo() != null) {
+                openjobCompanyEntity.setPhoneNo(signup.companyEntity.getPhoneNo());
+            }
+            if (!signup.companyEntity.getTaxCode().isEmpty() || signup.companyEntity.getTaxCode() != null) {
+                openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
+            }
+            uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
+            HttpEntity<OpenjobCompanyEntity> httpCompanyEntity = new HttpEntity<>(openjobCompanyEntity, headers);
             try {
-                openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+                openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
             } catch (HttpClientErrorException.Unauthorized e) {
                 CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
                 entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-                openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+                openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
             }
-            if (openJobEntity == null) {
-                OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
-                openjobCompanyEntity.setAccountId(1);
-                if (!signup.companyEntity.getAvatar().isEmpty() || signup.companyEntity.getAvatar() != null) {
-                    openjobCompanyEntity.setAvatar(signup.companyEntity.getAvatar());
-                }
-                if (!signup.companyEntity.getDescription().isEmpty() || signup.companyEntity.getDescription() != null) {
-                    openjobCompanyEntity.setDescription(signup.companyEntity.getDescription());
-                }
-                if (!signup.companyEntity.getEmail().isEmpty() || signup.companyEntity.getEmail() != null) {
-                    openjobCompanyEntity.setEmail(signup.companyEntity.getEmail());
-                }
-                if (!signup.companyEntity.getLocation().isEmpty() || signup.companyEntity.getLocation() != null) {
-                    openjobCompanyEntity.setLocation(signup.companyEntity.getLocation());
-                }
-                if (!signup.companyEntity.getName().isEmpty() || signup.companyEntity.getName() != null) {
-                    openjobCompanyEntity.setName(signup.companyEntity.getName());
-                }
-                if (!signup.companyEntity.getPhoneNo().isEmpty() || signup.companyEntity.getPhoneNo() != null) {
-                    openjobCompanyEntity.setPhoneNo(signup.companyEntity.getPhoneNo());
-                }
-                if (!signup.companyEntity.getTaxCode().isEmpty() || signup.companyEntity.getTaxCode() != null) {
-                    openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
-                }
-                uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
-                HttpEntity<OpenjobCompanyEntity> httpCompanyEntity = new HttpEntity<>(openjobCompanyEntity, headers);
-                try {
-                    openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
-                } catch (HttpClientErrorException.Unauthorized e) {
-                    CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-                    entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-                    openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
-                }
-                signup.companyEntity.setOpenjobCompanyId(openjobCompanyEntity.getId());
-            } else {
-                signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
-            }
-//            signup.companyEntity.setVerified(false);
-            CompanyEntity companyEntity = companyService.createCompany(signup.companyEntity);
-            signup.accountEntity.setCompanyId(companyEntity.getId());
-//            signup.accountEntity.setActive(false);
-            signup.accountEntity.setConfirmMail(false);
-            signup.accountEntity.setPassword(passwordEncoder.encode(signup.accountEntity.getPassword()));
-            AccountEntity accountEntity = accountService.createAccount(signup.accountEntity);
-            ConfirmationToken confirmationToken = new ConfirmationToken(accountEntity);
-            confirmationTokenRepository.save(confirmationToken);
-        this.sendMail(signup.accountEntity.getEmail(), "Complete Registration!",
-                    confirmMail(confirmationToken.getConfirmationToken()));
-            return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
+            signup.companyEntity.setOpenjobCompanyId(openjobCompanyEntity.getId());
+        } else {
+            signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
         }
+        CompanyEntity companyEntity = companyService.createCompany(signup.companyEntity);
+        signup.accountEntity.setCompanyId(companyEntity.getId());
+        signup.accountEntity.setConfirmMail(false);
+        signup.accountEntity.setPassword(passwordEncoder.encode(signup.accountEntity.getPassword()));
+        AccountEntity accountEntity = accountService.createAccount(signup.accountEntity);
+        ConfirmationToken confirmationToken = new ConfirmationToken(accountEntity);
+        confirmationTokenRepository.save(confirmationToken);
+        this.sendMail(signup.accountEntity.getEmail(), "Complete Registration!",
+                confirmMail(confirmationToken.getConfirmationToken()));
+        NotificationEntity notificationEntity = new NotificationEntity();
+        notificationEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
+        notificationEntity.setNew(true);
+        notificationEntity.setReceiverId(0);
+        notificationEntity.setTargetId(accountEntity.getId());
+        notificationEntity.setType(REGISTER);
+        notificationService.createNotification(notificationEntity);
+        return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/resend-email", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Integer> resendEmail(@Param("email") String email){
+    public ResponseEntity<Integer> resendEmail(@Param("email") String email) {
         try {
             AccountEntity accountEntity = accountService.findAccountByEmail(email);
             ConfirmationToken confirmationToken = new ConfirmationToken(accountEntity);
             confirmationTokenRepository.save(confirmationToken);
-        this.sendMail(email, "Complete Registration!",
+            this.sendMail(email, "Complete Registration!",
                     confirmMail(confirmationToken.getConfirmationToken()));
             return new ResponseEntity<>(0, HttpStatus.OK);
         } catch (MessagingException e) {
             throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
         }
     }
-
 
 
 //    @RequestMapping(value = "/activate-account/{id}", method = RequestMethod.PUT)
@@ -351,11 +349,11 @@ public class AccountController {
     @RequestMapping(value = "/accounts-paging", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ListAccountModel> getAllAccountWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
-                                                                   @RequestParam(value = "page") Integer page,
-                                                                   @RequestParam(value = "sort") String sort,
-                                                                   @RequestParam(value = "status") String status,
-                                                                   @RequestParam(value = "name") String name,
-                                                                   @RequestParam(value = "role") String role) {
+                                                                    @RequestParam(value = "page") Integer page,
+                                                                    @RequestParam(value = "sort") String sort,
+                                                                    @RequestParam(value = "status") String status,
+                                                                    @RequestParam(value = "name") String name,
+                                                                    @RequestParam(value = "role") String role) {
         Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
         return new ResponseEntity<>(accountService.getAllAccountWithPaging(pageable, name, status, role), HttpStatus.OK);
     }

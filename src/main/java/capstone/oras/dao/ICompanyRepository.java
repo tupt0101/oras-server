@@ -36,8 +36,8 @@ public interface ICompanyRepository extends JpaRepository<CompanyEntity, Integer
     int countByNameIgnoreCaseLike(String name);
     Optional<List<CompanyEntity>> findCompanyEntitiesByNameEqualsAndVerifiedEquals(String name, boolean verified);
     Optional<List<CompanyEntity>> findCompanyEntitiesByIdIsNotAndNameEqualsAndVerifiedEquals(Integer id, String name, boolean verified);
-    @Query(value = "update company set verified = :status, modify_date = CURRENT_TIMESTAMP at time zone 'UTC-7' where id = :id", nativeQuery = true)
+    @Query(value = "update company set verified = :status, modify_date = (CURRENT_TIMESTAMP at time zone 'UTC-7') where id = :id", nativeQuery = true)
     @Modifying
     @Transactional
-    Integer updateCompanyStatus(Integer id, boolean status);
+    Integer updateCompanyStatus(@Param("id") Integer id, @Param("status") boolean status);
 }
