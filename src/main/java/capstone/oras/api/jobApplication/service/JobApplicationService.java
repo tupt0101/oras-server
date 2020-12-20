@@ -77,6 +77,7 @@ public class JobApplicationService implements IJobApplicationService {
         List<OpenjobJobApplicationEntity> jobApplicationEntityList = Arrays.asList(jobApplicationsList.getBody());
         List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
         JobEntity jobEntity = jobService.getJobById(jobId);
+        jobEntity.setTotalApplication(jobApplicationEntityList.size());
         for (int i = 0; i < jobApplicationEntityList.size(); i++) {
             OpenjobJobApplicationEntity openjobJobApplication = jobApplicationEntityList.get(i);
             JobApplicationEntity jobApplicationEntity = new JobApplicationEntity();
@@ -116,6 +117,7 @@ public class JobApplicationService implements IJobApplicationService {
                 jobApplicationsOras.add(tempJobApplication);
             }
         }
+        jobService.updateJob(jobEntity);
         return IJobApplicationRepository.saveAll(jobApplicationsOras);
     }
 

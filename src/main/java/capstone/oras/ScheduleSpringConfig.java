@@ -4,10 +4,12 @@ import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.JobApplicationService;
+import capstone.oras.api.notification.service.INotificationService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.AccountPackageEntity;
 import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.JobEntity;
+import capstone.oras.entity.NotificationEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,6 +43,9 @@ public class ScheduleSpringConfig {
 
     @Autowired
     IActivityService activityService;
+
+    @Autowired
+    INotificationService notificationService;
 
     @Autowired
     JobApplicationService jobApplicationService;
@@ -121,12 +127,27 @@ public class ScheduleSpringConfig {
             }
         }
     }
+
     @Scheduled(fixedRate = 60000)
     public void scanJobApplication() {
         List<JobEntity> jobEntities = jobService.getAllPublishedJob();
         for (JobEntity job : jobEntities) {
-            if (job.getExpireDate().isBefore(LocalDateTime.now(TIME_ZONE)) || job.getApplyTo().isBefore(LocalDateTime.now(TIME_ZONE))) {
-                jobApplicationService.createJobApplications(job.getId());
+            if (job.getExpireDate().isAfter(LocalDateTime.now(TIME_ZONE)) || job.getApplyTo().isAfter(LocalDateTime.now(TIME_ZONE))) {
+                try {
+                    jobApplicationService.createJobApplications(job.getId());
+                    if (jobService.getJobById(job.getId()).getTotalApplication() != job.getTotalApplication()) {
+                        NotificationEntity notificationEntity = new NotificationEntity();
+                        notificationEntity.setCreateDate(LocalDateTime.now());
+                        notificationEntity.setNew(true);
+                        notificationEntity.setReceiverId(job.getCreatorId());
+                        notificationEntity.setTargetId(job.getId());
+                        notificationEntity.setType("Apply");
+                        notificationService.createNotification(notificationEntity);
+                    }
+                } catch (ResponseStatusException e) {
+                    System.out.println(e.getMessage());
+                }
+
             }
         }
     }
