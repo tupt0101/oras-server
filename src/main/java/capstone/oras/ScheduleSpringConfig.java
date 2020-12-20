@@ -6,6 +6,7 @@ import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.JobApplicationService;
 import capstone.oras.api.notification.service.INotificationService;
 import capstone.oras.common.CommonUtils;
+import capstone.oras.api.jobApplication.service.JobApplicationService;
 import capstone.oras.entity.AccountPackageEntity;
 import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.JobEntity;

@@ -23,6 +23,9 @@ import static capstone.oras.common.Constant.EmailForm.updateAccountNoti;
 public class AccountService implements IAccountService {
 
     @Autowired
+    public PasswordEncoder passwordEncoder;
+
+    @Autowired
     private IAccountRepository IAccountRepository;
 
     @Autowired
@@ -30,6 +33,13 @@ public class AccountService implements IAccountService {
 
     @Autowired
     public AccountService(IAccountRepository IAccountRepository) {
+        this.IAccountRepository = IAccountRepository;
+    }
+
+
+
+    public AccountService(PasswordEncoder passwordEncoder, capstone.oras.dao.IAccountRepository IAccountRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.IAccountRepository = IAccountRepository;
     }
 

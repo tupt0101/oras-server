@@ -31,7 +31,7 @@ public class AccountControllerTest {
 
     @Before
     public void init() {
-        accountService = new AccountService(IAccountRepository);
+        accountService = new AccountService(new BCryptPasswordEncoder(), IAccountRepository);
         controller = new AccountController(accountService , new BCryptPasswordEncoder());
     }
 
