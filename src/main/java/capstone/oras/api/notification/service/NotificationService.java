@@ -25,6 +25,11 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
+    public List<NotificationEntity> updateNotifications(List<NotificationEntity> notificationEntity) {
+        return INotificationRepository.saveAll(notificationEntity);
+    }
+
+    @Override
     public List<NotificationEntity> getAllNotification() {
         return INotificationRepository.findAll();
     }

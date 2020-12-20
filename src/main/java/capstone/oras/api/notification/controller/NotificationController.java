@@ -25,6 +25,18 @@ public class NotificationController {
         return new ResponseEntity<>(notificationService.createNotification(notificationEntity), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/notification", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<NotificationEntity> updateNotification(@RequestBody NotificationEntity notificationEntity) {
+        return new ResponseEntity<>(notificationService.updateNotification(notificationEntity), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/notifications", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<List<NotificationEntity>> updateNotifications(@RequestBody List<NotificationEntity> notificationEntity) {
+        return new ResponseEntity<>(notificationService.updateNotifications(notificationEntity), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/notifications", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<NotificationEntity>> getAllNotification() {
