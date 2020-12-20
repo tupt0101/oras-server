@@ -6,7 +6,7 @@ import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.BuffCompanyEntity;
 import capstone.oras.entity.CompanyEntity;
-import capstone.oras.model.custom.ListAccountModel;
+import capstone.oras.model.custom.ListAccountBuffModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -102,11 +102,11 @@ public class CompanyController {
 
     @RequestMapping(value = "/companies-paging", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<ListAccountModel> getAllCompanyWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
-                                                             @RequestParam(value = "page") Integer page,
-                                                             @RequestParam(value = "sort") String sort,
-                                                             @RequestParam(value = "status") String status,
-                                                             @RequestParam(value = "name") String name) {
+    ResponseEntity<ListAccountBuffModel> getAllCompanyWithPaging(@RequestParam(value = "numOfElement") Integer numOfElement,
+                                                                 @RequestParam(value = "page") Integer page,
+                                                                 @RequestParam(value = "sort") String sort,
+                                                                 @RequestParam(value = "status") String status,
+                                                                 @RequestParam(value = "name") String name) {
         Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
         return new ResponseEntity<>(companyService.getAllCompanyWithPaging(pageable, status, name), HttpStatus.OK);
     }
