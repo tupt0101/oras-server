@@ -34,6 +34,11 @@ public class AccountService implements IAccountService {
 
 
 
+    public AccountService(PasswordEncoder passwordEncoder, capstone.oras.dao.IAccountRepository IAccountRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.IAccountRepository = IAccountRepository;
+    }
+
     @Override
     public String login(String email, String password) {
 //        AccountEntity accountEntity = accountRepository.findAccountEntitiesByEmailEqualsAndPasswordEquals(email, password);

@@ -46,7 +46,7 @@ import static capstone.oras.common.Constant.TIME_ZONE;
 public class AccountController {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public PasswordEncoder passwordEncoder;
 
     @Autowired
     IConfirmationTokenRepository confirmationTokenRepository;
@@ -63,6 +63,11 @@ public class AccountController {
     @Autowired
     private IJobService jobService;
 
+
+    public AccountController(IAccountService accountService, PasswordEncoder passwordEncoder) {
+        this.accountService = accountService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     static class Signup {
         public AccountEntity accountEntity;
@@ -90,6 +95,7 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account already exist");
         } else {
             accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
+            accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
             return new ResponseEntity<>(accountService.createAccount(accountEntity), HttpStatus.OK);
         }
     }

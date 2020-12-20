@@ -5,24 +5,18 @@ import capstone.oras.api.candidate.service.ICandidateService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.IJobApplicationService;
 import capstone.oras.common.CommonUtils;
-import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
-import capstone.oras.entity.JobEntity;
-import capstone.oras.entity.openjob.OpenjobAccountEntity;
-import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.model.custom.ListJobApplicationModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -193,84 +187,7 @@ public class JobApplicationController {
     @RequestMapping(value = "/job-applications-openjob/{jobId}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationMulti(@PathVariable("jobId") int jobId) {
-        //get openjob token
-        String token = CommonUtils.getOjToken();
-        // get job entity
-        JobEntity jobEntity = jobService.getJobById(jobId);
-        // get OpenjobJobId
-        Integer ojId = jobEntity.getOpenjobJobId();
-        if (ojId == null) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This job have not published yet");
-        }
-        // get applications
-        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + ojId;
-        RestTemplate restTemplate = new RestTemplate();
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<OpenjobJobApplicationEntity[]> jobApplicationsList;
-        try {
-            jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
-        }
-        if (jobApplicationsList.getBody() == null) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No application");
-        }
-        OpenjobJobApplicationEntity[] jobApplicationEntityList = jobApplicationsList.getBody();
-        // update TotalApplication
-        if (jobApplicationEntityList.length != 0) {
-            if (jobEntity.getTotalApplication() < jobApplicationEntityList.length) {
-                jobEntity.setTotalApplication(jobApplicationEntityList.length);
-                jobService.updateJob(jobEntity);
-            }
-        }
-        // process application
-        List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
-        JobApplicationEntity jobApplicationEntity;
-        for (OpenjobJobApplicationEntity openjobJobApplication : jobApplicationEntityList) {
-            jobApplicationEntity = new JobApplicationEntity();
-            int candidateId;
-            // check to see if candidate already in system by email
-            // if not create
-            // get id
-            List<CandidateEntity> candByEmail = candidateService.findCandidatesByEmail(openjobJobApplication.getAccountByAccountId().getEmail());
-            if (CollectionUtils.isEmpty(candByEmail)) {
-                OpenjobAccountEntity openjobAccountEntity = openjobJobApplication.getAccountByAccountId();
-                CandidateEntity candidateEntity = new CandidateEntity();
-                candidateEntity.setPhoneNo(openjobAccountEntity.getPhoneNo());
-                candidateEntity.setEmail(openjobAccountEntity.getEmail());
-                candidateEntity.setFullname(openjobAccountEntity.getFullname());
-                candidateEntity.setAddress(openjobAccountEntity.getAddress());
-                candidateId = candidateService.createCandidate(candidateEntity).getId();
-            } else {
-                candidateId = candByEmail.get(0).getId();
-            }
-            jobApplicationEntity.setCandidateId(candidateId);
-            // check if application already exist(check by candidateID and jobId if exist bot
-            // if not create new
-            // else update
-            JobApplicationEntity tempJobApplication = jobApplicationService.findJobApplicationByJobIdAndCandidateId(jobId, candidateId);
-            if (tempJobApplication == null) {
-                jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
-                jobApplicationEntity.setCv(openjobJobApplication.getCv());
-                jobApplicationEntity.setJobId(jobId);
-                jobApplicationEntity.setSource("openjob");
-                jobApplicationEntity.setMatchingRate(0.0);
-                jobApplicationEntity.setStatus("Applied");
-                jobApplicationsOras.add(jobApplicationEntity);
-            } else if (!tempJobApplication.getApplyDate().isEqual(openjobJobApplication.getApplyAt())) {
-                tempJobApplication.setApplyDate(openjobJobApplication.getApplyAt());
-                tempJobApplication.setCv(openjobJobApplication.getCv());
-                tempJobApplication.setMatchingRate(0.0);
-                jobApplicationsOras.add(tempJobApplication);
-            }
-        }
-        List<JobApplicationEntity> result = jobApplicationService.createJobApplications(jobApplicationsOras);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(jobApplicationService.createJobApplications(jobId), HttpStatus.OK);
     }
 
 }

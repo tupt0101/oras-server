@@ -1,27 +1,30 @@
 package capstone.oras.api.jobApplication.service;
 
+import capstone.oras.api.candidate.service.CandidateService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.IJobApplicationRepository;
 import capstone.oras.dao.IJobRepository;
+import capstone.oras.entity.CandidateEntity;
 import capstone.oras.entity.JobApplicationEntity;
 import capstone.oras.entity.JobEntity;
+import capstone.oras.entity.openjob.OpenjobAccountEntity;
+import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.model.custom.ListJobApplicationModel;
 import capstone.oras.model.oras_ai.CalcSimilarityRequest;
 import capstone.oras.model.oras_ai.CalcSimilarityResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,15 +41,96 @@ public class JobApplicationService implements IJobApplicationService {
     @Autowired
     private IJobRepository iJobRepository;
     RestTemplate restTemplate = CommonUtils.initRestTemplate();
+    HttpHeaders headers = new HttpHeaders();
 
+    @Autowired
+    private JobApplicationService jobApplicationService;
+
+    @Autowired
+    private CandidateService candidateService;
     @Override
     public JobApplicationEntity createJobApplication(JobApplicationEntity jobApplicationEntity) {
         return IJobApplicationRepository.save(jobApplicationEntity);
     }
 
     @Override
-    public List<JobApplicationEntity> createJobApplications(List<JobApplicationEntity> jobApplicationsEntity) {
-        return IJobApplicationRepository.saveAll(jobApplicationsEntity);
+    public List<JobApplicationEntity> createJobApplications(int jobId) {
+        //get openjob token
+        String token = CommonUtils.getOjToken();
+        // get job entity
+        JobEntity jobEntity = jobService.getJobById(jobId);
+        // get OpenjobJobId
+        Integer ojId = jobEntity.getOpenjobJobId();
+        if (ojId == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This job have not published yet");
+        }
+        // get applications
+        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + ojId;
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        ResponseEntity<OpenjobJobApplicationEntity[]> jobApplicationsList;
+        try {
+            jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+            jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
+        }
+        if (jobApplicationsList.getBody() == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No application");
+        }
+        OpenjobJobApplicationEntity[] jobApplicationEntityList = jobApplicationsList.getBody();
+        // update TotalApplication
+        if (jobApplicationEntityList.length != 0) {
+            if (jobEntity.getTotalApplication() < jobApplicationEntityList.length) {
+                jobEntity.setTotalApplication(jobApplicationEntityList.length);
+                jobService.updateJob(jobEntity);
+            }
+        }
+        // process application
+        List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
+        JobApplicationEntity jobApplicationEntity;
+        for (OpenjobJobApplicationEntity openjobJobApplication : jobApplicationEntityList) {
+            jobApplicationEntity = new JobApplicationEntity();
+            int candidateId;
+            // check to see if candidate already in system by email
+            // if not create
+            // get id
+            List<CandidateEntity> candByEmail = candidateService.findCandidatesByEmail(openjobJobApplication.getAccountByAccountId().getEmail());
+            if (CollectionUtils.isEmpty(candByEmail)) {
+                OpenjobAccountEntity openjobAccountEntity = openjobJobApplication.getAccountByAccountId();
+                CandidateEntity candidateEntity = new CandidateEntity();
+                candidateEntity.setPhoneNo(openjobAccountEntity.getPhoneNo());
+                candidateEntity.setEmail(openjobAccountEntity.getEmail());
+                candidateEntity.setFullname(openjobAccountEntity.getFullname());
+                candidateEntity.setAddress(openjobAccountEntity.getAddress());
+                candidateId = candidateService.createCandidate(candidateEntity).getId();
+            } else {
+                candidateId = candByEmail.get(0).getId();
+            }
+            jobApplicationEntity.setCandidateId(candidateId);
+            // check if application already exist(check by candidateID and jobId if exist bot
+            // if not create new
+            // else update
+            JobApplicationEntity tempJobApplication = jobApplicationService.findJobApplicationByJobIdAndCandidateId(jobId, candidateId);
+            if (tempJobApplication == null) {
+                jobApplicationEntity.setApplyDate(openjobJobApplication.getApplyAt());
+                jobApplicationEntity.setCv(openjobJobApplication.getCv());
+                jobApplicationEntity.setJobId(jobId);
+                jobApplicationEntity.setSource("openjob");
+                jobApplicationEntity.setMatchingRate(0.0);
+                jobApplicationEntity.setStatus("Applied");
+                jobApplicationsOras.add(jobApplicationEntity);
+            } else if (!tempJobApplication.getApplyDate().isEqual(openjobJobApplication.getApplyAt())) {
+                tempJobApplication.setApplyDate(openjobJobApplication.getApplyAt());
+                tempJobApplication.setCv(openjobJobApplication.getCv());
+                tempJobApplication.setMatchingRate(0.0);
+                jobApplicationsOras.add(tempJobApplication);
+            }
+        }
+        return IJobApplicationRepository.saveAll(jobApplicationsOras);
     }
 
     @Override
