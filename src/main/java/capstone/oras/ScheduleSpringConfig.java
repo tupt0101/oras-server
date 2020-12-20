@@ -122,7 +122,7 @@ public class ScheduleSpringConfig {
             }
         }
     }
-    @Scheduled(fixedRate = 86400000)
+    @Scheduled(fixedRate = 60000)
     public void scanJobApplication() {
         List<JobEntity> jobEntities = jobService.getAllPublishedJob();
         for (JobEntity job : jobEntities) {
