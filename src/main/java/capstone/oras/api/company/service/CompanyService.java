@@ -26,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +37,7 @@ import static capstone.oras.common.Constant.EmailForm.*;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Service
+@Transactional
 public class CompanyService implements ICompanyService{
 
     @Autowired
@@ -156,6 +158,7 @@ public class CompanyService implements ICompanyService{
         if (bufferCompanyRepository.existsById(id)) {
             BuffCompanyEntity buffer = bufferCompanyRepository.findById(id).get();
             BeanUtils.copyProperties(buffer, companyEntity);
+            companyEntity.setModifyDate(companyRepository.findById(id).get().getModifyDate());
             companyEntity = companyRepository.save(companyEntity);
             bufferCompanyRepository.deleteById(id);
             // update company at OJ
