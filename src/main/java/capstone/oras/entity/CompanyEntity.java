@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +23,17 @@ public class CompanyEntity {
     @ApiModelProperty(hidden = true)
     private Integer openjobCompanyId;
     private Boolean verified;
+    private LocalDateTime modifyDate;
+
+    @Basic
+    @Column(name = "modify_date")
+    public LocalDateTime getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(LocalDateTime modifyDate) {
+        this.modifyDate = modifyDate;
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
