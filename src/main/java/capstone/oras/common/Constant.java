@@ -11,6 +11,12 @@ public class Constant {
 //    public static final String ORAS_HOST = "http://localhost:8080";
     public static final ZoneId TIME_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
 
+    public static class NotiType {
+        public static final String MODIFY = "Modify";
+        public static final String REGISTER = "Register";
+        public static final String APPLY = "Apply";
+    }
+
     public static class JobStatus {
         public static final String DRAFT = "Draft";
         public static final String PUBLISHED = "Published";

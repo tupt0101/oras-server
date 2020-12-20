@@ -130,7 +130,9 @@ public class AccountPackageController {
     @ResponseBody
     ResponseEntity<List<AccountPackageEntity>> getAccountPackagesByAccountId(@PathVariable("id") int id) {
         List<AccountPackageEntity> accountPackageEntities = accountPackageService.findAccountPackagesByAccountId(id);
-        accountPackageEntities.sort(Comparator.comparing(AccountPackageEntity::getValidTo).reversed());
+        if (accountPackageEntities != null) {
+            accountPackageEntities.sort(Comparator.comparing(AccountPackageEntity::getValidTo).reversed());
+        }
         return new ResponseEntity<>(accountPackageEntities, HttpStatus.OK);
     }
 

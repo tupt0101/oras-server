@@ -6,7 +6,6 @@ import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.jobApplication.service.JobApplicationService;
 import capstone.oras.api.notification.service.INotificationService;
 import capstone.oras.common.CommonUtils;
-import capstone.oras.api.jobApplication.service.JobApplicationService;
 import capstone.oras.entity.AccountPackageEntity;
 import capstone.oras.entity.ActivityEntity;
 import capstone.oras.entity.JobEntity;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static capstone.oras.common.Constant.NotiType.APPLY;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Configuration
@@ -138,11 +138,11 @@ public class ScheduleSpringConfig {
                     jobApplicationService.createJobApplications(job.getId());
                     if (jobService.getJobById(job.getId()).getTotalApplication() != job.getTotalApplication()) {
                         NotificationEntity notificationEntity = new NotificationEntity();
-                        notificationEntity.setCreateDate(LocalDateTime.now());
+                        notificationEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
                         notificationEntity.setNew(true);
                         notificationEntity.setReceiverId(job.getCreatorId());
                         notificationEntity.setTargetId(job.getId());
-                        notificationEntity.setType("Apply");
+                        notificationEntity.setType(APPLY);
                         notificationService.createNotification(notificationEntity);
                     }
                 } catch (ResponseStatusException e) {
