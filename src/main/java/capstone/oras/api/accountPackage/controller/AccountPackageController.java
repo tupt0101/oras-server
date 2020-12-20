@@ -2,7 +2,6 @@ package capstone.oras.api.accountPackage.controller;
 
 
 import capstone.oras.api.accountPackage.service.IAccountPackageService;
-import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.packages.service.IPackageService;
 import capstone.oras.api.purchase.service.IPurchaseService;
 import capstone.oras.common.CommonUtils;
@@ -11,10 +10,7 @@ import capstone.oras.entity.PurchaseEntity;
 import capstone.oras.entity.model.PurchaseAccountPackage;
 import capstone.oras.model.custom.ListAccountPackageModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -36,15 +32,10 @@ public class AccountPackageController {
     private IAccountPackageService accountPackageService;
 
     @Autowired
-    private ICompanyService companyService;
-
-    @Autowired
     private IPackageService packageService;
 
     @Autowired
     private IPurchaseService purchaseService;
-
-    HttpHeaders httpHeaders = new HttpHeaders();
 
     @RequestMapping(value = "/account-package", method = RequestMethod.POST)
     @ResponseBody
@@ -65,8 +56,7 @@ public class AccountPackageController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Package Id doesn't exist");
         }
         PurchaseEntity purchaseEntity = purchaseService.createPurchase(purchaseAccountPagkage.getPurchaseEntity());
-        AccountPackageEntity accountPackage = new AccountPackageEntity();
-        accountPackage = purchaseAccountPagkage.getAccountPackageEntity();
+        AccountPackageEntity accountPackage = purchaseAccountPagkage.getAccountPackageEntity();
         accountPackage.setPurchaseId(purchaseEntity.getId());
         accountPackage = accountPackageService.createAccountPackage(accountPackage);
         return new ResponseEntity<>(accountPackage, HttpStatus.OK);
@@ -114,7 +104,7 @@ public class AccountPackageController {
         if (!CollectionUtils.isEmpty(lst)) {
             lst.sort(Comparator.comparingInt(AccountPackageEntity::getAccountId));
         }
-        return new ResponseEntity<List<AccountPackageEntity>>(lst, HttpStatus.OK);
+        return new ResponseEntity<>(lst, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/account-packages-paging", method = RequestMethod.GET)
@@ -133,7 +123,7 @@ public class AccountPackageController {
     @RequestMapping(value = "/account-package/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<AccountPackageEntity> getAccountPackageById(@PathVariable("id") int id) {
-        return new ResponseEntity<AccountPackageEntity>(accountPackageService.findAccountPackageById(id), HttpStatus.OK);
+        return new ResponseEntity<>(accountPackageService.findAccountPackageById(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/account-package-by-account-id/{id}", method = RequestMethod.GET)
@@ -141,13 +131,13 @@ public class AccountPackageController {
     ResponseEntity<List<AccountPackageEntity>> getAccountPackagesByAccountId(@PathVariable("id") int id) {
         List<AccountPackageEntity> accountPackageEntities = accountPackageService.findAccountPackagesByAccountId(id);
         accountPackageEntities.sort(Comparator.comparing(AccountPackageEntity::getValidTo).reversed());
-        return new ResponseEntity<List<AccountPackageEntity>>(accountPackageEntities, HttpStatus.OK);
+        return new ResponseEntity<>(accountPackageEntities, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/current-account-package-by-account-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<AccountPackageEntity> getAccountPackageByAccountId(@PathVariable("id") int id) {
-        return new ResponseEntity<AccountPackageEntity>(accountPackageService.findAccountPackageByAccountId(id), HttpStatus.OK);
+        return new ResponseEntity<>(accountPackageService.findAccountPackageByAccountId(id), HttpStatus.OK);
     }
 
 
@@ -159,7 +149,6 @@ public class AccountPackageController {
             for (int i = 0; i < accountPackageEntities.size(); i++) {
                 if (accountPackageEntities.get(i).getPackageId() == 1) {
                     throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Package Starter has already been purchased");
-
                 }
             }
         }

@@ -1,6 +1,7 @@
 package capstone.oras.api.company.service;
 
 import capstone.oras.entity.AccountEntity;
+import capstone.oras.entity.BuffCompanyEntity;
 import capstone.oras.entity.CompanyEntity;
 import capstone.oras.model.custom.ListAccountModel;
 import org.springframework.data.domain.Pageable;
@@ -19,4 +20,6 @@ public interface ICompanyService {
     List<CompanyEntity> getAllCompanyWithNameAndIsVerified(String name);
     Boolean checkCompanyName(Integer id, String name);
     AccountEntity getAccountCompany(int id);
+    int updateCompanyStatus(int id, boolean status);
+    BuffCompanyEntity saveBufferCompany(CompanyEntity companyEntity);
 }

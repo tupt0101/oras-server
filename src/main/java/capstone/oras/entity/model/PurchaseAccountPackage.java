@@ -15,4 +15,20 @@ public class PurchaseAccountPackage implements Serializable {
 
     public PurchaseAccountPackage() {
     }
+
+    public PurchaseEntity getPurchaseEntity() {
+        return purchaseEntity;
+    }
+
+    public void setPurchaseEntity(PurchaseEntity purchaseEntity) {
+        this.purchaseEntity = purchaseEntity;
+    }
+
+    public AccountPackageEntity getAccountPackageEntity() {
+        return accountPackageEntity;
+    }
+
+    public void setAccountPackageEntity(AccountPackageEntity accountPackageEntity) {
+        this.accountPackageEntity = accountPackageEntity;
+    }
 }
