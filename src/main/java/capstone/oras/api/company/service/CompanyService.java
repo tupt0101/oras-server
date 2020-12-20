@@ -26,12 +26,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static capstone.oras.common.Constant.EmailForm.*;
+import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Service
 public class CompanyService implements ICompanyService{
@@ -82,6 +84,7 @@ public class CompanyService implements ICompanyService{
         if (StringUtils.isEmpty(companyEntity.getLocation())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
         }
+        companyEntity.setModifyDate(LocalDateTime.now(TIME_ZONE));
         CompanyEntity ret;
         ret = companyRepository.save(companyEntity);
         this.sendMail(toEmail, "Your company information has been changed", updateCompanyNoti(companyEntity, raw));

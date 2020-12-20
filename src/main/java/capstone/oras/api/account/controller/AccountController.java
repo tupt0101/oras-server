@@ -134,6 +134,7 @@ public class AccountController {
 
         else {
             signup.accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
+            signup.companyEntity.setModifyDate(LocalDateTime.now(TIME_ZONE));
             //get openjob token
             CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
             String token = CommonUtils.getOjToken();
