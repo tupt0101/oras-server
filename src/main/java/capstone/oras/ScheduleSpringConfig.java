@@ -3,6 +3,7 @@ package capstone.oras;
 import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.activity.service.IActivityService;
 import capstone.oras.api.job.service.IJobService;
+import capstone.oras.api.jobApplication.service.JobApplicationService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.api.jobApplication.service.JobApplicationService;
 import capstone.oras.entity.AccountPackageEntity;
