@@ -35,11 +35,8 @@
   <component name="ChangeListManager">
     <list default="true" id="a626e92b-47d1-4c0d-91d5-d4c351b17ac3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oras.iml" beforeDir="false" afterPath="$PROJECT_DIR$/oras.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/ScheduleSpringConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/ScheduleSpringConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/api/jobApplication/controller/JobApplicationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/api/jobApplication/controller/JobApplicationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/api/jobApplication/service/IJobApplicationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/api/jobApplication/service/IJobApplicationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/api/jobApplication/service/JobApplicationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/api/jobApplication/service/JobApplicationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/capstone/oras/api/account/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/capstone/oras/api/account/service/AccountService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +132,7 @@
       <recent name="capstone.oras.oauth2" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AccountControllerTest">
+  <component name="RunManager" selected="Spring Boot.OrasApplication">
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
@@ -473,10 +470,10 @@
     </state>
     <state x="413" y="121" key="extract.method.dialog/0.0.1366.728@0.0.1366.728" timestamp="1608419654759" />
     <state x="651" y="306" key="extract.method.dialog/0.0.1842.1080@0.0.1842.1080" timestamp="1606375845022" />
-    <state x="389" y="97" width="587" height="592" key="find.popup" timestamp="1607928465469">
+    <state x="389" y="97" width="587" height="592" key="find.popup" timestamp="1608422878003">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="389" y="97" width="587" height="592" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1607928465469" />
+    <state x="389" y="97" width="587" height="592" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1608422878003" />
     <state x="437" y="110" width="661" height="671" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1606733060402" />
     <state x="462" y="76" key="git4idea.branch.GitSmartOperationDialog" timestamp="1607959488386">
       <screen x="0" y="0" width="1366" height="728" />

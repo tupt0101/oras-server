@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,7 +36,6 @@ public class AccountService implements IAccountService {
 
 
     public AccountService(PasswordEncoder passwordEncoder, capstone.oras.dao.IAccountRepository IAccountRepository) {
-        this.passwordEncoder = passwordEncoder;
         this.IAccountRepository = IAccountRepository;
     }
 
