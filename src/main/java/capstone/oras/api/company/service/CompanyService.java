@@ -159,6 +159,7 @@ public class CompanyService implements ICompanyService{
             BuffCompanyEntity buffer = bufferCompanyRepository.findById(id).get();
             BeanUtils.copyProperties(buffer, companyEntity);
             companyEntity.setModifyDate(companyRepository.findById(id).get().getModifyDate());
+            companyEntity.setVerified(true);
             companyEntity = companyRepository.save(companyEntity);
             bufferCompanyRepository.deleteById(id);
             // update company at OJ
