@@ -4,6 +4,7 @@ package capstone.oras.api.company.controller;
 import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.common.CommonUtils;
 import capstone.oras.entity.AccountEntity;
+import capstone.oras.entity.BuffCompanyEntity;
 import capstone.oras.entity.CompanyEntity;
 import capstone.oras.model.custom.ListAccountModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
@@ -95,7 +96,7 @@ public class CompanyController {
         if (!CollectionUtils.isEmpty(lst)) {
             lst.sort(Comparator.comparingInt(CompanyEntity::getId));
         }
-        return new ResponseEntity<List<CompanyEntity>>(lst, HttpStatus.OK);
+        return new ResponseEntity<>(lst, HttpStatus.OK);
     }
 
 
@@ -125,6 +126,7 @@ public class CompanyController {
             throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
         }
     }
+
     @RequestMapping(value = "/company/account-company/{id}", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<AccountEntity> getAccountCompany(@PathVariable("id") Integer id) {
@@ -173,7 +175,24 @@ public class CompanyController {
 
 //        ResponseEntity<CompanyEntity> openJobEntity = restTemplate.exchange(uri,HttpMethod.POST, entity, CompanyEntity.class);
 
-        return new ResponseEntity(openJobEntity, HttpStatus.OK);
+        return new ResponseEntity<>(openJobEntity, HttpStatus.OK);
 
+    }
+
+    @RequestMapping(value = "/company-by-user", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<BuffCompanyEntity> updateCompanyByUser(@RequestBody CompanyEntity companyEntity) {
+        System.out.println("Begin updateCompanyByUser");
+        BuffCompanyEntity res = new BuffCompanyEntity();
+        // change status
+        int ret = companyService.updateCompanyStatus(companyEntity.getId(), false);
+        System.out.println("Update company status: " + ret);
+        // save info to buffer
+        if (ret != 0) {
+            res = companyService.saveBufferCompany(companyEntity);
+            System.out.println("Save buffer company: success");
+        }
+        System.out.println("End updateCompanyByUser");
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }

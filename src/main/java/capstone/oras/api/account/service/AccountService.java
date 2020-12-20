@@ -29,13 +29,7 @@ public class AccountService implements IAccountService {
     private JavaMailSender javaMailSender;
 
     @Autowired
-    public AccountService(capstone.oras.dao.IAccountRepository IAccountRepository) {
-        this.IAccountRepository = IAccountRepository;
-    }
-
-
-
-    public AccountService(PasswordEncoder passwordEncoder, capstone.oras.dao.IAccountRepository IAccountRepository) {
+    public AccountService(IAccountRepository IAccountRepository) {
         this.IAccountRepository = IAccountRepository;
     }
 

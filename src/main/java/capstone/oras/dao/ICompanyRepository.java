@@ -36,8 +36,8 @@ public interface ICompanyRepository extends JpaRepository<CompanyEntity, Integer
     int countByNameIgnoreCaseLike(String name);
     Optional<List<CompanyEntity>> findCompanyEntitiesByNameEqualsAndVerifiedEquals(String name, boolean verified);
     Optional<List<CompanyEntity>> findCompanyEntitiesByIdIsNotAndNameEqualsAndVerifiedEquals(Integer id, String name, boolean verified);
-    @Query(value = "update company set verified = true where id = :id", nativeQuery = true)
+    @Query(value = "update company set verified = :status where id = :id", nativeQuery = true)
     @Modifying
     @Transactional
-    Integer verifyCompanyPass(Integer id);
+    Integer updateCompanyStatus(Integer id, boolean status);
 }
