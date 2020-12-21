@@ -67,13 +67,14 @@ public class NotificationController {
 
     @RequestMapping(value = "/new-account-notifications", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<NotificationModel>> getNewNotificationByAccountId(@Param("id") int id, @Param("role") String role) {
+    ResponseEntity<List<NotificationModel>> getNewNotificationByAccountId(@Param("id") Integer id,
+                                                                          @Param("role") String role) {
         return new ResponseEntity<>(notificationService.getAllNewAccountNotification(id, role), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/read-notification", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<Integer> readNotification(@RequestBody List<Integer> ids) {
-        return new ResponseEntity<>(notificationService.readNotifications(ids), HttpStatus.OK);
+        return new ResponseEntity<>(notificationService.readNotification(ids), HttpStatus.OK);
     }
 }

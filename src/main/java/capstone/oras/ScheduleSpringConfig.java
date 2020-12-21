@@ -14,19 +14,13 @@ import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static capstone.oras.common.Constant.NotiType.APPLY;
@@ -122,7 +116,7 @@ public class ScheduleSpringConfig {
             if (job.getExpireDate().isAfter(LocalDateTime.now(TIME_ZONE)) || job.getApplyTo().isAfter(LocalDateTime.now(TIME_ZONE))) {
                 try {
                     jobApplicationService.createJobApplications(job.getId());
-                    if (jobService.getJobById(job.getId()).getTotalApplication() != job.getTotalApplication()) {
+                    if (!jobService.getJobById(job.getId()).getTotalApplication().equals(job.getTotalApplication())) {
                         NotificationEntity notificationEntity = new NotificationEntity();
                         notificationEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
                         notificationEntity.setNew(true);

@@ -123,7 +123,7 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public Integer readNotification(int id) {
+    public Integer readNotification(Integer id) {
         if (!notificationRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification ID not found");
         }
@@ -131,7 +131,7 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public Integer readNotifications(List<Integer> ids) {
+    public Integer readNotification(List<Integer> ids) {
         return notificationRepository.updateIsNew(ids, false);
     }
 }

@@ -15,7 +15,7 @@ public interface INotificationService {
     List<NotificationModel> getAllNewAccountNotification(int accountId, String role);
     NotificationEntity getNotificationById(int id);
     Integer readNotification(Integer id);
-    Integer readNotifications(List<Integer> ids);
+    Integer readNotification(List<Integer> ids);
 
 
 }
