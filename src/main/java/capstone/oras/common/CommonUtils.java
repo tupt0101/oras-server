@@ -1,14 +1,18 @@
 package capstone.oras.common;
 
 import capstone.oras.oauth2.controller.TokenDto;
+import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
@@ -59,6 +63,32 @@ public class CommonUtils {
         return restTemplate;
     }
 
+    public static HttpHeaders initHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(ojToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        return headers;
+    }
+
+    public static <T1, T2> T2 handleOpenJobApi(String url, HttpMethod method, T1 requestBody, Class<T2> responseModel) {
+        T2 ret = null;
+        RestTemplate restTemplate = initRestTemplate();
+        HttpHeaders httpHeaders = initHttpHeaders();
+        HttpEntity<T1> entity = new HttpEntity<>(requestBody, httpHeaders);
+        // request with retry
+        for (int i = 0; i < 3; i++) {
+            try {
+                ret = restTemplate.exchange(url, method, entity, responseModel).getBody();
+            } catch (HttpClientErrorException.Unauthorized e) {
+                getOpenJobToken();
+            } catch (Exception e) {
+                System.out.println("ERROR AT handleOpenJobApi: " + e.getMessage());
+            }
+        }
+        return ret;
+    }
+
     public static Pageable configPageable(Integer numOfElement, Integer page, String sort) {
         String sortBy = sort.substring(1);
         return PageRequest.of(page != null ? page - 1 : 0, numOfElement != null ? numOfElement : Integer.MAX_VALUE,
@@ -82,12 +112,12 @@ public class CommonUtils {
     }
 
     public static String getOpenJobToken() {
-        final String uri = OJ_LOGIN;
         RestTemplate restTemplate = new RestTemplate();
         TokenDto dto;
         try {
-            dto = restTemplate.getForObject(uri, TokenDto.class);
-            return dto.getToken();
+            dto = restTemplate.getForObject(OJ_LOGIN, TokenDto.class);
+            setOjToken(dto.getToken());
+            return ojToken;
         } catch (Exception e) {
             return "";
         }

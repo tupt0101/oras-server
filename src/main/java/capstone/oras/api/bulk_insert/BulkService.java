@@ -15,7 +15,6 @@ import capstone.oras.entity.openjob.OpenjobCompanyEntity;
 import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.model.oras_ai.ProcessJdRequest;
 import capstone.oras.model.oras_ai.ProcessJdResponse;
-import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -66,13 +65,6 @@ public class BulkService implements IBulkService {
     @Override
     public Integer signup(List<BulkController.Signup> signups) {
         int res = 0;
-        //get openjob token
-        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = CommonUtils.getOjToken();
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        entity = new HttpEntity(headers);
         for (BulkController.Signup signup : signups) {
             try {
                 this.validateSignUp(signup);
@@ -221,7 +213,7 @@ public class BulkService implements IBulkService {
         // post company to openjob
         String uri = OJ_COMPANY_BY_NAME + signup.companyEntity.getName();
         // check company existence
-        CompanyEntity openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
+        CompanyEntity openJobEntity = CommonUtils.handleOpenJobApi(uri, HttpMethod.GET, null,CompanyEntity.class);
         if (openJobEntity == null) {
             OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
             // ????? Why set 1

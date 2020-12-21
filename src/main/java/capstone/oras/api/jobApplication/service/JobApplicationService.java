@@ -56,8 +56,6 @@ public class JobApplicationService implements IJobApplicationService {
 
     @Override
     public List<JobApplicationEntity> createJobApplications(int jobId) {
-        //get openjob token
-        String token = CommonUtils.getOjToken();
         // get job entity
         JobEntity jobEntity = jobService.getJobById(jobId);
         // get OpenjobJobId
@@ -67,22 +65,10 @@ public class JobApplicationService implements IJobApplicationService {
         }
         // get applications
         String uri = OJ_JOB_BY_ID + ojId;
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<OpenjobJobApplicationEntity[]> jobApplicationsList;
-        try {
-            jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
-        }
-        if (jobApplicationsList.getBody() == null) {
+        OpenjobJobApplicationEntity[] jobApplicationEntityList = CommonUtils.handleOpenJobApi(uri, HttpMethod.GET, null, OpenjobJobApplicationEntity[].class);
+        if (jobApplicationEntityList == null) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No application");
         }
-        OpenjobJobApplicationEntity[] jobApplicationEntityList = jobApplicationsList.getBody();
         // update TotalApplication
         if (jobApplicationEntityList.length != 0) {
             if (jobEntity.getTotalApplication() < jobApplicationEntityList.length) {

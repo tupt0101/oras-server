@@ -209,34 +209,18 @@ public class CompanyService implements ICompanyService {
     }
 
     private void changeOJAvatar(Integer id, String avaUrl) {
-        String getCompanyUrl = OJ_COMPANY + "/" + id;
-        String updateCompanyUrl = OJ_COMPANY;
-        headers.setBearerAuth(CommonUtils.getOjToken());
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<OpenjobCompanyEntity> entity = new HttpEntity<>(headers);
+        Integer ojId = findCompanyById(id).getOpenjobCompanyId();
+        String getCompanyUrl = OJ_COMPANY + "/" + ojId;
         // get
-        OpenjobCompanyEntity comp;
-        try {
-            comp = restTemplate.exchange(getCompanyUrl, HttpMethod.GET, entity, OpenjobCompanyEntity.class).getBody();
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            comp = restTemplate.exchange(getCompanyUrl, HttpMethod.GET, entity, OpenjobCompanyEntity.class).getBody();
-        }
+        OpenjobCompanyEntity comp = CommonUtils.handleOpenJobApi(getCompanyUrl, HttpMethod.GET, null,
+                OpenjobCompanyEntity.class);
         if (comp == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This company does not exist in Open Job system");
         }
         comp.setAvatar(avaUrl);
         // put
-        entity = new HttpEntity<>(comp, headers);
-        try {
-            restTemplate.put(updateCompanyUrl, HttpMethod.PUT, entity, OpenjobCompanyEntity.class);
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            restTemplate.put(updateCompanyUrl, HttpMethod.PUT, entity, OpenjobCompanyEntity.class);
-        }
+        CommonUtils.handleOpenJobApi(OJ_COMPANY, HttpMethod.PUT, comp,
+                OpenjobCompanyEntity.class);
     }
 
     public void sendMail(String email, String subject, String text) throws MessagingException {

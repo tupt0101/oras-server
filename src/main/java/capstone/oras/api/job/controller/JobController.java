@@ -116,21 +116,7 @@ public class JobController {
         String token = CommonUtils.getOjToken();
         // post job to openjob
         String uri = OJ_JOB + "/" + openjobJobId + "/close";
-        System.out.println(uri);
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity entity = new HttpEntity(headers);
-        // close job on openjob
-        try {
-            restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
-        }
+        CommonUtils.handleOpenJobApi(uri, HttpMethod.PUT, null, OpenjobJobEntity.class);
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setCreatorId(job.getCreatorId());
         activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
@@ -161,13 +147,6 @@ public class JobController {
         return new ResponseEntity<>(jobService.getJobByCreatorId(id), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/closed-published-job-by-creator-id/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<List<JobEntity>> getAllClosedAndPublishedJobByCreatorId(@PathVariable("id") int id) {
-        return new ResponseEntity<List<JobEntity>>(jobService.getClosedAndPublishedJobByCreatorId(id), HttpStatus.OK);
-    }
-
-
     @RequestMapping(value = "/job-by-creator-id/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<JobEntity>> getAllJobByCreatorId(@PathVariable("id") int id) {
@@ -185,20 +164,6 @@ public class JobController {
                                                                    @RequestParam(value = "currency") String currency) {
         Pageable pageable = CommonUtils.configPageable(numOfElement, page, sort);
         return new ResponseEntity<>(jobService.getAllJobByCreatorIdWithPaging(id, pageable, title, status, currency), HttpStatus.OK);
-    }
-
-
-    @RequestMapping(value = "/job/{id}/extend/{date}", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id, @PathVariable("date") int date) {
-        if (jobService.getJobById(id) == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
-        }
-        JobEntity job = jobService.getJobById(id);
-        LocalDateTime expireDate = job.getExpireDate();
-        expireDate.plusDays(date);
-        job.setExpireDate(expireDate);
-        return new ResponseEntity<JobEntity>(this.jobService.updateJob(job), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/job/{id}/publish", method = RequestMethod.PUT)
@@ -281,186 +246,40 @@ public class JobController {
         return new ResponseEntity<>(job, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/categories", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<JobEntity> createJobMulti(@RequestBody JobEntity job) {
-        if (job.getCreatorId() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
-        }
-        if (job.getTitle() == null || job.getTitle().isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
-        }
-
-        if (job.getApplyTo() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
-        }
-
-        if (job.getCreateDate() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is a required field");
-        }
-
-        if (job.getCurrency() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
-        }
-
-
-        if (jobService.getJobById(job.getId()) != null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
-        }
-
-        if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
-        }
-
-
-        job.setCreateDate(LocalDateTime.now(TIME_ZONE));
-        JobEntity jobEntity = jobService.createJob(job);
-
-        OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-
-        openjobJobEntity.setApplyTo(job.getApplyTo());
-        openjobJobEntity.setAccountId(1);
-        openjobJobEntity.setCategory(job.getCategory());
-        // Get company id from openjob
-        int companyId = accountService.findAccountEntityById(job.getCreatorId()).getCompanyId();
-        System.out.println(accountService.findAccountEntityById(job.getCreatorId()).toString());
-        int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
-        openjobJobEntity.setCompanyId(openjobCompanyId);
-
-
-        openjobJobEntity.setCreateDate(job.getCreateDate());
-        openjobJobEntity.setCurrency(job.getCurrency());
-        openjobJobEntity.setDescription(job.getDescription());
-        openjobJobEntity.setJobType(job.getJobType());
-        openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
-        openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
-        openjobJobEntity.setSalaryTo(job.getSalaryTo());
-        openjobJobEntity.setStatus(job.getStatus());
-        openjobJobEntity.setTitle(job.getTitle());
-        openjobJobEntity.setVacancies(job.getVacancies());
-
-        //get openjob token
-//        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = CommonUtils.getOjToken();
-        // post job to openjob
-        String uri = OJ_JOB;
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-
-        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        try {
-            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
-        }
-        job.setOpenjobJobId(openjobJobEntity.getId());
-//        jobService.updateJob(job);
-        return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
+    ResponseEntity<List<CategoryEntity>> getAllCategories() {
+        return new ResponseEntity<>(jobService.getAllCategories(), HttpStatus.OK);
     }
 
-
-    @PutMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/remove", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<JobEntity> updateJobMulti(@RequestBody JobEntity job) {
-        if (job.getCreatorId() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
-        }
-        if (job.getTitle() == null || job.getTitle().isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
-        }
-
-        if (job.getApplyTo() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
-        }
-
-        if (job.getCreateDate() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is a required field");
-        }
-
-        if (job.getCurrency() == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
-        }
-
-
-        if (jobService.getJobById(job.getId()) == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
-        }
-
-        if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
-        }
-
-
-        OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
-        openjobJobEntity.setApplyTo(job.getApplyTo());
-        openjobJobEntity.setAccountId(1);
-        openjobJobEntity.setCategory(job.getCategory());
-        // Get company id from openjob
-        int companyId = accountService.findAccountEntityById(job.getCreatorId()).getCompanyId();
-        System.out.println(accountService.findAccountEntityById(job.getCreatorId()).toString());
-        int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
-        openjobJobEntity.setCompanyId(openjobCompanyId);
-
-        // Set Attribute
-        openjobJobEntity.setCreateDate(job.getCreateDate());
-        openjobJobEntity.setCurrency(job.getCurrency());
-        openjobJobEntity.setDescription(job.getDescription());
-        openjobJobEntity.setJobType(job.getJobType());
-        openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
-        openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
-        openjobJobEntity.setSalaryTo(job.getSalaryTo());
-        openjobJobEntity.setStatus(job.getStatus());
-        openjobJobEntity.setTitle(job.getTitle());
-        openjobJobEntity.setVacancies(job.getVacancies());
-
-        //get openjob token
-//        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = CommonUtils.getOjToken();
-        // post job to openjob
-        String uri = OJ_JOB;
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-
-        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        try {
-            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
-        }
-        job.setOpenjobJobId(openjobJobEntity.getId());
-//        jobService.updateJob(job);
-        return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
+    public void removeDraft(Integer id) {
+        jobService.removeDraft(id);
     }
 
+//    @RequestMapping(value = "/closed-published-job-by-creator-id/{id}", method = RequestMethod.GET)
+//    @ResponseBody
+//    public ResponseEntity<List<JobEntity>> getAllClosedAndPublishedJobByCreatorId(@PathVariable("id") int id) {
+//        return new ResponseEntity<List<JobEntity>>(jobService.getClosedAndPublishedJobByCreatorId(id), HttpStatus.OK);
+//    }
+//
+//    @RequestMapping(value = "/job/{id}/extend/{date}", method = RequestMethod.PUT)
+//    @ResponseBody
+//    public ResponseEntity<JobEntity> publishJob(@PathVariable("id") int id, @PathVariable("date") int date) {
+//        if (jobService.getJobById(id) == null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to publish");
+//        }
+//        JobEntity job = jobService.getJobById(id);
+//        LocalDateTime expireDate = job.getExpireDate();
+//        expireDate.plusDays(date);
+//        job.setExpireDate(expireDate);
+//        return new ResponseEntity<JobEntity>(this.jobService.updateJob(job), HttpStatus.OK);
+//    }
+//
 //    @PostMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
 //    @ResponseBody
-//    ResponseEntity<JobEntity> createJobMulti(@RequestBody JobEntity job) {
+//    public ResponseEntity<JobEntity> createJobMulti(@RequestBody JobEntity job) {
 //        if (job.getCreatorId() == null) {
 //
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
@@ -468,10 +287,6 @@ public class JobController {
 //        if (job.getTitle() == null || job.getTitle().isEmpty()) {
 //
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
-//        }
-//        if (job.getApplyFrom() == null) {
-//
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
 //        }
 //
 //        if (job.getApplyTo() == null) {
@@ -490,7 +305,6 @@ public class JobController {
 //        }
 //
 //
-//
 //        if (jobService.getJobById(job.getId()) != null) {
 //
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
@@ -501,10 +315,12 @@ public class JobController {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
 //        }
 //
+//
 //        job.setCreateDate(LocalDateTime.now(TIME_ZONE));
 //        JobEntity jobEntity = jobService.createJob(job);
 //
 //        OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
+//
 //        openjobJobEntity.setApplyTo(job.getApplyTo());
 //        openjobJobEntity.setAccountId(1);
 //        openjobJobEntity.setCategory(job.getCategory());
@@ -519,7 +335,6 @@ public class JobController {
 //        openjobJobEntity.setCurrency(job.getCurrency());
 //        openjobJobEntity.setDescription(job.getDescription());
 //        openjobJobEntity.setJobType(job.getJobType());
-//        openjobJobEntity.setLocation(job.getLocation());
 //        openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
 //        openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
 //        openjobJobEntity.setSalaryTo(job.getSalaryTo());
@@ -540,7 +355,13 @@ public class JobController {
 //
 //
 //        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-//        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+//        try {
+//            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+//        } catch (HttpClientErrorException.Unauthorized e) {
+//            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+//            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+//            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+//        }
 //        job.setOpenjobJobId(openjobJobEntity.getId());
 ////        jobService.updateJob(job);
 //        return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
@@ -549,7 +370,7 @@ public class JobController {
 //
 //    @PutMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
 //    @ResponseBody
-//    ResponseEntity<JobEntity> updateJobMulti(@RequestBody JobEntity job) {
+//    public ResponseEntity<JobEntity> updateJobMulti(@RequestBody JobEntity job) {
 //        if (job.getCreatorId() == null) {
 //
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
@@ -557,10 +378,6 @@ public class JobController {
 //        if (job.getTitle() == null || job.getTitle().isEmpty()) {
 //
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
-//        }
-//        if (job.getApplyFrom() == null) {
-//
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
 //        }
 //
 //        if (job.getApplyTo() == null) {
@@ -579,7 +396,6 @@ public class JobController {
 //        }
 //
 //
-//
 //        if (jobService.getJobById(job.getId()) == null) {
 //
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
@@ -589,6 +405,7 @@ public class JobController {
 //
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
 //        }
+//
 //
 //        OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
 //        openjobJobEntity.setApplyTo(job.getApplyTo());
@@ -605,7 +422,6 @@ public class JobController {
 //        openjobJobEntity.setCurrency(job.getCurrency());
 //        openjobJobEntity.setDescription(job.getDescription());
 //        openjobJobEntity.setJobType(job.getJobType());
-//        openjobJobEntity.setLocation(job.getLocation());
 //        openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
 //        openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
 //        openjobJobEntity.setSalaryTo(job.getSalaryTo());
@@ -626,21 +442,189 @@ public class JobController {
 //
 //
 //        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-//        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+//        try {
+//            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+//        } catch (HttpClientErrorException.Unauthorized e) {
+//            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+//            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+//            restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+//        }
 //        job.setOpenjobJobId(openjobJobEntity.getId());
 ////        jobService.updateJob(job);
 //        return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
 //    }
-
-    @RequestMapping(value = "/categories", method = RequestMethod.GET)
-    @ResponseBody
-    ResponseEntity<List<CategoryEntity>> getAllCategories() {
-        return new ResponseEntity<>(jobService.getAllCategories(), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/remove", method = RequestMethod.GET)
-    @ResponseBody
-    public void removeDraft(Integer id) {
-        jobService.removeDraft(id);
-    }
+//
+////    @PostMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
+////    @ResponseBody
+////    ResponseEntity<JobEntity> createJobMulti(@RequestBody JobEntity job) {
+////        if (job.getCreatorId() == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
+////        }
+////        if (job.getTitle() == null || job.getTitle().isEmpty()) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
+////        }
+////        if (job.getApplyFrom() == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
+////        }
+////
+////        if (job.getApplyTo() == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
+////        }
+////
+////        if (job.getCreateDate() == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is a required field");
+////        }
+////
+////        if (job.getCurrency() == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
+////        }
+////
+////
+////
+////        if (jobService.getJobById(job.getId()) != null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
+////        }
+////
+////        if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
+////        }
+////
+////        job.setCreateDate(LocalDateTime.now(TIME_ZONE));
+////        JobEntity jobEntity = jobService.createJob(job);
+////
+////        OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
+////        openjobJobEntity.setApplyTo(job.getApplyTo());
+////        openjobJobEntity.setAccountId(1);
+////        openjobJobEntity.setCategory(job.getCategory());
+////        // Get company id from openjob
+////        int companyId = accountService.findAccountEntityById(job.getCreatorId()).getCompanyId();
+////        System.out.println(accountService.findAccountEntityById(job.getCreatorId()).toString());
+////        int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
+////        openjobJobEntity.setCompanyId(openjobCompanyId);
+////
+////
+////        openjobJobEntity.setCreateDate(job.getCreateDate());
+////        openjobJobEntity.setCurrency(job.getCurrency());
+////        openjobJobEntity.setDescription(job.getDescription());
+////        openjobJobEntity.setJobType(job.getJobType());
+////        openjobJobEntity.setLocation(job.getLocation());
+////        openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
+////        openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
+////        openjobJobEntity.setSalaryTo(job.getSalaryTo());
+////        openjobJobEntity.setStatus(job.getStatus());
+////        openjobJobEntity.setTitle(job.getTitle());
+////        openjobJobEntity.setVacancies(job.getVacancies());
+////
+////        //get openjob token
+//////        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
+////        String token = CommonUtils.getOjToken();
+////        // post job to openjob
+////        String uri = OJ_JOB;
+////        RestTemplate restTemplate = new RestTemplate();
+////        HttpHeaders headers = new HttpHeaders();
+////        headers.setBearerAuth(token);
+////        headers.setContentType(MediaType.APPLICATION_JSON);
+////        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+////
+////
+////        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
+////        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+////        job.setOpenjobJobId(openjobJobEntity.getId());
+//////        jobService.updateJob(job);
+////        return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
+////    }
+////
+////
+////    @PutMapping(value = "/job-openjob", consumes = MediaType.APPLICATION_JSON_VALUE)
+////    @ResponseBody
+////    ResponseEntity<JobEntity> updateJobMulti(@RequestBody JobEntity job) {
+////        if (job.getCreatorId() == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreatorId is null");
+////        }
+////        if (job.getTitle() == null || job.getTitle().isEmpty()) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title is a required field");
+////        }
+////        if (job.getApplyFrom() == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apply from is a required field");
+////        }
+////
+////        if (job.getApplyTo() == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deadline is a required field");
+////        }
+////
+////        if (job.getCreateDate() == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Create Date is a required field");
+////        }
+////
+////        if (job.getCurrency() == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Currency is a required field");
+////        }
+////
+////
+////
+////        if (jobService.getJobById(job.getId()) == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job ID already exist");
+////        }
+////
+////        if (accountService.findAccountEntityById(job.getCreatorId()) == null) {
+////
+////            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account is not exist");
+////        }
+////
+////        OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
+////        openjobJobEntity.setApplyTo(job.getApplyTo());
+////        openjobJobEntity.setAccountId(1);
+////        openjobJobEntity.setCategory(job.getCategory());
+////        // Get company id from openjob
+////        int companyId = accountService.findAccountEntityById(job.getCreatorId()).getCompanyId();
+////        System.out.println(accountService.findAccountEntityById(job.getCreatorId()).toString());
+////        int openjobCompanyId = companyService.findCompanyById(companyId).getOpenjobCompanyId();
+////        openjobJobEntity.setCompanyId(openjobCompanyId);
+////
+////        // Set Attribute
+////        openjobJobEntity.setCreateDate(job.getCreateDate());
+////        openjobJobEntity.setCurrency(job.getCurrency());
+////        openjobJobEntity.setDescription(job.getDescription());
+////        openjobJobEntity.setJobType(job.getJobType());
+////        openjobJobEntity.setLocation(job.getLocation());
+////        openjobJobEntity.setSalaryFrom(job.getSalaryFrom());
+////        openjobJobEntity.setSalaryHidden(job.getSalaryHidden());
+////        openjobJobEntity.setSalaryTo(job.getSalaryTo());
+////        openjobJobEntity.setStatus(job.getStatus());
+////        openjobJobEntity.setTitle(job.getTitle());
+////        openjobJobEntity.setVacancies(job.getVacancies());
+////
+////        //get openjob token
+//////        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
+////        String token = CommonUtils.getOjToken();
+////        // post job to openjob
+////        String uri = OJ_JOB;
+////        RestTemplate restTemplate = new RestTemplate();
+////        HttpHeaders headers = new HttpHeaders();
+////        headers.setBearerAuth(token);
+////        headers.setContentType(MediaType.APPLICATION_JSON);
+////        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+////
+////
+////        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
+////        OpenjobJobEntity openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
+////        job.setOpenjobJobId(openjobJobEntity.getId());
+//////        jobService.updateJob(job);
+////        return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
+////    }
 }

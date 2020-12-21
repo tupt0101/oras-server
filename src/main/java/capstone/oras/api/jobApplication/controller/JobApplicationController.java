@@ -68,14 +68,6 @@ public class JobApplicationController {
             return new ResponseEntity<>(jobApplicationService.createJobApplication(jobApplicationEntity), HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/job-applications", method = RequestMethod.POST)
-//    @ResponseBody
-//    ResponseEntity<List<JobApplicationEntity>> createJobApplications(@RequestBody List<JobApplicationEntity> jobApplicationsEntity) {
-//
-//        return new ResponseEntity<>(jobApplicationService.createJobApplications(jobApplicationsEntity), HttpStatus.OK);
-//
-//    }
-
     @RequestMapping(value = "/job-application", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<JobApplicationEntity> updateJobApplication(@RequestBody JobApplicationEntity jobApplicationEntity) {
@@ -105,15 +97,6 @@ public class JobApplicationController {
 
     }
 
-
-    @RequestMapping(value = "/job-application/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    ResponseEntity<JobApplicationEntity> getJobApplicationById(@PathVariable("id") int id) {
-
-        return new ResponseEntity<JobApplicationEntity>(jobApplicationService.findJobApplicationById(id), HttpStatus.OK);
-
-    }
-
     @RequestMapping(value = "/job-application/hire/{id}", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<JobApplicationEntity> hireJobApplication(@PathVariable("id") int id) {
@@ -126,18 +109,6 @@ public class JobApplicationController {
         } else {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Cannot find this job");
         }
-    }
-
-
-    @RequestMapping(value = "/job-applications", method = RequestMethod.GET)
-    @ResponseBody
-    ResponseEntity<List<JobApplicationEntity>> getAllJobApplication() {
-        List<JobApplicationEntity> lst = jobApplicationService.getAllJobApplication();
-        if (!CollectionUtils.isEmpty(lst)) {
-            lst.sort(Comparator.comparingInt(JobApplicationEntity::getId));
-        }
-        return new ResponseEntity<List<JobApplicationEntity>>(lst, HttpStatus.OK);
-
     }
 
     @RequestMapping(value = "/job-applications-by-job-id/{jobId}", method = RequestMethod.GET)
@@ -189,5 +160,31 @@ public class JobApplicationController {
     ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationMulti(@PathVariable("jobId") int jobId) {
         return new ResponseEntity<>(jobApplicationService.createJobApplications(jobId), HttpStatus.OK);
     }
+
+////    @RequestMapping(value = "/job-applications", method = RequestMethod.POST)
+////    @ResponseBody
+////    ResponseEntity<List<JobApplicationEntity>> createJobApplications(@RequestBody List<JobApplicationEntity> jobApplicationsEntity) {
+////
+////        return new ResponseEntity<>(jobApplicationService.createJobApplications(jobApplicationsEntity), HttpStatus.OK);
+////
+////    }
+//
+//    @RequestMapping(value = "/job-application/{id}", method = RequestMethod.GET)
+//    @ResponseBody
+//    ResponseEntity<JobApplicationEntity> getJobApplicationById(@PathVariable("id") int id) {
+//
+//        return new ResponseEntity<JobApplicationEntity>(jobApplicationService.findJobApplicationById(id), HttpStatus.OK);
+//
+//    }
+//
+//    @RequestMapping(value = "/job-applications", method = RequestMethod.GET)
+//    @ResponseBody
+//    ResponseEntity<List<JobApplicationEntity>> getAllJobApplication() {
+//        List<JobApplicationEntity> lst = jobApplicationService.getAllJobApplication();
+//        if (!CollectionUtils.isEmpty(lst)) {
+//            lst.sort(Comparator.comparingInt(JobApplicationEntity::getId));
+//        }
+//        return new ResponseEntity<List<JobApplicationEntity>>(lst, HttpStatus.OK);
+//    }
 
 }
