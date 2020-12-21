@@ -86,7 +86,7 @@ public class NotificationService implements INotificationService {
                 listNoti.stream().filter(o -> o.getType().equalsIgnoreCase(APPLY)).collect(Collectors.toList());
         // handle REGISTER notification
         if (registerList.size() > 0) {
-            registerList.sort(Comparator.comparing(NotificationEntity::getCreateDate));
+            registerList.sort(Comparator.comparing(NotificationEntity::getCreateDate).reversed());
             resNoti = new NotificationModel(REGISTER, registerList.size(), registerList.get(0).getCreateDate(),
                     registerList.stream().map(NotificationEntity::getId).collect(Collectors.toList()));
             res.add(resNoti);
@@ -103,14 +103,14 @@ public class NotificationService implements INotificationService {
                     .collect(Collectors.groupingBy(NotificationEntity::getTargetId));
             for (Map.Entry<Integer, List<NotificationEntity>> noti: jobIdToNoti.entrySet()) {
                 String title = jobService.getJobById(noti.getKey()).getTitle();
-                noti.getValue().sort(Comparator.comparing(NotificationEntity::getCreateDate));
-                resNoti = new NotificationModel(APPLY, noti.getValue().size(), title,
+                noti.getValue().sort(Comparator.comparing(NotificationEntity::getCreateDate).reversed());
+                resNoti = new NotificationModel(APPLY, noti.getValue().size(), title, noti.getKey(),
                         noti.getValue().get(0).getCreateDate(),
                         noti.getValue().stream().map(NotificationEntity::getId).collect(Collectors.toList()));
                 res.add(resNoti);
             }
         }
-        res.sort(Comparator.comparing(NotificationModel::getLastModify));
+        res.sort(Comparator.comparing(NotificationModel::getLastModify).reversed());
         return res;
     }
 

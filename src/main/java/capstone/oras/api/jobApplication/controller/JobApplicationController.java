@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
+import static capstone.oras.common.Constant.ApplicantStatus.APPLIED;
 import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
@@ -105,9 +106,23 @@ public class JobApplicationController {
             applicationEntity.setStatus(HIRED);
             applicationEntity.setHiredDate(LocalDateTime.now(TIME_ZONE));
             this.jobApplicationService.updateJobApplication(applicationEntity);
-            return new ResponseEntity<JobApplicationEntity>(this.jobApplicationService.updateJobApplication(applicationEntity), HttpStatus.OK);
+            return new ResponseEntity<>(this.jobApplicationService.updateJobApplication(applicationEntity), HttpStatus.OK);
         } else {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Cannot find this job");
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Cannot find this application");
+        }
+    }
+
+    @RequestMapping(value = "/job-application/unhire/{id}", method = RequestMethod.PUT)
+    @ResponseBody
+    ResponseEntity<JobApplicationEntity> unhireJobApplication(@PathVariable("id") int id) {
+        JobApplicationEntity applicationEntity = jobApplicationService.findJobApplicationById(id);
+        if (applicationEntity != null) {
+            applicationEntity.setStatus(APPLIED);
+            applicationEntity.setHiredDate(null);
+            this.jobApplicationService.updateJobApplication(applicationEntity);
+            return new ResponseEntity<>(this.jobApplicationService.updateJobApplication(applicationEntity), HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Cannot find this application");
         }
     }
 
