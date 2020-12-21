@@ -16,5 +16,9 @@ public interface INotificationRepository extends JpaRepository<NotificationEntit
     @Modifying
     @Transactional
     Integer updateIsNew(int id, boolean isNew);
+    @Query(value = "update notification set is_new = :isNew where id in :ids", nativeQuery = true)
+    @Modifying
+    @Transactional
+    Integer updateIsNew(List<Integer> ids, boolean isNew);
 
 }

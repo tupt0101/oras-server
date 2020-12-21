@@ -3,6 +3,7 @@ package capstone.oras.api.notification.controller;
 
 import capstone.oras.api.notification.service.INotificationService;
 import capstone.oras.entity.NotificationEntity;
+import capstone.oras.model.custom.NotificationModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -66,13 +67,14 @@ public class NotificationController {
 
     @RequestMapping(value = "/new-account-notifications", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<NotificationEntity>> getNewNotificationByAccountId(@Param("id") int id, @Param("role") String role) {
+    ResponseEntity<List<NotificationModel>> getNewNotificationByAccountId(@Param("id") Integer id,
+                                                                          @Param("role") String role) {
         return new ResponseEntity<>(notificationService.getAllNewAccountNotification(id, role), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/read-notification/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/read-notification", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<Integer> readNotification(@PathVariable("id") int id) {
-        return new ResponseEntity<>(notificationService.readNotification(id), HttpStatus.OK);
+    ResponseEntity<Integer> readNotification(@RequestBody List<Integer> ids) {
+        return new ResponseEntity<>(notificationService.readNotification(ids), HttpStatus.OK);
     }
 }
