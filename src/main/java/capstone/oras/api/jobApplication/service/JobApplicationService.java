@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
-import static capstone.oras.common.Constant.ApplicantStatus.APPLIED;
+import static capstone.oras.common.Constant.ApplicantStatus.APPL;
 import static capstone.oras.common.Constant.OpenJobApi.OJ_JOB_BY_ID;
 
 @Service
@@ -109,7 +109,7 @@ public class JobApplicationService implements IJobApplicationService {
                 jobApplicationEntity.setJobId(jobId);
                 jobApplicationEntity.setSource("openjob");
                 jobApplicationEntity.setMatchingRate(0.0);
-                jobApplicationEntity.setStatus(APPLIED);
+                jobApplicationEntity.setStatus(APPL);
                 jobApplicationsOras.add(jobApplicationEntity);
             } else if (!tempJobApplication.getApplyDate().isEqual(openjobJobApplication.getApplyAt())) {
                 tempJobApplication.setApplyDate(openjobJobApplication.getApplyAt());

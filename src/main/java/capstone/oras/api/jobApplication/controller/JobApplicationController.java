@@ -20,8 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-import static capstone.oras.common.Constant.ApplicantStatus.APPLIED;
-import static capstone.oras.common.Constant.ApplicantStatus.HIRED;
+import static capstone.oras.common.Constant.ApplicantStatus.*;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 @RestController
@@ -117,7 +116,7 @@ public class JobApplicationController {
     ResponseEntity<JobApplicationEntity> unhireJobApplication(@PathVariable("id") int id) {
         JobApplicationEntity applicationEntity = jobApplicationService.findJobApplicationById(id);
         if (applicationEntity != null) {
-            applicationEntity.setStatus(APPLIED);
+            applicationEntity.setStatus(APPL);
             applicationEntity.setHiredDate(null);
             this.jobApplicationService.updateJobApplication(applicationEntity);
             return new ResponseEntity<>(this.jobApplicationService.updateJobApplication(applicationEntity), HttpStatus.OK);
