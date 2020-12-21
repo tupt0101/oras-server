@@ -41,5 +41,7 @@ public interface ICompanyRepository extends JpaRepository<CompanyEntity, Integer
     @Transactional
     Integer updateCompanyStatus(@Param("id") Integer id, @Param("status") boolean status);
     @Query("update CompanyEntity set avatar = :avaUrl where id = :id")
+    @Modifying
+    @Transactional
     Integer changeAvatar(Integer id, String avaUrl);
 }
