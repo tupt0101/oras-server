@@ -631,10 +631,15 @@ public class JobController {
 //        return new ResponseEntity<JobEntity>(jobService.updateJob(job), HttpStatus.OK);
 //    }
 
-
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     @ResponseBody
     ResponseEntity<List<CategoryEntity>> getAllCategories() {
-        return new ResponseEntity<List<CategoryEntity>>(jobService.getAllCategories(), HttpStatus.OK);
+        return new ResponseEntity<>(jobService.getAllCategories(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/remove", method = RequestMethod.GET)
+    @ResponseBody
+    public void removeDraft(Integer id) {
+        jobService.removeDraft(id);
     }
 }

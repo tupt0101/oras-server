@@ -22,4 +22,5 @@ public interface ICompanyService {
     AccountEntity getAccountCompany(int id);
     int updateCompanyStatus(int id, boolean status);
     BuffCompanyEntity saveBufferCompany(CompanyEntity companyEntity);
+    Integer changeAvatar(Integer id, String avaUrl);
 }

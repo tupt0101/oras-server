@@ -32,15 +32,15 @@ import static capstone.oras.common.Constant.TIME_ZONE;
 @Service
 public class JobService implements IJobService {
     @Autowired
-    private IJobRepository IJobRepository;
+    private IJobRepository jobRepository;
     @Autowired
     private ICategoryRepository iCategoryRepository;
     @Autowired
     private IAccountService accountService;
 
     @Autowired
-    public JobService(capstone.oras.dao.IJobRepository IJobRepository, IAccountService accountService) {
-        this.IJobRepository = IJobRepository;
+    public JobService(IJobRepository jobRepository, IAccountService accountService) {
+        this.jobRepository = jobRepository;
         this.accountService = accountService;
     }
 
@@ -56,7 +56,7 @@ public class JobService implements IJobService {
         }
         job.setCreateDate(LocalDateTime.now(TIME_ZONE));
         job.setTotalApplication(0);
-        return IJobRepository.save(job);
+        return jobRepository.save(job);
     }
 
     @Override
@@ -67,27 +67,27 @@ public class JobService implements IJobService {
         } else if (getJobById(job.getId()) == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find job to update");
         }
-        return IJobRepository.save(job);
+        return jobRepository.save(job);
     }
 
     @Override
     public List<JobEntity> getAllJob() {
-        return IJobRepository.findAll();
+        return jobRepository.findAll();
     }
 
     @Override
     public List<JobEntity> getAllClosedAndPublishedJob() {
-        return IJobRepository.findJobEntitiesByStatusNot(DRAFT);
+        return jobRepository.findJobEntitiesByStatusNot(DRAFT);
     }
 
     @Override
     public List<JobEntity> getAllPublishedJobByCreatorId(int creatorId) {
-        return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED);
+        return jobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(creatorId, PUBLISHED);
     }
 
     @Override
     public boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIs(Integer creatorId, String title) {
-        return IJobRepository.existsByCreatorIdEqualsAndTitleEqualsAndStatusIs(creatorId, title, PUBLISHED);
+        return jobRepository.existsByCreatorIdEqualsAndTitleEqualsAndStatusIs(creatorId, title, PUBLISHED);
     }
 
     @Override
@@ -95,8 +95,8 @@ public class JobService implements IJobService {
         title = "%" + title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;
         currency = StringUtils.isEmpty(currency) ? "%" : currency;
-        int count = IJobRepository.countByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(title, status, currency);
-        List<JobEntity> data = IJobRepository.findAllByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(title, status, currency, pageable);
+        int count = jobRepository.countByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(title, status, currency);
+        List<JobEntity> data = jobRepository.findAllByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(title, status, currency, pageable);
         return new ListJobModel(count, data);
     }
 
@@ -109,31 +109,31 @@ public class JobService implements IJobService {
         }
         JobEntity job = getJobById(id);
         job.setStatus(CLOSED);
-        return IJobRepository.save(job);
+        return jobRepository.save(job);
     }
 
     @Override
     public JobEntity getJobById(int id) {
-        if (IJobRepository.existsById(id)) {
-            return IJobRepository.findById(id).get();
+        if (jobRepository.existsById(id)) {
+            return jobRepository.findById(id).get();
         } else throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Can not find job");
     }
 
     @Override
     public boolean checkJobEntityById(int id) {
-        return IJobRepository.existsById(id);
+        return jobRepository.existsById(id);
     }
 
     @Override
     public List<JobEntity> getOpenJob() {
-        List<JobEntity> lstJob = IJobRepository.findAllByStatus(PUBLISHED);
+        List<JobEntity> lstJob = jobRepository.findAllByStatus(PUBLISHED);
         lstJob.sort(Comparator.comparing(JobEntity::getApplyFrom).reversed());
         return lstJob;
     }
 
     @Override
     public List<JobEntity> getJobByCreatorId(int id) {
-        List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(id, PUBLISHED);
+        List<JobEntity> lstJob = jobRepository.findJobEntitiesByCreatorIdEqualsAndStatusEquals(id, PUBLISHED);
         lstJob.sort(Comparator.comparing(JobEntity::getApplyFrom).reversed());
         return lstJob;
     }
@@ -143,8 +143,8 @@ public class JobService implements IJobService {
         List<String> statusToSearch = new ArrayList<>();
         statusToSearch.add(PUBLISHED);
         statusToSearch.add(CLOSED);
-        if (IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusIn(id, statusToSearch).isPresent()) {
-            return IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusIn(id, statusToSearch).get();
+        if (jobRepository.findJobEntitiesByCreatorIdEqualsAndStatusIn(id, statusToSearch).isPresent()) {
+            return jobRepository.findJobEntitiesByCreatorIdEqualsAndStatusIn(id, statusToSearch).get();
 
         }
         throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No job found");
@@ -155,23 +155,23 @@ public class JobService implements IJobService {
         List<String> statusToSearch = new ArrayList<>();
         statusToSearch.add(PUBLISHED);
         statusToSearch.add(CLOSED);
-        if (IJobRepository.findJobEntitiesByStatusIn(statusToSearch).isPresent()) {
-            return IJobRepository.findJobEntitiesByStatusIn(statusToSearch).get();
+        if (jobRepository.findJobEntitiesByStatusIn(statusToSearch).isPresent()) {
+            return jobRepository.findJobEntitiesByStatusIn(statusToSearch).get();
         }
         return new ArrayList<>();
     }
 
     @Override
     public List<JobEntity> getAllPublishedJob() {
-        if (IJobRepository.findJobEntitiesByStatusEquals(PUBLISHED).isPresent()) {
-            return IJobRepository.findJobEntitiesByStatusEquals(PUBLISHED).get();
+        if (jobRepository.findJobEntitiesByStatusEquals(PUBLISHED).isPresent()) {
+            return jobRepository.findJobEntitiesByStatusEquals(PUBLISHED).get();
         }
         return new ArrayList<>();
     }
 
     @Override
     public List<JobEntity> getAllJobByCreatorId(int id) {
-        Optional<List<JobEntity>> lstJob = IJobRepository.findJobEntitiesByCreatorIdEquals(id);
+        Optional<List<JobEntity>> lstJob = jobRepository.findJobEntitiesByCreatorIdEquals(id);
         List<JobEntity> ret = new ArrayList<>();
         if (lstJob.isPresent()) {
             ret = lstJob.get();
@@ -182,7 +182,7 @@ public class JobService implements IJobService {
 
     @Override
     public List<JobEntity> getPostedJobByCreatorId(int id) {
-        List<JobEntity> lstJob = IJobRepository.findJobEntitiesByCreatorIdEqualsAndStatusIsNot(id, DRAFT);
+        List<JobEntity> lstJob = jobRepository.findJobEntitiesByCreatorIdEqualsAndStatusIsNot(id, DRAFT);
         lstJob.sort(Comparator.comparingInt(JobEntity::getId));
         return lstJob;
     }
@@ -192,8 +192,8 @@ public class JobService implements IJobService {
         title = "%" + title + "%";
         status = StringUtils.isEmpty(status) ? "%" : status;
         currency = StringUtils.isEmpty(currency) ? "%" : currency;
-        List<JobEntity> data = IJobRepository.findJobEntitiesByCreatorIdEqualsAndTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(id, title, status, currency, pageable);
-        int count = IJobRepository.countJobEntitiesByCreatorIdEqualsAndTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(id, title, status, currency);
+        List<JobEntity> data = jobRepository.findJobEntitiesByCreatorIdEqualsAndTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(id, title, status, currency, pageable);
+        int count = jobRepository.countJobEntitiesByCreatorIdEqualsAndTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(id, title, status, currency);
         return new ListJobModel(count, data);
     }
 
@@ -222,6 +222,15 @@ public class JobService implements IJobService {
             processedJD = restTemplate.postForEntity(uri, entity, ProcessJdResponse.class).getBody();
         }
         return processedJD == null ? "" : processedJD.getPrc_jd();
+    }
+
+    @Override
+    public void removeDraft(Integer id) {
+        if (DRAFT.equalsIgnoreCase(this.getJobById(id).getStatus())) {
+            jobRepository.deleteById(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_MODIFIED, "This job can not be removed");
+        }
     }
 
     private void jobValidation(JobEntity job) {

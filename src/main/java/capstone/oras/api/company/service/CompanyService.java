@@ -203,6 +203,11 @@ public class CompanyService implements ICompanyService{
         return bufferCompanyRepository.save(BuffCompanyEntity);
     }
 
+    @Override
+    public Integer changeAvatar(Integer id, String avaUrl) {
+        return companyRepository.changeAvatar(id, avaUrl);
+    }
+
     public void sendMail(String email, String subject, String text) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         message.setSubject(subject);
