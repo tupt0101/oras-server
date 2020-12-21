@@ -19,4 +19,5 @@ public interface IAccountService {
     Integer updateFullNameAndPhoneNo(AccountEntity accountEntity);
     Integer updateFullNameAndPhoneNoByAdmin(AccountEntity accountEntity) throws MessagingException;
     Integer updatePassword(AccountEntity accountEntity);
+    AccountEntity createAccountByAdmin(AccountEntity accountEntity);
 }

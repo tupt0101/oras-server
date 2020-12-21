@@ -336,6 +336,12 @@ public class AccountController {
         }
     }
 
+    @RequestMapping(value = "/account-by-admin", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<AccountEntity> createAccountByAdmin(@RequestBody AccountEntity accountEntity) {
+        return new ResponseEntity<>(accountService.createAccountByAdmin(accountEntity), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/accounts", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<List<AccountEntity>> getAllAccount() {

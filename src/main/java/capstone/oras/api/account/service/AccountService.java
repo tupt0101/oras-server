@@ -15,9 +15,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static capstone.oras.common.Constant.EmailForm.updateAccountNoti;
+import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Service
 public class AccountService implements IAccountService {
@@ -26,21 +28,21 @@ public class AccountService implements IAccountService {
     public PasswordEncoder passwordEncoder;
 
     @Autowired
-    private IAccountRepository IAccountRepository;
+    private IAccountRepository accountRepository;
 
     @Autowired
     private JavaMailSender javaMailSender;
 
     @Autowired
-    public AccountService(IAccountRepository IAccountRepository) {
-        this.IAccountRepository = IAccountRepository;
+    public AccountService(IAccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
 
 
-    public AccountService(PasswordEncoder passwordEncoder, capstone.oras.dao.IAccountRepository IAccountRepository) {
+    public AccountService(PasswordEncoder passwordEncoder, IAccountRepository accountRepository) {
         this.passwordEncoder = passwordEncoder;
-        this.IAccountRepository = IAccountRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -58,18 +60,18 @@ public class AccountService implements IAccountService {
     @Override
     public AccountEntity createAccount(AccountEntity accountEntity) {
 //        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
-        return IAccountRepository.save(accountEntity);
+        return accountRepository.save(accountEntity);
     }
 
     @Override
     public AccountEntity updateAccount(AccountEntity accountEntity) {
 //        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
-        return IAccountRepository.save(accountEntity);
+        return accountRepository.save(accountEntity);
     }
 
     @Override
     public List<AccountEntity> getAllAccount() {
-        return IAccountRepository.findAll();
+        return accountRepository.findAll();
     }
 
     @Override
@@ -79,33 +81,31 @@ public class AccountService implements IAccountService {
         name = "%" + name + "%";
         role = StringUtils.isEmpty(role) ? "%" : role;
         if (StringUtils.isEmpty(status)) {
-            data = IAccountRepository.findAllByFullnameIgnoreCaseLikeAndRoleLike(pageable, name, role);
-            count = IAccountRepository.countByFullnameIgnoreCaseLikeAndRoleLike(name, role);
+            data = accountRepository.findAllByFullnameIgnoreCaseLikeAndRoleLike(pageable, name, role);
+            count = accountRepository.countByFullnameIgnoreCaseLikeAndRoleLike(name, role);
         } else {
-            data = IAccountRepository.findAllByFullnameIgnoreCaseLikeAndActiveIsAndRoleLike(pageable, name, "Active".equalsIgnoreCase(status), role);
-            count = IAccountRepository.countByFullnameIgnoreCaseLikeAndActiveIsAndRoleLike(name, "Active".equalsIgnoreCase(status), role);
+            data = accountRepository.findAllByFullnameIgnoreCaseLikeAndActiveIsAndRoleLike(pageable, name, "Active".equalsIgnoreCase(status), role);
+            count = accountRepository.countByFullnameIgnoreCaseLikeAndActiveIsAndRoleLike(name, "Active".equalsIgnoreCase(status), role);
         }
         return new ListAccountModel(count, data);
     }
 
     @Override
     public AccountEntity findAccountByEmail(String email) {
-        if (IAccountRepository.findAccountEntitiesByEmailEquals(email).isPresent()) {
-            return IAccountRepository.findAccountEntitiesByEmailEquals(email).get();
-        } else return null;
+        return accountRepository.findAccountEntitiesByEmailEquals(email).orElse(null);
     }
 
     @Override
     public AccountEntity findAccountEntityById(int id) {
-        if (IAccountRepository.findById(id).isPresent()) {
-            return IAccountRepository.findById(id).get();
+        if (accountRepository.findById(id).isPresent()) {
+            return accountRepository.findById(id).get();
         } else return null;
     }
 
     @Override
     public AccountEntity findAccountByCompanyId(int id) {
-        if (IAccountRepository.findAccountEntityByCompanyIdEquals(id).isPresent()) {
-            return IAccountRepository.findAccountEntityByCompanyIdEquals(id).get();
+        if (accountRepository.findAccountEntityByCompanyIdEquals(id).isPresent()) {
+            return accountRepository.findAccountEntityByCompanyIdEquals(id).get();
         } else return null;
     }
 
@@ -125,7 +125,7 @@ public class AccountService implements IAccountService {
         }
         int ret;
         try {
-            ret = IAccountRepository.updateFullNameAndPhoneNo(id, fullName, phoneNo);
+            ret = accountRepository.updateFullNameAndPhoneNo(id, fullName, phoneNo);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
@@ -149,7 +149,7 @@ public class AccountService implements IAccountService {
         }
         int ret;
         try {
-            ret = IAccountRepository.updateFullNameAndPhoneNo(id, fullName, phoneNo);
+            ret = accountRepository.updateFullNameAndPhoneNo(id, fullName, phoneNo);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
@@ -168,8 +168,21 @@ public class AccountService implements IAccountService {
 //        accountEntity.setActive(true);
 //        accountEntity.setEmail(email);
 //        accountEntity.setFullname(fullname);
-//        return IAccountRepository.save(accountEntity);
+//        return accountRepository.save(accountEntity);
 //    }
+
+    @Override
+    public AccountEntity createAccountByAdmin(AccountEntity accountEntity) {
+        if (this.findAccountByEmail(accountEntity.getEmail()) != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This email already exists.");
+        }
+        accountEntity.setActive(true);
+        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
+        accountEntity.setRole("Admin");
+        accountEntity.setConfirmMail(true);
+        accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
+        return accountRepository.save(accountEntity);
+    }
 
     public void sendMail(String email, String subject, String text) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
