@@ -38,6 +38,7 @@ public class Constant {
 
     public static class ApplicantStatus {
         public static final String HIRED = "Hired";
+        public static final String APPL = "Applied";
     }
 
     public static class EmailForm {
