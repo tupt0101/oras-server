@@ -29,7 +29,7 @@ public interface IJobService {
     List<JobEntity> getAllPublishedJobByCreatorId(int creatorId);
     boolean existsByCreatorIdEqualsAndTitleEqualsAndStatusIs(Integer creatorId, String title);
     String processJd(String description);
-    void removeDraft(Integer id);
+    Integer removeDraft(Integer[] ids);
 
 
 }

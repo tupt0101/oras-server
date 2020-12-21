@@ -252,10 +252,10 @@ public class JobController {
         return new ResponseEntity<>(jobService.getAllCategories(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/remove", method = RequestMethod.GET)
+    @RequestMapping(value = "/remove", method = RequestMethod.DELETE)
     @ResponseBody
-    public void removeDraft(Integer id) {
-        jobService.removeDraft(id);
+    public Integer removeDraft(@RequestBody Integer[] ids) {
+        return jobService.removeDraft(ids);
     }
 
 //    @RequestMapping(value = "/closed-published-job-by-creator-id/{id}", method = RequestMethod.GET)
