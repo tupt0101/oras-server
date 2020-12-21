@@ -92,7 +92,6 @@ public class JobController {
         activityEntity.setCreatorId(job.getCreatorId());
         activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
         activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
-        activityEntity.setJobId(jobEntity.getId());
         activityService.createActivity(activityEntity);
         return new ResponseEntity<>(jobEntity, HttpStatus.OK);
     }
@@ -121,7 +120,6 @@ public class JobController {
         activityEntity.setCreatorId(job.getCreatorId());
         activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
         activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
-        activityEntity.setJobId(id);
         job = jobService.closeJob(id);
         activityService.createActivity(activityEntity);
 
@@ -239,7 +237,6 @@ public class JobController {
         job = jobService.updateJob(job);
         activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
         activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
-        activityEntity.setJobId(id);
         activityService.createActivity(activityEntity);
         accountPackageService.updateAccountPackage(accountPackageEntity);
 
