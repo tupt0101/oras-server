@@ -15,9 +15,6 @@ public class ActivityEntity {
     private LocalDateTime time;
     @ApiModelProperty(hidden = true)
     private AccountEntity accountById;
-    private Integer jobId;
-    @ApiModelProperty(hidden = true)
-    private JobEntity jobById;
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -60,16 +57,6 @@ public class ActivityEntity {
         this.time = time;
     }
 
-    @Basic
-    @Column(name = "job_id", nullable = true)
-    public Integer getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(Integer jobId) {
-        this.jobId = jobId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -77,14 +64,13 @@ public class ActivityEntity {
         ActivityEntity that = (ActivityEntity) o;
         return id == that.id &&
                 creatorId == that.creatorId &&
-                jobId == that.jobId &&
                 Objects.equals(title, that.title) &&
                 Objects.equals(time, that.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, creatorId, time, jobId);
+        return Objects.hash(id, title, creatorId, time);
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -95,15 +81,5 @@ public class ActivityEntity {
 
     public void setAccountById(AccountEntity accountById) {
         this.accountById = accountById;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "job_id", referencedColumnName = "id", insertable=false, updatable=false)
-    public JobEntity getJobById() {
-        return jobById;
-    }
-
-    public void setJobById(JobEntity jobById) {
-        this.jobById = jobById;
     }
 }

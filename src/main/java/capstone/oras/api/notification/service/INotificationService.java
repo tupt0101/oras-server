@@ -1,6 +1,7 @@
 package capstone.oras.api.notification.service;
 
 import capstone.oras.entity.NotificationEntity;
+import capstone.oras.model.custom.NotificationModel;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface INotificationService {
     List<NotificationEntity> getAllNotification();
     List<NotificationEntity> getAllAccountNotification(int accountId);
     List<NotificationEntity> getAllNewAccountNotification(int accountId);
-    List<NotificationEntity> getAllNewAccountNotification(int accountId, String role);
+    List<NotificationModel> getAllNewAccountNotification(int accountId, String role);
     NotificationEntity getNotificationById(int id);
     Integer readNotification(int id);
 
