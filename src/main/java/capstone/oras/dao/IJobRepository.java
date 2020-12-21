@@ -75,4 +75,9 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer>, Pagin
             "order by j.id;",
             nativeQuery = true)
     List<Integer[]> findEntityAndTotalApplication(@Param("creatorId") int creatorId);
+
+    @Query(value = "delete from JobEntity where id in :ids")
+    @Modifying
+    @Transactional
+    Integer deleteByIds(@Param("ids") Integer[] ids);
 }

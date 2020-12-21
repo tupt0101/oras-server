@@ -225,12 +225,8 @@ public class JobService implements IJobService {
     }
 
     @Override
-    public void removeDraft(Integer id) {
-        if (DRAFT.equalsIgnoreCase(this.getJobById(id).getStatus())) {
-            jobRepository.deleteById(id);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_MODIFIED, "This job can not be removed");
-        }
+    public Integer removeDraft(Integer[] ids) {
+        return jobRepository.deleteByIds(ids);
     }
 
     private void jobValidation(JobEntity job) {
