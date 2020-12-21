@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static capstone.oras.common.Constant.NotiType.APPLY;
+import static capstone.oras.common.Constant.OpenJobApi.OJ_JOB;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Configuration
@@ -99,21 +100,8 @@ public class ScheduleSpringConfig {
                 //get openjob token
                 String token = CommonUtils.getOjToken();
                 // post job to openjob
-                String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
-                RestTemplate restTemplate = new RestTemplate();
-                HttpHeaders headers = new HttpHeaders();
-                headers.setBearerAuth(token);
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-                HttpEntity entity = new HttpEntity(headers);
-                // close job on openjob
-                try {
-                    restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
-                } catch (HttpClientErrorException.Unauthorized e) {
-                    CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-                    entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-                    restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
-                }
+                String uri = OJ_JOB + "/" + openjobJobId + "/close";
+                CommonUtils.handleOpenJobApi(uri, HttpMethod.PUT, null, OpenjobJobEntity.class);
                 ActivityEntity activityEntity = new ActivityEntity();
                 activityEntity.setCreatorId(job.getCreatorId());
                 activityEntity.setTime(LocalDateTime.now(TIME_ZONE));

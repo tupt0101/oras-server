@@ -8,33 +8,32 @@ import capstone.oras.common.CommonUtils;
 import capstone.oras.dao.IConfirmationTokenRepository;
 import capstone.oras.entity.*;
 import capstone.oras.entity.openjob.OpenjobCompanyEntity;
-import capstone.oras.entity.openjob.OpenjobJobEntity;
 import capstone.oras.model.custom.ListAccountModel;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import static capstone.oras.common.Constant.EmailForm.confirmMail;
 import static capstone.oras.common.Constant.EmailForm.resetPasswordMail;
 import static capstone.oras.common.Constant.NotiType.REGISTER;
+import static capstone.oras.common.Constant.OpenJobApi.*;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 
@@ -132,24 +131,10 @@ public class AccountController {
         }
         signup.accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
         signup.companyEntity.setModifyDate(LocalDateTime.now(TIME_ZONE));
-        //get openjob token
-        String token = CommonUtils.getOjToken();
         // post company to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/company-management/company-by-name/" + signup.companyEntity.getName();
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity entity = new HttpEntity(headers);
-        CompanyEntity openJobEntity;
-        try {
-            openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
-        }
+        String uri = OJ_COMPANY_BY_NAME + signup.companyEntity.getName();
+        CompanyEntity openJobEntity = CommonUtils.handleOpenJobApi(uri, HttpMethod.GET, null,
+                CompanyEntity.class);
         if (openJobEntity == null) {
             OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
             openjobCompanyEntity.setAccountId(1);
@@ -174,15 +159,9 @@ public class AccountController {
             if (!signup.companyEntity.getTaxCode().isEmpty() || signup.companyEntity.getTaxCode() != null) {
                 openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
             }
-            uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
-            HttpEntity<OpenjobCompanyEntity> httpCompanyEntity = new HttpEntity<>(openjobCompanyEntity, headers);
-            try {
-                openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
-            } catch (HttpClientErrorException.Unauthorized e) {
-                CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-                entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-                openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
-            }
+            uri = OJ_COMPANY;
+            openjobCompanyEntity = CommonUtils.handleOpenJobApi(uri, HttpMethod.POST, openjobCompanyEntity,
+                    OpenjobCompanyEntity.class);
             signup.companyEntity.setOpenjobCompanyId(openjobCompanyEntity.getId());
         } else {
             signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
@@ -221,61 +200,19 @@ public class AccountController {
         }
     }
 
-
-//    @RequestMapping(value = "/activate-account/{id}", method = RequestMethod.PUT)
-//    @ResponseBody
-//    ResponseEntity<AccountEntity> activeAccountViaCompany(@PathVariable("id") int companyId) throws MessagingException {
-//        if (companyId == 0) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id is a required field");
-//        } else if (companyService.findCompanyById(companyId) == null) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company doesn't exist");
-//        }
-//        // refactor code de update 1 field thoi dung native query nang cao hieu suat
-//        CompanyEntity companyEntity = companyService.findCompanyById(companyId);
-//        companyEntity.setVerified(true);
-//        companyService.updateCompany(companyEntity);
-//        AccountEntity accountEntity = accountService.findAccountByCompanyId(companyId);
-//        accountEntity.setActive(true);
-//
-//        MimeMessage message = javaMailSender.createMimeMessage();
-//        message.setSubject("Complete Registration!");
-//        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-//        helper.setTo(accountEntity.getEmail());
-//
-//        // use the true flag to indicate the text included is HTML
-//        helper.setText(VERIFY_COMPANY_NOTI, true);
-//        javaMailSender.send(message);
-//        return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
-//    }
-
     @RequestMapping(value = "/deactivate-account/{accountId}", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<AccountEntity> deactiveAccount(@PathVariable("accountId") int accountId) {
-
         // refactor code de update 1 field thoi dung native query nang cao hieu suat
         AccountEntity accountEntity = accountService.findAccountEntityById(accountId);
         accountEntity.setActive(false);
         List<JobEntity> jobEntities = jobService.getAllJobByCreatorId(accountId);
         for (JobEntity jobEntity : jobEntities) {
             int openjobJobId = jobEntity.getOpenjobJobId();
-            //get openjob token
-            String token = CommonUtils.getOjToken();
             // close job to openjob
-            String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(token);
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            HttpEntity entity = new HttpEntity(headers);
+            String uri = OJ_JOB + "/" + openjobJobId + "/close";
             // close job on openjob
-            try {
-                restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
-            } catch (HttpClientErrorException.Unauthorized e) {
-                CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-                entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-                restTemplate.exchange(uri, HttpMethod.PUT, entity, OpenjobJobEntity.class);
-            }
+            CommonUtils.handleOpenJobApi(uri, HttpMethod.PUT, null, OpenjobCompanyEntity.class);
             jobService.closeJob(jobEntity.getId());
         }
         return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
@@ -412,4 +349,31 @@ public class AccountController {
         helper.setText(text, true);
         javaMailSender.send(message);
     }
+
+
+//    @RequestMapping(value = "/activate-account/{id}", method = RequestMethod.PUT)
+//    @ResponseBody
+//    ResponseEntity<AccountEntity> activeAccountViaCompany(@PathVariable("id") int companyId) throws MessagingException {
+//        if (companyId == 0) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company Id is a required field");
+//        } else if (companyService.findCompanyById(companyId) == null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company doesn't exist");
+//        }
+//        // refactor code de update 1 field thoi dung native query nang cao hieu suat
+//        CompanyEntity companyEntity = companyService.findCompanyById(companyId);
+//        companyEntity.setVerified(true);
+//        companyService.updateCompany(companyEntity);
+//        AccountEntity accountEntity = accountService.findAccountByCompanyId(companyId);
+//        accountEntity.setActive(true);
+//
+//        MimeMessage message = javaMailSender.createMimeMessage();
+//        message.setSubject("Complete Registration!");
+//        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//        helper.setTo(accountEntity.getEmail());
+//
+//        // use the true flag to indicate the text included is HTML
+//        helper.setText(VERIFY_COMPANY_NOTI, true);
+//        javaMailSender.send(message);
+//        return new ResponseEntity<>(accountService.updateAccount(accountEntity), HttpStatus.OK);
+//    }
 }

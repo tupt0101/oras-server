@@ -13,7 +13,6 @@ import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.model.custom.ListJobApplicationModel;
 import capstone.oras.model.oras_ai.CalcSimilarityRequest;
 import capstone.oras.model.oras_ai.CalcSimilarityResponse;
-import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
@@ -30,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
+import static capstone.oras.common.Constant.OpenJobApi.OJ_JOB_BY_ID;
 
 @Service
 @Transactional
@@ -56,8 +56,6 @@ public class JobApplicationService implements IJobApplicationService {
 
     @Override
     public List<JobApplicationEntity> createJobApplications(int jobId) {
-        //get openjob token
-        String token = CommonUtils.getOjToken();
         // get job entity
         JobEntity jobEntity = jobService.getJobById(jobId);
         // get OpenjobJobId
@@ -66,23 +64,11 @@ public class JobApplicationService implements IJobApplicationService {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This job have not published yet");
         }
         // get applications
-        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + ojId;
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<OpenjobJobApplicationEntity[]> jobApplicationsList;
-        try {
-            jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            jobApplicationsList = restTemplate.exchange(uri, HttpMethod.GET, entity, OpenjobJobApplicationEntity[].class);
-        }
-        if (jobApplicationsList.getBody() == null) {
+        String uri = OJ_JOB_BY_ID + ojId;
+        OpenjobJobApplicationEntity[] jobApplicationEntityList = CommonUtils.handleOpenJobApi(uri, HttpMethod.GET, null, OpenjobJobApplicationEntity[].class);
+        if (jobApplicationEntityList == null) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No application");
         }
-        OpenjobJobApplicationEntity[] jobApplicationEntityList = jobApplicationsList.getBody();
         // update TotalApplication
         if (jobApplicationEntityList.length != 0) {
             if (jobEntity.getTotalApplication() < jobApplicationEntityList.length) {

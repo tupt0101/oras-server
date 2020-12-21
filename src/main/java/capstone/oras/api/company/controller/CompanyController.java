@@ -9,20 +9,17 @@ import capstone.oras.entity.BuffCompanyEntity;
 import capstone.oras.entity.CompanyEntity;
 import capstone.oras.entity.NotificationEntity;
 import capstone.oras.model.custom.ListAccountBuffModel;
-import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -38,45 +35,6 @@ public class CompanyController {
     private ICompanyService companyService;
     @Autowired
     private INotificationService notificationService;
-
-    @RequestMapping(value = "/company", method = RequestMethod.POST)
-    @ResponseBody
-    ResponseEntity<CompanyEntity> createCompany(@RequestBody CompanyEntity companyEntity) {
-        if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
-        } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
-        } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
-        } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
-        } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
-        } else if (companyService.checkCompanyName(companyEntity.getId(), companyEntity.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
-        }
-        return new ResponseEntity<>(companyService.createCompany(companyEntity), HttpStatus.OK);
-
-    }
-
-    @RequestMapping(value = "/company", method = RequestMethod.PUT)
-    @ResponseBody
-    ResponseEntity<CompanyEntity> updateCompany(@RequestBody CompanyEntity companyEntity) {
-        if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
-        } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
-        } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
-        } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
-        } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
-        } else if (companyService.checkCompanyName(companyEntity.getId(), companyEntity.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
-        }
-        return new ResponseEntity<>(companyService.updateCompany(companyEntity), HttpStatus.OK);
-    }
 
     @RequestMapping(value = "/company-by-admin", method = RequestMethod.PUT)
     @ResponseBody
@@ -141,52 +99,6 @@ public class CompanyController {
         return new ResponseEntity<>(companyService.getAccountCompany(id), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/company-openjob", method = RequestMethod.POST)
-    @ResponseBody
-    ResponseEntity<CompanyEntity> createCompanyMulti(@RequestBody CompanyEntity companyEntity) {
-        if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
-        } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
-        } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
-        } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
-        } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
-        }
-        //get openjob token
-        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = CommonUtils.getOjToken();
-        // post company to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<CompanyEntity> entity = new HttpEntity<>(companyEntity, headers);
-        System.out.println(entity.getHeaders());
-        CompanyEntity openJobEntity;
-        try {
-            openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
-        }
-
-//        ResponseEntity<CompanyEntity> openJobEntity = restTemplate.exchange(uri,HttpMethod.POST, entity, CompanyEntity.class);
-
-        return new ResponseEntity<>(openJobEntity, HttpStatus.OK);
-
-    }
-
     @RequestMapping(value = "/company-by-user", method = RequestMethod.PUT)
     @ResponseBody
     ResponseEntity<BuffCompanyEntity> updateCompanyByUser(@RequestBody CompanyEntity companyEntity) {
@@ -216,4 +128,89 @@ public class CompanyController {
     public ResponseEntity<Integer> changeAvatar(@Param("id") Integer id, @Param(value = "avaUrl") String avaUrl) {
         return new ResponseEntity<>(companyService.changeAvatar(id, avaUrl), HttpStatus.OK);
     }
+
+//    @RequestMapping(value = "/company", method = RequestMethod.POST)
+//    @ResponseBody
+//    ResponseEntity<CompanyEntity> createCompany(@RequestBody CompanyEntity companyEntity) {
+//        if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
+//        } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
+//        } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
+//        } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
+//        } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
+//        } else if (companyService.checkCompanyName(companyEntity.getId(), companyEntity.getName())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
+//        }
+//        return new ResponseEntity<>(companyService.createCompany(companyEntity), HttpStatus.OK);
+//
+//    }
+//
+//    @RequestMapping(value = "/company", method = RequestMethod.PUT)
+//    @ResponseBody
+//    ResponseEntity<CompanyEntity> updateCompany(@RequestBody CompanyEntity companyEntity) {
+//        if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
+//        } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
+//        } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
+//        } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
+//        } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
+//        } else if (companyService.checkCompanyName(companyEntity.getId(), companyEntity.getName())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name already exist");
+//        }
+//        return new ResponseEntity<>(companyService.updateCompany(companyEntity), HttpStatus.OK);
+//    }
+
+//    @RequestMapping(value = "/company-openjob", method = RequestMethod.POST)
+//    @ResponseBody
+//    ResponseEntity<CompanyEntity> createCompanyMulti(@RequestBody CompanyEntity companyEntity) {
+//        if (companyEntity.getEmail() == null || companyEntity.getEmail().isEmpty()) {
+//
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
+//        } else if (companyEntity.getName() == null || companyEntity.getName().isEmpty()) {
+//
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is a required field");
+//        } else if (companyEntity.getTaxCode() == null || companyEntity.getTaxCode().isEmpty()) {
+//
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tax Code is a required field");
+//        } else if (companyEntity.getPhoneNo() == null || companyEntity.getPhoneNo().isEmpty()) {
+//
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number is a required field");
+//        } else if (companyEntity.getLocation() == null || companyEntity.getLocation().isEmpty()) {
+//
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is a required field");
+//        }
+//        //get openjob token
+//        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
+//        String token = CommonUtils.getOjToken();
+//        // post company to openjob
+//        String uri = OJ_COMPANY;
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(token);
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+//        HttpEntity<CompanyEntity> entity = new HttpEntity<>(companyEntity, headers);
+//        System.out.println(entity.getHeaders());
+//        CompanyEntity openJobEntity;
+//        try {
+//            openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
+//        } catch (HttpClientErrorException.Unauthorized e) {
+//            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
+//            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
+//            openJobEntity = restTemplate.postForObject(uri, entity, CompanyEntity.class);
+//        }
+//
+////        ResponseEntity<CompanyEntity> openJobEntity = restTemplate.exchange(uri,HttpMethod.POST, entity, CompanyEntity.class);
+//
+//        return new ResponseEntity<>(openJobEntity, HttpStatus.OK);
+//
+//    }
 }

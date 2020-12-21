@@ -7,15 +7,13 @@ import capstone.oras.dao.ICompanyRepository;
 import capstone.oras.entity.AccountEntity;
 import capstone.oras.entity.BuffCompanyEntity;
 import capstone.oras.entity.CompanyEntity;
+import capstone.oras.entity.openjob.OpenjobCompanyEntity;
 import capstone.oras.model.custom.AccountBuffModel;
 import capstone.oras.model.custom.ListAccountBuffModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -34,11 +32,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static capstone.oras.common.Constant.EmailForm.*;
+import static capstone.oras.common.Constant.OpenJobApi.OJ_COMPANY;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Service
 @Transactional
-public class CompanyService implements ICompanyService{
+public class CompanyService implements ICompanyService {
 
     @Autowired
     private ICompanyRepository companyRepository;
@@ -104,8 +103,8 @@ public class CompanyService implements ICompanyService{
         int count;
         List<AccountEntity> data;
         if (StringUtils.isEmpty(status)) {
-            data =  companyRepository.accountCompanyPagingFilterName(pageable, name);
-            count =  companyRepository.countByNameIgnoreCaseLike(name);
+            data = companyRepository.accountCompanyPagingFilterName(pageable, name);
+            count = companyRepository.countByNameIgnoreCaseLike(name);
         } else {
             data = companyRepository.accountCompanyPagingFilter(pageable, "Verified".equalsIgnoreCase(status), name);
             count = companyRepository.countByVerifiedAndNameIgnoreCaseLike("Verified".equalsIgnoreCase(status), name);
@@ -113,7 +112,7 @@ public class CompanyService implements ICompanyService{
         // replace with company in buffer
         List<AccountBuffModel> result = new ArrayList<>();
         AccountBuffModel buff;
-        for (AccountEntity comp: data) {
+        for (AccountEntity comp : data) {
             buff = new AccountBuffModel();
             BeanUtils.copyProperties(comp, buff);
             if (!buff.getCompanyById().getVerified()) {
@@ -134,8 +133,8 @@ public class CompanyService implements ICompanyService{
 
     @Override
     public List<CompanyEntity> getAllCompanyWithNameAndIsVerified(String name) {
-        if(companyRepository.findCompanyEntitiesByNameEqualsAndVerifiedEquals(name, true).isPresent()) {
-            return companyRepository.findCompanyEntitiesByNameEqualsAndVerifiedEquals(name,true).get();
+        if (companyRepository.findCompanyEntitiesByNameEqualsAndVerifiedEquals(name, true).isPresent()) {
+            return companyRepository.findCompanyEntitiesByNameEqualsAndVerifiedEquals(name, true).get();
         } else return null;
     }
 
@@ -163,7 +162,7 @@ public class CompanyService implements ICompanyService{
             companyEntity = companyRepository.save(companyEntity);
             bufferCompanyRepository.deleteById(id);
             // update company at OJ
-            String uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
+            String uri = OJ_COMPANY;
             headers.setBearerAuth(CommonUtils.getOjToken());
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -205,7 +204,23 @@ public class CompanyService implements ICompanyService{
 
     @Override
     public Integer changeAvatar(Integer id, String avaUrl) {
+        changeOJAvatar(id, avaUrl);
         return companyRepository.changeAvatar(id, avaUrl);
+    }
+
+    private void changeOJAvatar(Integer id, String avaUrl) {
+        Integer ojId = findCompanyById(id).getOpenjobCompanyId();
+        String getCompanyUrl = OJ_COMPANY + "/" + ojId;
+        // get
+        OpenjobCompanyEntity comp = CommonUtils.handleOpenJobApi(getCompanyUrl, HttpMethod.GET, null,
+                OpenjobCompanyEntity.class);
+        if (comp == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This company does not exist in Open Job system");
+        }
+        comp.setAvatar(avaUrl);
+        // put
+        CommonUtils.handleOpenJobApi(OJ_COMPANY, HttpMethod.PUT, comp,
+                OpenjobCompanyEntity.class);
     }
 
     public void sendMail(String email, String subject, String text) throws MessagingException {

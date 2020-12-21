@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import static capstone.oras.common.Constant.OpenJobApi.OJ_LOGIN;
+
 /**
  * @author developer
  */
@@ -48,7 +50,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public String getOpenJobToken() {
-        final String uri = "https://openjob-server.herokuapp.com/login?username=admin@gmail.com&password=password";
+        final String uri = OJ_LOGIN;
         //TODO: Autowire the RestTemplate in all the examples
         RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.getForObject(uri, TokenDto.class).getToken();
