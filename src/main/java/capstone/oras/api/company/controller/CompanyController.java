@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static capstone.oras.common.Constant.NotiType.MODIFY;
+import static capstone.oras.common.Constant.OpenJobApi.OJ_COMPANY;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 @RestController
@@ -164,7 +165,7 @@ public class CompanyController {
         CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = CommonUtils.getOjToken();
         // post company to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
+        String uri = OJ_COMPANY;
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);

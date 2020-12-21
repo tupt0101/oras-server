@@ -9,6 +9,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+import static capstone.oras.common.Constant.AccountRole.ADMIN;
+
 @Service
 public class NotificationService implements INotificationService {
 
@@ -54,7 +56,7 @@ public class NotificationService implements INotificationService {
 
     @Override
     public List<NotificationEntity> getAllNewAccountNotification(int accountId, String role) {
-        if ("admin".equalsIgnoreCase(role)) {
+        if (ADMIN.equalsIgnoreCase(role)) {
             accountId = 0;
         }
         return notificationRepository.getNotificationEntitiesByNewTrueAndReceiverIdEquals(accountId).orElse(null);

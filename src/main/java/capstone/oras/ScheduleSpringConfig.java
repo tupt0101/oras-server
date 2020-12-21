@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static capstone.oras.common.Constant.NotiType.APPLY;
+import static capstone.oras.common.Constant.OpenJobApi.OJ_JOB;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Configuration
@@ -99,7 +100,7 @@ public class ScheduleSpringConfig {
                 //get openjob token
                 String token = CommonUtils.getOjToken();
                 // post job to openjob
-                String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
+                String uri = OJ_JOB + "/" + openjobJobId + "/close";
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setBearerAuth(token);

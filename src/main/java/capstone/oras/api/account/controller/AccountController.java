@@ -35,6 +35,7 @@ import java.util.List;
 import static capstone.oras.common.Constant.EmailForm.confirmMail;
 import static capstone.oras.common.Constant.EmailForm.resetPasswordMail;
 import static capstone.oras.common.Constant.NotiType.REGISTER;
+import static capstone.oras.common.Constant.OpenJobApi.*;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 
@@ -135,7 +136,7 @@ public class AccountController {
         //get openjob token
         String token = CommonUtils.getOjToken();
         // post company to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/company-management/company-by-name/" + signup.companyEntity.getName();
+        String uri = OJ_COMPANY_BY_NAME + signup.companyEntity.getName();
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
@@ -174,7 +175,7 @@ public class AccountController {
             if (!signup.companyEntity.getTaxCode().isEmpty() || signup.companyEntity.getTaxCode() != null) {
                 openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
             }
-            uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
+            uri = OJ_COMPANY;
             HttpEntity<OpenjobCompanyEntity> httpCompanyEntity = new HttpEntity<>(openjobCompanyEntity, headers);
             try {
                 openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
@@ -261,7 +262,7 @@ public class AccountController {
             //get openjob token
             String token = CommonUtils.getOjToken();
             // close job to openjob
-            String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
+            String uri = OJ_JOB + "/" + openjobJobId + "/close";
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);

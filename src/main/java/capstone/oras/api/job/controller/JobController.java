@@ -29,6 +29,7 @@ import java.util.List;
 
 import static capstone.oras.common.Constant.JobStatus.CLOSED;
 import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
+import static capstone.oras.common.Constant.OpenJobApi.OJ_JOB;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 @RestController
@@ -114,7 +115,7 @@ public class JobController {
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = CommonUtils.getOjToken();
         // post job to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job/" + openjobJobId + "/close";
+        String uri = OJ_JOB + "/" + openjobJobId + "/close";
         System.out.println(uri);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -249,7 +250,7 @@ public class JobController {
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = CommonUtils.getOjToken();
         // post job to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
+        String uri = OJ_JOB;
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
@@ -349,7 +350,7 @@ public class JobController {
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = CommonUtils.getOjToken();
         // post job to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
+        String uri = OJ_JOB;
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
@@ -436,7 +437,7 @@ public class JobController {
 //        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
         String token = CommonUtils.getOjToken();
         // post job to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
+        String uri = OJ_JOB;
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
@@ -530,7 +531,7 @@ public class JobController {
 ////        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
 //        String token = CommonUtils.getOjToken();
 //        // post job to openjob
-//        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
+//        String uri = OJ_JOB;
 //        RestTemplate restTemplate = new RestTemplate();
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setBearerAuth(token);
@@ -616,7 +617,7 @@ public class JobController {
 ////        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
 //        String token = CommonUtils.getOjToken();
 //        // post job to openjob
-//        String uri = "https://openjob-server.herokuapp.com/v1/job-management/job";
+//        String uri = OJ_JOB;
 //        RestTemplate restTemplate = new RestTemplate();
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setBearerAuth(token);

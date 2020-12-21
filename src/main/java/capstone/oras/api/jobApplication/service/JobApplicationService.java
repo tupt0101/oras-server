@@ -13,7 +13,6 @@ import capstone.oras.entity.openjob.OpenjobJobApplicationEntity;
 import capstone.oras.model.custom.ListJobApplicationModel;
 import capstone.oras.model.oras_ai.CalcSimilarityRequest;
 import capstone.oras.model.oras_ai.CalcSimilarityResponse;
-import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
@@ -30,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
+import static capstone.oras.common.Constant.OpenJobApi.OJ_JOB_BY_ID;
 
 @Service
 @Transactional
@@ -66,7 +66,7 @@ public class JobApplicationService implements IJobApplicationService {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "This job have not published yet");
         }
         // get applications
-        String uri = "https://openjob-server.herokuapp.com/v1/job-application-management/job-application/find-by-job-id/" + ojId;
+        String uri = OJ_JOB_BY_ID + ojId;
         headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));

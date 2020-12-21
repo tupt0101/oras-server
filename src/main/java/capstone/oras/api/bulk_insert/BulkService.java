@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
 import static capstone.oras.common.Constant.JobStatus.DRAFT;
 import static capstone.oras.common.Constant.JobStatus.PUBLISHED;
+import static capstone.oras.common.Constant.OpenJobApi.*;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
 @Service
@@ -60,7 +61,6 @@ public class BulkService implements IBulkService {
     private HttpHeaders headers = new HttpHeaders();
     private HttpEntity entity;
     Logger logger = Logger.getLogger(BulkService.class.getName());
-    private final String JOB_URI = "https://openjob-server.herokuapp.com/v1/job-management/job";
 
 
     @Override
@@ -168,7 +168,7 @@ public class BulkService implements IBulkService {
         openjobJobEntity.setTitle(job.getTitle());
         openjobJobEntity.setVacancies(job.getVacancies());
         HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        openjobJobEntity= restTemplate.postForObject(JOB_URI, entity, OpenjobJobEntity.class);
+        openjobJobEntity= restTemplate.postForObject(OJ_JOB, entity, OpenjobJobEntity.class);
         if (openjobJobEntity != null) {
             job.setOpenjobJobId(openjobJobEntity.getId());
         }
@@ -219,7 +219,7 @@ public class BulkService implements IBulkService {
 
     private BulkController.Signup postToOpenJob(BulkController.Signup signup) {
         // post company to openjob
-        String uri = "https://openjob-server.herokuapp.com/v1/company-management/company-by-name/" + signup.companyEntity.getName();
+        String uri = OJ_COMPANY_BY_NAME + signup.companyEntity.getName();
         // check company existence
         CompanyEntity openJobEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, CompanyEntity.class).getBody();
         if (openJobEntity == null) {
@@ -233,7 +233,7 @@ public class BulkService implements IBulkService {
             openjobCompanyEntity.setName(signup.companyEntity.getName());
             openjobCompanyEntity.setPhoneNo(signup.companyEntity.getPhoneNo());
             openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
-            uri = "https://openjob-server.herokuapp.com/v1/company-management/company";
+            uri = OJ_COMPANY;
             HttpEntity<OpenjobCompanyEntity> httpCompanyEntity = new HttpEntity<>(openjobCompanyEntity, headers);
             // Register
             openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);

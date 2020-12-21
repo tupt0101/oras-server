@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static capstone.oras.common.Constant.JobStatus.*;
+import static capstone.oras.common.Constant.OpenJobApi.OJ_LOGIN;
 
 public class CommonUtils {
     private static String ojToken;
@@ -81,7 +82,7 @@ public class CommonUtils {
     }
 
     public static String getOpenJobToken() {
-        final String uri = "https://openjob-server.herokuapp.com/login?username=admin@gmail.com&password=password";
+        final String uri = OJ_LOGIN;
         RestTemplate restTemplate = new RestTemplate();
         TokenDto dto;
         try {
