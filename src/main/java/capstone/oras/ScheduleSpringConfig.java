@@ -84,7 +84,6 @@ public class ScheduleSpringConfig {
                 activityEntity.setCreatorId(accountPackage.getAccountId());
                 activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
                 activityEntity.setTitle("Current Package Expired");
-                activityEntity.setJobId(null);
                 activityService.createActivity(activityEntity);
             }
         }
@@ -110,7 +109,6 @@ public class ScheduleSpringConfig {
                 } else if (job.getApplyTo().isBefore(LocalDateTime.now(TIME_ZONE))) {
                     activityEntity.setTitle("Job's Apply To Date Reached");
                 }
-                activityEntity.setJobId(job.getId());
                 jobService.closeJob(job.getId());
                 activityService.createActivity(activityEntity);
             }

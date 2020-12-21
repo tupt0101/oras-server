@@ -89,7 +89,6 @@ public class BulkService implements IBulkService {
                 activityEntity.setCreatorId(job.getCreatorId());
                 activityEntity.setTime(jobEntity.getCreateDate());
                 activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
-                activityEntity.setJobId(jobEntity.getId());
                 activityService.createActivity(activityEntity);
                 res++;
             } catch (Exception e) {
@@ -171,7 +170,6 @@ public class BulkService implements IBulkService {
         job = jobService.updateJob(job);
         activityEntity.setTime(java.time.LocalDateTime.now(TIME_ZONE));
         activityEntity.setTitle(CommonUtils.jobActivityTitle(job.getTitle(), job.getStatus()));
-        activityEntity.setJobId(job.getId());
         activityService.createActivity(activityEntity);
     }
 
