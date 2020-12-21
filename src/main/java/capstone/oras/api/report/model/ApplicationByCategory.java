@@ -11,4 +11,20 @@ public class ApplicationByCategory {
 
     public ApplicationByCategory() {
     }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getNumOfApplication() {
+        return numOfApplication;
+    }
+
+    public void setNumOfApplication(int numOfApplication) {
+        this.numOfApplication = numOfApplication;
+    }
 }
