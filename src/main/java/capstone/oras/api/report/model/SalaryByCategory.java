@@ -11,4 +11,20 @@ public class SalaryByCategory {
 
     public SalaryByCategory() {
     }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getAverageSalary() {
+        return averageSalary;
+    }
+
+    public void setAverageSalary(int averageSalary) {
+        this.averageSalary = averageSalary;
+    }
 }

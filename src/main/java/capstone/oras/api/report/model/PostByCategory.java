@@ -12,4 +12,19 @@ public class PostByCategory {
     public PostByCategory() {
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getNumOfPost() {
+        return numOfPost;
+    }
+
+    public void setNumOfPost(int numOfPost) {
+        this.numOfPost = numOfPost;
+    }
 }

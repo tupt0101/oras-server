@@ -13,4 +13,28 @@ public class CandidateOfJob {
 
     public CandidateOfJob() {
     }
+
+    public JobEntity getJob() {
+        return job;
+    }
+
+    public void setJob(JobEntity job) {
+        this.job = job;
+    }
+
+    public int getTotalApplication() {
+        return totalApplication;
+    }
+
+    public void setTotalApplication(int totalApplication) {
+        this.totalApplication = totalApplication;
+    }
+
+    public int getHired() {
+        return hired;
+    }
+
+    public void setHired(int hired) {
+        this.hired = hired;
+    }
 }
