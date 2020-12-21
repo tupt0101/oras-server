@@ -18,6 +18,7 @@ import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static capstone.oras.common.Constant.AccountRole.ADMIN;
 import static capstone.oras.common.Constant.EmailForm.updateAccountNoti;
 import static capstone.oras.common.Constant.TIME_ZONE;
 
@@ -178,9 +179,10 @@ public class AccountService implements IAccountService {
         }
         accountEntity.setActive(true);
         accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
-        accountEntity.setRole("Admin");
+        accountEntity.setRole(ADMIN);
         accountEntity.setConfirmMail(true);
         accountEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
+        accountEntity.setCompanyById(null);
         return accountRepository.save(accountEntity);
     }
 
