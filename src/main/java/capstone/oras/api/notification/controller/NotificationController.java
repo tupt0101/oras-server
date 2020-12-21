@@ -71,9 +71,9 @@ public class NotificationController {
         return new ResponseEntity<>(notificationService.getAllNewAccountNotification(id, role), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/read-notification/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/read-notification", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity<Integer> readNotification(@PathVariable("id") int id) {
-        return new ResponseEntity<>(notificationService.readNotification(id), HttpStatus.OK);
+    ResponseEntity<Integer> readNotification(@RequestBody List<Integer> ids) {
+        return new ResponseEntity<>(notificationService.readNotifications(ids), HttpStatus.OK);
     }
 }

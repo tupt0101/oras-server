@@ -85,10 +85,12 @@ public class NotificationService implements INotificationService {
         List<NotificationEntity> applyList =
                 listNoti.stream().filter(o -> o.getType().equalsIgnoreCase(APPLY)).collect(Collectors.toList());
         // handle REGISTER notification
-        registerList.sort(Comparator.comparing(NotificationEntity::getCreateDate));
-        resNoti = new NotificationModel(REGISTER, registerList.size(), registerList.get(0).getCreateDate(),
-                registerList.stream().map(NotificationEntity::getId).collect(Collectors.toList()));
-        res.add(resNoti);
+        if (registerList.size() > 0) {
+            registerList.sort(Comparator.comparing(NotificationEntity::getCreateDate));
+            resNoti = new NotificationModel(REGISTER, registerList.size(), registerList.get(0).getCreateDate(),
+                    registerList.stream().map(NotificationEntity::getId).collect(Collectors.toList()));
+            res.add(resNoti);
+        }
         // handle MODIFY notification
         for (NotificationEntity noti: modifyList) {
             String actor = companyService.getAccountCompany(noti.getTargetId()).getFullname();
@@ -96,15 +98,17 @@ public class NotificationService implements INotificationService {
             res.add(resNoti);
         }
         // handle APPLY notification
-        Map<Integer, List<NotificationEntity>> jobIdToNoti = applyList.stream()
-                .collect(Collectors.groupingBy(NotificationEntity::getTargetId));
-        for (Map.Entry<Integer, List<NotificationEntity>> noti: jobIdToNoti.entrySet()) {
-            String title = jobService.getJobById(noti.getKey()).getTitle();
-            noti.getValue().sort(Comparator.comparing(NotificationEntity::getCreateDate));
-            resNoti = new NotificationModel(APPLY, noti.getValue().size(), title,
-                    noti.getValue().get(0).getCreateDate(),
-                    noti.getValue().stream().map(NotificationEntity::getId).collect(Collectors.toList()));
-            res.add(resNoti);
+        if (applyList.size() > 0) {
+            Map<Integer, List<NotificationEntity>> jobIdToNoti = applyList.stream()
+                    .collect(Collectors.groupingBy(NotificationEntity::getTargetId));
+            for (Map.Entry<Integer, List<NotificationEntity>> noti: jobIdToNoti.entrySet()) {
+                String title = jobService.getJobById(noti.getKey()).getTitle();
+                noti.getValue().sort(Comparator.comparing(NotificationEntity::getCreateDate));
+                resNoti = new NotificationModel(APPLY, noti.getValue().size(), title,
+                        noti.getValue().get(0).getCreateDate(),
+                        noti.getValue().stream().map(NotificationEntity::getId).collect(Collectors.toList()));
+                res.add(resNoti);
+            }
         }
         res.sort(Comparator.comparing(NotificationModel::getLastModify));
         return res;
@@ -124,5 +128,10 @@ public class NotificationService implements INotificationService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification ID not found");
         }
         return notificationRepository.updateIsNew(id, false);
+    }
+
+    @Override
+    public Integer readNotifications(List<Integer> ids) {
+        return notificationRepository.updateIsNew(ids, false);
     }
 }
