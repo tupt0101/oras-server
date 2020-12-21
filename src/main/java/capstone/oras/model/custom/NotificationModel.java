@@ -7,6 +7,7 @@ public class NotificationModel {
     private String type;
     private Integer numb;
     private String actor;
+    private Integer jobId;
     private String jobTitle;
     private LocalDateTime lastModify;
     private List<Integer> ids;
@@ -50,10 +51,11 @@ public class NotificationModel {
      * @param jobTitle
      * @param ids
      */
-    public NotificationModel(String type, Integer numb, String jobTitle, LocalDateTime lastModify, List<Integer> ids) {
+    public NotificationModel(String type, Integer numb, String jobTitle, Integer jobId, LocalDateTime lastModify, List<Integer> ids) {
         this.type = type;
         this.numb = numb;
         this.jobTitle = jobTitle;
+        this.jobId = jobId;
         this.lastModify = lastModify;
         this.ids = ids;
     }
@@ -104,5 +106,13 @@ public class NotificationModel {
 
     public void setLastModify(LocalDateTime lastModify) {
         this.lastModify = lastModify;
+    }
+
+    public Integer getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(Integer jobId) {
+        this.jobId = jobId;
     }
 }
