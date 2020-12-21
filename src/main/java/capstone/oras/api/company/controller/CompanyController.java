@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
@@ -210,5 +211,10 @@ public class CompanyController {
         noti.setType(MODIFY);
         notificationService.createNotification(noti);
         return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/change-avatar", method = RequestMethod.PUT)
+    public ResponseEntity<Integer> resetPassword(@Param("id") Integer id, @Param(value = "avaUrl") String avaUrl) {
+        return new ResponseEntity<>(companyService.changeAvatar(id, avaUrl), HttpStatus.OK);
     }
 }
