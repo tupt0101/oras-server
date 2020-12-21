@@ -70,13 +70,7 @@ public class JobApplicationService implements IJobApplicationService {
         if (jobApplicationEntityList == null) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No application");
         }
-        // update TotalApplication
-        if (jobApplicationEntityList.length != 0) {
-            if (jobEntity.getTotalApplication() < jobApplicationEntityList.length) {
-                jobEntity.setTotalApplication(jobApplicationEntityList.length);
-                jobService.updateJob(jobEntity);
-            }
-        }
+        int total = jobEntity.getTotalApplication();
         // process application
         List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
         JobApplicationEntity jobApplicationEntity;
@@ -110,6 +104,7 @@ public class JobApplicationService implements IJobApplicationService {
                 jobApplicationEntity.setSource("openjob");
                 jobApplicationEntity.setMatchingRate(0.0);
                 jobApplicationEntity.setStatus(APPL);
+                total++;
                 jobApplicationsOras.add(jobApplicationEntity);
             } else if (!tempJobApplication.getApplyDate().isEqual(openjobJobApplication.getApplyAt())) {
                 tempJobApplication.setApplyDate(openjobJobApplication.getApplyAt());
@@ -117,6 +112,10 @@ public class JobApplicationService implements IJobApplicationService {
                 tempJobApplication.setMatchingRate(0.0);
                 jobApplicationsOras.add(tempJobApplication);
             }
+        }
+        // update TotalApplication
+        if (total != jobEntity.getTotalApplication()) {
+            jobService.updateJob(jobEntity);
         }
         return IJobApplicationRepository.saveAll(jobApplicationsOras);
     }
