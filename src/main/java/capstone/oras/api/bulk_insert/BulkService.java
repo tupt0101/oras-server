@@ -158,8 +158,7 @@ public class BulkService implements IBulkService {
         openjobJobEntity.setStatus(job.getStatus());
         openjobJobEntity.setTitle(job.getTitle());
         openjobJobEntity.setVacancies(job.getVacancies());
-        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        openjobJobEntity= restTemplate.postForObject(OJ_JOB, entity, OpenjobJobEntity.class);
+        openjobJobEntity = CommonUtils.handleOpenJobApi(OJ_JOB, HttpMethod.POST, openjobJobEntity, OpenjobJobEntity.class);
         if (openjobJobEntity != null) {
             job.setOpenjobJobId(openjobJobEntity.getId());
         }
@@ -223,10 +222,8 @@ public class BulkService implements IBulkService {
             openjobCompanyEntity.setName(signup.companyEntity.getName());
             openjobCompanyEntity.setPhoneNo(signup.companyEntity.getPhoneNo());
             openjobCompanyEntity.setTaxCode(signup.companyEntity.getTaxCode());
-            uri = OJ_COMPANY;
-            HttpEntity<OpenjobCompanyEntity> httpCompanyEntity = new HttpEntity<>(openjobCompanyEntity, headers);
             // Register
-            openjobCompanyEntity = restTemplate.postForObject(uri, httpCompanyEntity, OpenjobCompanyEntity.class);
+            openjobCompanyEntity = CommonUtils.handleOpenJobApi(OJ_COMPANY, HttpMethod.POST, openjobCompanyEntity, OpenjobCompanyEntity.class);
             signup.companyEntity.setOpenjobCompanyId(openjobCompanyEntity != null ? openjobCompanyEntity.getId() : 0);
         } else {
             signup.companyEntity.setOpenjobCompanyId(openJobEntity.getId());
