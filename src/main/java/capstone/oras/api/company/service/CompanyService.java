@@ -47,8 +47,6 @@ public class CompanyService implements ICompanyService {
     private IBuffCompanyRepository bufferCompanyRepository;
     @Autowired
     private JavaMailSender javaMailSender;
-    private RestTemplate restTemplate = new RestTemplate();
-    HttpHeaders headers = new HttpHeaders();
 
     @Override
     public CompanyEntity createCompany(CompanyEntity companyEntity) {
@@ -162,18 +160,7 @@ public class CompanyService implements ICompanyService {
             companyEntity = companyRepository.save(companyEntity);
             bufferCompanyRepository.deleteById(id);
             // update company at OJ
-            String uri = OJ_COMPANY;
-            headers.setBearerAuth(CommonUtils.getOjToken());
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            HttpEntity<CompanyEntity> entity = new HttpEntity<>(companyEntity, headers);
-            try {
-                restTemplate.postForObject(uri, entity, CompanyEntity.class);
-            } catch (HttpClientErrorException.Unauthorized e) {
-                CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-                entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-                restTemplate.postForObject(uri, entity, CompanyEntity.class);
-            }
+            CommonUtils.handleOpenJobApi(OJ_COMPANY, HttpMethod.POST, companyEntity, CompanyEntity.class);
             mailSubject = "Your company's new information has been accepted!";
             mailText = VERIFY_COMPANY_UPDATE_NOTI;
         } else {
@@ -221,6 +208,17 @@ public class CompanyService implements ICompanyService {
         // put
         CommonUtils.handleOpenJobApi(OJ_COMPANY, HttpMethod.PUT, comp,
                 OpenjobCompanyEntity.class);
+    }
+
+    @Override
+    public void rejectCompany(int id, String email) throws MessagingException {
+        // remove buffer
+        bufferCompanyRepository.deleteById(id);
+        // update company to verified
+        companyRepository.updateCompanyStatus(id, true);
+        // send mail
+        String mailSubject = "Your company's new information has been rejected!";
+        this.sendMail(email, mailSubject, REJECT_COMPANY_UPDATE_NOTI);
     }
 
     public void sendMail(String email, String subject, String text) throws MessagingException {

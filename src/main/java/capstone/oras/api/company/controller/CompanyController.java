@@ -129,6 +129,16 @@ public class CompanyController {
         return new ResponseEntity<>(companyService.changeAvatar(id, avaUrl), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/company/reject", method = RequestMethod.PUT)
+    @ResponseBody
+    void rejectCompany(@Param("id") int id, @Param("email") String email) {
+        try {
+            companyService.rejectCompany(id, email);
+        } catch (MessagingException e) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Cannot send email.");
+        }
+    }
+
 //    @RequestMapping(value = "/company", method = RequestMethod.POST)
 //    @ResponseBody
 //    ResponseEntity<CompanyEntity> createCompany(@RequestBody CompanyEntity companyEntity) {
