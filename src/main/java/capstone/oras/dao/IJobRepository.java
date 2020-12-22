@@ -36,7 +36,11 @@ public interface IJobRepository extends JpaRepository<JobEntity, Integer>, Pagin
 
     List<JobEntity> findAllBy(Pageable pageable);
 
+    @Query("select j from JobEntity j where upper(j.title) = :title and j.status = :status and j.currency = :currency" +
+            " and j.status <> 'Draft'")
     List<JobEntity> findAllByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(String title, String status, String currency, Pageable pageable);
+    @Query("select count(j) from JobEntity j where upper(j.title) = :title and j.status = :status and j.currency = " +
+            ":currency and j.status <> 'Draft'")
     int countByTitleIgnoreCaseLikeAndStatusLikeAndCurrencyLike(String title, String status, String currency);
 
     Optional<List<JobEntity>> findJobEntitiesByCreatorIdEquals(int creatorId, Pageable pageable);

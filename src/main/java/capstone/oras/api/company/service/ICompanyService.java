@@ -23,4 +23,5 @@ public interface ICompanyService {
     int updateCompanyStatus(int id, boolean status);
     BuffCompanyEntity saveBufferCompany(CompanyEntity companyEntity);
     Integer changeAvatar(Integer id, String avaUrl);
+    void rejectCompany(int id, String email) throws MessagingException;
 }
