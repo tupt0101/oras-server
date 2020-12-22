@@ -15,15 +15,15 @@ import capstone.oras.model.custom.ListJobModel;
 import capstone.oras.oauth2.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -209,25 +209,8 @@ public class JobController {
         openjobJobEntity.setStatus(job.getStatus());
         openjobJobEntity.setTitle(job.getTitle());
         openjobJobEntity.setVacancies(job.getVacancies());
-        //get openjob token
-//        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = CommonUtils.getOjToken();
         // post job to openjob
-        String uri = OJ_JOB;
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<OpenjobJobEntity> entity = new HttpEntity<>(openjobJobEntity, headers);
-        OpenjobJobEntity openJobEntity;
-        try {
-            openJobEntity= restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
-        } catch (HttpClientErrorException.Unauthorized e) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            openJobEntity = restTemplate.postForObject(uri, entity, OpenjobJobEntity.class);
-        }
+        OpenjobJobEntity openJobEntity = CommonUtils.handleOpenJobApi(OJ_JOB, HttpMethod.POST, openjobJobEntity, OpenjobJobEntity.class);
         job.setOpenjobJobId(openJobEntity.getId());
         job.setExpireDate(accountPackageEntity.getValidTo());
         job.setApplyFrom(LocalDateTime.now(TIME_ZONE));
