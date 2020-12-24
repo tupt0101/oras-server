@@ -3,6 +3,7 @@ package capstone.oras.paypal.controller;
 import capstone.oras.api.accountPackage.service.IAccountPackageService;
 import capstone.oras.api.packages.service.IPackageService;
 import capstone.oras.api.purchase.service.IPurchaseService;
+import capstone.oras.common.Constant;
 import capstone.oras.entity.AccountPackageEntity;
 import capstone.oras.entity.PurchaseEntity;
 import capstone.oras.paypal.config.PaypalPaymentIntent;
@@ -112,7 +113,7 @@ public class PaypalController {
                 accountPackageService.createAccountPackage(accountPackageEntity);
 
 
-                return "<HTML><body> <a href=\"http://localhost:9527/#\">Payment Successful (Click to go back)</a></body></HTML>";
+                return Constant.HtmlTemplate.successPaypalTemplate();
             }
         } catch (PayPalRESTException e) {
             log.error(e.getMessage());
