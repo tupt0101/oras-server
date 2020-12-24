@@ -27,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -104,6 +105,7 @@ public class AccountController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     @ResponseBody
+    @Transactional
     public ResponseEntity<AccountEntity> signup(@RequestBody Signup signup) throws MessagingException {
         if (signup.accountEntity.getEmail() == null || signup.accountEntity.getEmail().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is a required field");
