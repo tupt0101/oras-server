@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface INotificationService {
     NotificationEntity createNotification(NotificationEntity notificationEntity);
+    List<NotificationEntity> createAllNotification(List<NotificationEntity> notificationEntity);
     NotificationEntity updateNotification(NotificationEntity notificationEntity);
     List<NotificationEntity> updateNotifications(List<NotificationEntity> notificationEntity);
     List<NotificationEntity> getAllNotification();
