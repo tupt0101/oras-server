@@ -14,7 +14,7 @@ public class Constant {
 
     public static class OpenJobApi {
         public static final String OJ_JOB = OPEN_JOB_HOST + "/v1/job-management/job";
-        public static final String OJ_COMPANY_BY_NAME = OPEN_JOB_HOST + "company-management/company-by-name/";
+        public static final String OJ_COMPANY_BY_NAME = OPEN_JOB_HOST + "/v1/company-management/company-by-name/";
         public static final String OJ_COMPANY = OPEN_JOB_HOST + "/v1/company-management/company";
         public static final String OJ_JOB_BY_ID = OPEN_JOB_HOST + "/v1/job-application-management/job-application/find-by-job-id/";
         public static final String OJ_LOGIN = OPEN_JOB_HOST + "/login?username=admin@gmail.com&password=password";
