@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static capstone.oras.common.Constant.NotiType.APPLY;
+import static capstone.oras.common.Constant.TIME_ZONE;
+
 @Entity
 @Table(name = "notification", schema = "public", catalog = "db67ot35cl90oe")
 public class NotificationEntity {
@@ -91,5 +94,16 @@ public class NotificationEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, receiverId, type, targetId, createDate, isNew);
+    }
+
+    public NotificationEntity() {
+    }
+
+    public NotificationEntity(Integer creatorId, Integer jobId, String action) {
+        receiverId = creatorId;
+        type = action;
+        targetId = jobId;
+        createDate = LocalDateTime.now(TIME_ZONE);
+        isNew = true;
     }
 }

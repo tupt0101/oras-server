@@ -116,14 +116,15 @@ public class ScheduleSpringConfig {
             if (job.getExpireDate().isAfter(LocalDateTime.now(TIME_ZONE)) || job.getApplyTo().isAfter(LocalDateTime.now(TIME_ZONE))) {
                 try {
                     jobApplicationService.createJobApplications(job.getId());
-                    if (!jobService.getJobById(job.getId()).getTotalApplication().equals(job.getTotalApplication())) {
-                        NotificationEntity notificationEntity = new NotificationEntity();
-                        notificationEntity.setCreateDate(LocalDateTime.now(TIME_ZONE));
-                        notificationEntity.setNew(true);
-                        notificationEntity.setReceiverId(job.getCreatorId());
-                        notificationEntity.setTargetId(job.getId());
-                        notificationEntity.setType(APPLY);
-                        notificationService.createNotification(notificationEntity);
+                    Integer newTotal = jobService.getJobById(job.getId()).getTotalApplication();
+                    if (!newTotal.equals(job.getTotalApplication())) {
+                        List<NotificationEntity> notificationEntities = new ArrayList<>();
+                        for (int i = 1; i <= (newTotal - job.getTotalApplication()); i++) {
+                            NotificationEntity notificationEntity = new NotificationEntity(job.getCreatorId(),
+                                    job.getId(), APPLY);
+                            notificationEntities.add(notificationEntity);
+                        }
+                        notificationService.createAllNotification(notificationEntities);
                     }
                 } catch (ResponseStatusException e) {
                     System.out.println(e.getMessage());
