@@ -106,7 +106,7 @@ public class Constant {
                     "      </div>\n" +
                     "        <h1>Success</h1> \n" +
                     "        <p>Your account has been confirmed</p>\n" +
-                    "        <button class=\"button button2\">Take me ORAS</button>\n" +
+                    "        <a  href=\"http://localhost:9527/#\"><button class=\"button button2\">Take me ORAS</button></a>\n" +
                     "      </div>\n" +
                     "    </body>\n" +
                     "</html>";
@@ -527,7 +527,7 @@ public class Constant {
                 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                 "                    <tr>\n" +
                 "                        <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\" style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
-                            "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Welcome!</h1> <img src=\"https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
+                "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Your company's new information has been accepted!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
                 "                </table>\n" +
@@ -681,7 +681,7 @@ public class Constant {
                 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                 "                    <tr>\n" +
                 "                        <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\" style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
-                    "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Reset Password!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
+                "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Your company's new information has been accepted!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
                 "                </table>\n" +
@@ -838,8 +838,7 @@ public class Constant {
                             "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                             "                    <tr>\n" +
                             "                        <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\" style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
-                    "                        <h1 style=\"font-size: 48px; font-weight: 400; margin: auto;\">Your personal information </br>has\n" +
-                    "                            been changed!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\"\n" +
+                            "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Welcome!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
                             "                        </td>\n" +
                             "                    </tr>\n" +
                             "                </table>\n" +
@@ -1020,6 +1019,7 @@ public class Constant {
                     "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                     "                    <tr>\n" +
                     "                        <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\" style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
+                    "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Reset Password!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
                     "                        </td>\n" +
                     "                    </tr>\n" +
                     "                </table>\n" +
@@ -1195,7 +1195,7 @@ public class Constant {
                     "                    <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\"\n" +
                     "                        style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
                     "                        <h1 style=\"font-size: 48px; font-weight: 400; margin: auto;\">Your personal information </br>has\n" +
-                    "                            been changed!</h1> <img src=\" https://img.icons8.com/clouds/100/000000/handshake.png\"\n" +
+                    "                            been changed!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\"\n" +
                     "                                                    width=\"125\" height=\"120\" style=\"display: block; border: 0px;\"/>\n" +
                     "                    </td>\n" +
                     "                </tr>\n" +
