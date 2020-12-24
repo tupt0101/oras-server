@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IJobApplicationService {
     JobApplicationEntity createJobApplication(JobApplicationEntity jobApplicationEntity);
-    List<JobApplicationEntity> createJobApplications(int jobId);
+    void createJobApplications(int jobId);
     JobApplicationEntity updateJobApplication(JobApplicationEntity jobApplicationEntity);
     List<JobApplicationEntity> getAllJobApplication();
     JobApplicationEntity findJobApplicationById(int id);

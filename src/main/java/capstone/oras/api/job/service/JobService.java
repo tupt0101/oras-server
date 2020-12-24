@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
@@ -23,7 +22,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
 import static capstone.oras.common.Constant.JobStatus.*;
@@ -206,9 +208,10 @@ public class JobService implements IJobService {
     public String processJd(String description) {
         String uri = AI_PROCESS_HOST + "/process/jd";
         // Create HttpEntity
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
+        HttpHeaders headers = CommonUtils.initHttpHeaders();
+//                new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
         ProcessJdRequest jobDesc = new ProcessJdRequest();
         jobDesc.setJd(Jsoup.parse(description).text());
         HttpEntity entity = new HttpEntity(jobDesc, headers);

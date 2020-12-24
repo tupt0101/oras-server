@@ -80,6 +80,7 @@ public class CommonUtils {
         for (int i = 0; i < 3; i++) {
             try {
                 ret = restTemplate.exchange(url, method, entity, responseModel).getBody();
+                break;
             } catch (HttpClientErrorException.Unauthorized e) {
                 getOpenJobToken();
             } catch (Exception e) {
