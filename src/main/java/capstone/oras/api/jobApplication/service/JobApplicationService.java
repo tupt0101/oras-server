@@ -15,18 +15,20 @@ import capstone.oras.model.oras_ai.CalcSimilarityRequest;
 import capstone.oras.model.oras_ai.CalcSimilarityResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static capstone.oras.common.Constant.AI_PROCESS_HOST;
 import static capstone.oras.common.Constant.ApplicantStatus.APPL;
@@ -56,7 +58,7 @@ public class JobApplicationService implements IJobApplicationService {
     }
 
     @Override
-    public List<JobApplicationEntity> createJobApplications(int jobId) {
+    public void createJobApplications(int jobId) {
         // get job entity
         JobEntity jobEntity = jobService.getJobById(jobId);
         // get OpenjobJobId
@@ -70,7 +72,7 @@ public class JobApplicationService implements IJobApplicationService {
         if (jobApplicationEntityList == null) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No application");
         }
-        int total = jobEntity.getTotalApplication();
+
         // process application
         List<JobApplicationEntity> jobApplicationsOras = new ArrayList<>();
         JobApplicationEntity jobApplicationEntity;
@@ -104,7 +106,6 @@ public class JobApplicationService implements IJobApplicationService {
                 jobApplicationEntity.setSource("openjob");
                 jobApplicationEntity.setMatchingRate(0.0);
                 jobApplicationEntity.setStatus(APPL);
-                total++;
                 jobApplicationsOras.add(jobApplicationEntity);
             } else if (!tempJobApplication.getApplyDate().isEqual(openjobJobApplication.getApplyAt())) {
                 tempJobApplication.setApplyDate(openjobJobApplication.getApplyAt());
@@ -113,11 +114,13 @@ public class JobApplicationService implements IJobApplicationService {
                 jobApplicationsOras.add(tempJobApplication);
             }
         }
+        IJobApplicationRepository.saveAll(jobApplicationsOras);
         // update TotalApplication
+        int total = jobApplicationService.findJobApplicationsByJobId(jobId).size();
         if (total != jobEntity.getTotalApplication()) {
+            jobEntity.setTotalApplication(total);
             jobService.updateJob(jobEntity);
         }
-        return IJobApplicationRepository.saveAll(jobApplicationsOras);
     }
 
     @Override
@@ -159,30 +162,17 @@ public class JobApplicationService implements IJobApplicationService {
         }
         String uri = AI_PROCESS_HOST + "/calc/similarity";
         // Create HttpEntity
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
-        JobEntity job = iJobRepository.findById(id).get();
-        String jd = job.getProcessedJd();
-        if (jd == null) {
-            jd = jobService.processJd(job.getDescription());
-            iJobRepository.updateProcessJd(id, jd);
-        }
-        Integer job_id = job.getId();
-        CalcSimilarityRequest request = new CalcSimilarityRequest(job_id, jd);
+        HttpHeaders headers = CommonUtils.initHttpHeaders();
+        CalcSimilarityRequest request = new CalcSimilarityRequest(id);
         HttpEntity entity = new HttpEntity(request, headers);
         // Call process
         CalcSimilarityResponse ret;
         try {
             ret = restTemplate.postForEntity(uri, entity, CalcSimilarityResponse.class).getBody();
-        } catch (HttpClientErrorException.Unauthorized ex) {
-            CommonUtils.setOjToken(CommonUtils.getOpenJobToken());
-            entity.getHeaders().setBearerAuth(CommonUtils.getOjToken());
-            ret = restTemplate.postForEntity(uri, entity, CalcSimilarityResponse.class).getBody();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Disconnect to server");
         }
-        return ret.getMessage();
+        return Objects.requireNonNull(ret).getMessage();
     }
 
     @Override

@@ -4,11 +4,12 @@ import capstone.oras.entity.CompanyEntity;
 import java.time.ZoneId;
 
 public class Constant {
-//    public static final String AI_PROCESS_HOST = "http://127.0.0.1:5000";
-    public static final String AI_PROCESS_HOST = "http://113.185.84.243:5000";
+    public static final String AI_PROCESS_HOST = "http://127.0.0.1:5000";
+//    public static final String AI_PROCESS_HOST = "http://113.185.84.243:5000";
     public static final String OPEN_JOB_HOST = "https://openjob-server.herokuapp.com";
-    public static final String ORAS_HOST = "https://oras-api.herokuapp.com";
-//    public static final String ORAS_HOST = "http://localhost:8080";
+//    public static final String OPEN_JOB_HOST = "http://127.0.0.1:8088";
+//    public static final String ORAS_HOST = "https://oras-api.herokuapp.com";
+    public static final String ORAS_HOST = "http://localhost:8080";
     public static final ZoneId TIME_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
 
     public static class OpenJobApi {

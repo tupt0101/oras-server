@@ -171,8 +171,8 @@ public class JobApplicationController {
 
     @RequestMapping(value = "/job-applications-openjob/{jobId}", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity<List<JobApplicationEntity>> getAllJobApplicationMulti(@PathVariable("jobId") int jobId) {
-        return new ResponseEntity<>(jobApplicationService.createJobApplications(jobId), HttpStatus.OK);
+    public void getAllJobApplicationMulti(@PathVariable("jobId") int jobId) {
+        jobApplicationService.createJobApplications(jobId);
     }
 
 ////    @RequestMapping(value = "/job-applications", method = RequestMethod.POST)
