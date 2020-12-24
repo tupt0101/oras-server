@@ -5,6 +5,7 @@ import capstone.oras.api.company.service.ICompanyService;
 import capstone.oras.api.job.service.IJobService;
 import capstone.oras.api.notification.service.INotificationService;
 import capstone.oras.common.CommonUtils;
+import capstone.oras.common.Constant;
 import capstone.oras.dao.IConfirmationTokenRepository;
 import capstone.oras.entity.*;
 import capstone.oras.entity.openjob.OpenjobCompanyEntity;
@@ -321,7 +322,8 @@ public class AccountController {
             AccountEntity user = accountService.findAccountByEmail(token.getUser().getEmail());
             user.setConfirmMail(true);
             accountService.updateAccount(user);
-            return "<HTML><body> <a href=\"http://localhost:9527/#\">Confirm Successful (Click to go back)</a></body></HTML>";
+//            return "<HTML><body> <a href=\"http://localhost:9527/#\">Confirm Successful (Click to go back)</a></body></HTML>";
+            return Constant.HtmlTemplate.successConfirmAccountTemplate();
         } else {
             return "<HTML><body> <a href=\"http://localhost:9527/#\">Confirm Error (Click to go back)</a></body></HTML>";
         }

@@ -42,6 +42,214 @@ public class Constant {
         public static final String APPL = "Applied";
     }
 
+    public static class HtmlTemplate {
+        public static String successConfirmAccountTemplate() {
+            return "<html>\n" +
+                    "  <head>\n" +
+                    "    <link href=\"https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap\" rel=\"stylesheet\">\n" +
+                    "  </head>\n" +
+                    "    <style>\n" +
+                    "      body {\n" +
+                    "        text-align: center;\n" +
+                    "        padding: 40px 0;\n" +
+                    "        background: #EBF0F5;\n" +
+                    "      }\n" +
+                    "        h1 {\n" +
+                    "          color: #88B04B;\n" +
+                    "          font-family: \"Nunito Sans\", \"Helvetica Neue\", sans-serif;\n" +
+                    "          font-weight: 900;\n" +
+                    "          font-size: 40px;\n" +
+                    "          margin-bottom: 10px;\n" +
+                    "        }\n" +
+                    "        p {\n" +
+                    "          color: #404F5E;\n" +
+                    "          font-family: \"Nunito Sans\", \"Helvetica Neue\", sans-serif;\n" +
+                    "          font-size:20px;\n" +
+                    "          margin: 0;\n" +
+                    "        }\n" +
+                    "      i {\n" +
+                    "        color: #9ABC66;\n" +
+                    "        font-size: 100px;\n" +
+                    "        line-height: 200px;\n" +
+                    "        margin-left:-15px;\n" +
+                    "      }\n" +
+                    "      .card {\n" +
+                    "        background: white;\n" +
+                    "        padding: 60px;\n" +
+                    "        border-radius: 4px;\n" +
+                    "        box-shadow: 0 2px 3px #C8D0D8;\n" +
+                    "        display: inline-block;\n" +
+                    "        margin: 0 auto;\n" +
+                    "      }\n" +
+                    "      .button {\n" +
+                    "  background-color: #4CAF50; /* Green */\n" +
+                    "  border: none;\n" +
+                    "  color: white;\n" +
+                    "  padding: 15px 32px;\n" +
+                    "  text-align: center;\n" +
+                    "  text-decoration: none;\n" +
+                    "  display: inline-block;\n" +
+                    "  font-size: 16px;\n" +
+                    "  margin: 4px 2px;\n" +
+                    "  cursor: pointer;\n" +
+                    "  -webkit-transition-duration: 0.4s; /* Safari */\n" +
+                    "  transition-duration: 0.4s;\n" +
+                    "}\n" +
+                    "      .button2:hover {\n" +
+                    "  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);\n" +
+                    "}\n" +
+                    "    </style>\n" +
+                    "    <body>\n" +
+                    "      <div class=\"card\">\n" +
+                    "      <div style=\"border-radius:200px; height:200px; width:200px; background: #F8FAF5; margin:0 auto;\">\n" +
+                    "        <i class=\"checkmark\">✓</i>\n" +
+                    "      </div>\n" +
+                    "        <h1>Success</h1> \n" +
+                    "        <p>Your account has been confirmed</p>\n" +
+                    "        <button class=\"button button2\">Take me ORAS</button>\n" +
+                    "      </div>\n" +
+                    "    </body>\n" +
+                    "</html>";
+        }
+        public static String successPaypalTemplate() {
+            return "<html>\n" +
+                    "  <head>\n" +
+                    "    <link href=\"https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap\" rel=\"stylesheet\">\n" +
+                    "  </head>\n" +
+                    "    <style>\n" +
+                    "      body {\n" +
+                    "        text-align: center;\n" +
+                    "        padding: 40px 0;\n" +
+                    "        background: #EBF0F5;\n" +
+                    "      }\n" +
+                    "        h1 {\n" +
+                    "          color: #88B04B;\n" +
+                    "          font-family: \"Nunito Sans\", \"Helvetica Neue\", sans-serif;\n" +
+                    "          font-weight: 900;\n" +
+                    "          font-size: 40px;\n" +
+                    "          margin-bottom: 10px;\n" +
+                    "        }\n" +
+                    "        p {\n" +
+                    "          color: #404F5E;\n" +
+                    "          font-family: \"Nunito Sans\", \"Helvetica Neue\", sans-serif;\n" +
+                    "          font-size:20px;\n" +
+                    "          margin: 0;\n" +
+                    "        }\n" +
+                    "      i {\n" +
+                    "        color: #9ABC66;\n" +
+                    "        font-size: 100px;\n" +
+                    "        line-height: 200px;\n" +
+                    "        margin-left:-15px;\n" +
+                    "      }\n" +
+                    "      .card {\n" +
+                    "        background: white;\n" +
+                    "        padding: 60px;\n" +
+                    "        border-radius: 4px;\n" +
+                    "        box-shadow: 0 2px 3px #C8D0D8;\n" +
+                    "        display: inline-block;\n" +
+                    "        margin: 0 auto;\n" +
+                    "      }\n" +
+                    "      .button {\n" +
+                    "  background-color: #4CAF50; /* Green */\n" +
+                    "  border: none;\n" +
+                    "  color: white;\n" +
+                    "  padding: 15px 32px;\n" +
+                    "  text-align: center;\n" +
+                    "  text-decoration: none;\n" +
+                    "  display: inline-block;\n" +
+                    "  font-size: 16px;\n" +
+                    "  margin: 4px 2px;\n" +
+                    "  cursor: pointer;\n" +
+                    "  -webkit-transition-duration: 0.4s; /* Safari */\n" +
+                    "  transition-duration: 0.4s;\n" +
+                    "}\n" +
+                    "      .button2:hover {\n" +
+                    "  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);\n" +
+                    "}\n" +
+                    "    </style>\n" +
+                    "    <body>\n" +
+                    "      <div class=\"card\">\n" +
+                    "      <div style=\"border-radius:200px; height:200px; width:200px; background: #F8FAF5; margin:0 auto;\">\n" +
+                    "        <i class=\"checkmark\">✓</i>\n" +
+                    "      </div>\n" +
+                    "        <h1>Success</h1> \n" +
+                    "        <p>Purchase success</p>\n" +
+                    "        <button class=\"button button2\">Take me ORAS</button>\n" +
+                    "      </div>\n" +
+                    "    </body>\n" +
+                    "</html>";
+        }
+
+        public static String errorAccountTemplate() {
+            return "<html>\n" +
+                    "  <head>\n" +
+                    "    <link href=\"https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap\" rel=\"stylesheet\">\n" +
+                    "  </head>\n" +
+                    "    <style>\n" +
+                    "      body {\n" +
+                    "        text-align: center;\n" +
+                    "        padding: 40px 0;\n" +
+                    "        background: #EBF0F5;\n" +
+                    "      }\n" +
+                    "        h1 {\n" +
+                    "          color: #88B04B;\n" +
+                    "          font-family: \"Nunito Sans\", \"Helvetica Neue\", sans-serif;\n" +
+                    "          font-weight: 900;\n" +
+                    "          font-size: 40px;\n" +
+                    "          margin-bottom: 10px;\n" +
+                    "        }\n" +
+                    "        p {\n" +
+                    "          color: #404F5E;\n" +
+                    "          font-family: \"Nunito Sans\", \"Helvetica Neue\", sans-serif;\n" +
+                    "          font-size:20px;\n" +
+                    "          margin: 0;\n" +
+                    "        }\n" +
+                    "      i {\n" +
+                    "        color: #9ABC66;\n" +
+                    "        font-size: 100px;\n" +
+                    "        line-height: 200px;\n" +
+                    "        margin-left:-15px;\n" +
+                    "      }\n" +
+                    "      .card {\n" +
+                    "        background: white;\n" +
+                    "        padding: 60px;\n" +
+                    "        border-radius: 4px;\n" +
+                    "        box-shadow: 0 2px 3px #C8D0D8;\n" +
+                    "        display: inline-block;\n" +
+                    "        margin: 0 auto;\n" +
+                    "      }\n" +
+                    "      .button {\n" +
+                    "  background-color: #4CAF50; /* Green */\n" +
+                    "  border: none;\n" +
+                    "  color: white;\n" +
+                    "  padding: 15px 32px;\n" +
+                    "  text-align: center;\n" +
+                    "  text-decoration: none;\n" +
+                    "  display: inline-block;\n" +
+                    "  font-size: 16px;\n" +
+                    "  margin: 4px 2px;\n" +
+                    "  cursor: pointer;\n" +
+                    "  -webkit-transition-duration: 0.4s; /* Safari */\n" +
+                    "  transition-duration: 0.4s;\n" +
+                    "}\n" +
+                    "      .button2:hover {\n" +
+                    "  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);\n" +
+                    "}\n" +
+                    "    </style>\n" +
+                    "    <body>\n" +
+                    "      <div class=\"card\">\n" +
+                    "      <div style=\"border-radius:200px; height:200px; width:200px; background: #F8FAF5; margin:0 auto;\">\n" +
+                    "        <i class=\"checkmark\">✓</i>\n" +
+                    "      </div>\n" +
+                    "        <h1>Success</h1> \n" +
+                    "        <p>Your account has been confirmed</p>\n" +
+                    "        <button class=\"button button2\">Ok</button>\n" +
+                    "      </div>\n" +
+                    "    </body>\n" +
+                    "</html>";
+        }
+    }
+
     public static class EmailForm {
         public static final String VERIFY_COMPANY_NOTI = "<!DOCTYPE html>\n" +
                 "<html>\n" +
@@ -165,7 +373,7 @@ public class Constant {
                 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                 "                    <tr>\n" +
                 "                        <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\" style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
-                "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Welcome!</h1> <img src=\" https://img.icons8.com/clouds/100/000000/handshake.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
+                "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Welcome!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
                 "                </table>\n" +
@@ -319,7 +527,7 @@ public class Constant {
                 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                 "                    <tr>\n" +
                 "                        <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\" style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
-                "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Your company's new information has been accepted!</h1> <img src=\" https://img.icons8.com/clouds/100/000000/handshake.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
+                            "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Welcome!</h1> <img src=\"https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
                 "                </table>\n" +
@@ -473,7 +681,7 @@ public class Constant {
                 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                 "                    <tr>\n" +
                 "                        <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\" style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
-                "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Your company's new information has been accepted!</h1> <img src=\" https://img.icons8.com/clouds/100/000000/handshake.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
+                    "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Reset Password!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
                 "                        </td>\n" +
                 "                    </tr>\n" +
                 "                </table>\n" +
@@ -630,7 +838,8 @@ public class Constant {
                             "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                             "                    <tr>\n" +
                             "                        <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\" style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
-                            "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Welcome!</h1> <img src=\" https://img.icons8.com/clouds/100/000000/handshake.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
+                    "                        <h1 style=\"font-size: 48px; font-weight: 400; margin: auto;\">Your personal information </br>has\n" +
+                    "                            been changed!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\"\n" +
                             "                        </td>\n" +
                             "                    </tr>\n" +
                             "                </table>\n" +
@@ -811,7 +1020,6 @@ public class Constant {
                     "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                     "                    <tr>\n" +
                     "                        <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\" style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
-                    "                            <h1 style=\"font-size: 48px; font-weight: 400; margin: 2;\">Reset Password!</h1> <img src=\" https://img.icons8.com/clouds/100/000000/handshake.png\" width=\"125\" height=\"120\" style=\"display: block; border: 0px;\" />\n" +
                     "                        </td>\n" +
                     "                    </tr>\n" +
                     "                </table>\n" +
@@ -1177,7 +1385,7 @@ public class Constant {
                     "                    <td bgcolor=\"#ffffff\" align=\"center\" valign=\"top\"\n" +
                     "                        style=\"padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;\">\n" +
                     "                        <h1 style=\"font-size: 48px; font-weight: 400; margin: auto;\">Your personal information </br>has\n" +
-                    "                            been changed!</h1> <img src=\" https://img.icons8.com/clouds/100/000000/handshake.png\"\n" +
+                    "                            been changed!</h1> <img src=\" https://oras-myfile.s3-ap-southeast-1.amazonaws.com/1607931466649-logo_2.png\"\n" +
                     "                                                    width=\"125\" height=\"120\" style=\"display: block; border: 0px;\"/>\n" +
                     "                    </td>\n" +
                     "                </tr>\n" +
@@ -1260,5 +1468,6 @@ public class Constant {
                     "</html>\n";
         }
     }
+
 }
 
