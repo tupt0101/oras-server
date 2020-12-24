@@ -90,7 +90,7 @@ public class Constant {
                     "      </div>\n" +
                     "        <h1>Success</h1> \n" +
                     "        <p>Your account has been confirmed</p>\n" +
-                    "        <a  href=\"http://localhost:9527/#\"><button class=\"button button2\">Take me ORAS</button></a>\n" +
+                    "        <a  href=\"http://localhost:9527/#\"><button class=\"button button2\">Take me to ORAS</button></a>\n" +
                     "      </div>\n" +
                     "    </body>\n" +
                     "</html>";
@@ -158,7 +158,7 @@ public class Constant {
                     "      </div>\n" +
                     "        <h1>Success</h1> \n" +
                     "        <p>Purchase success</p>\n" +
-                    "        <button class=\"button button2\">Take me ORAS</button>\n" +
+                    "        <a  href=\"http://localhost:9527/#\"><button class=\"button button2\">Take me to ORAS</button></a>\n" +
                     "      </div>\n" +
                     "    </body>\n" +
                     "</html>";
