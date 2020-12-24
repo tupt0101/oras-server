@@ -136,8 +136,8 @@ public class AccountController {
         signup.companyEntity.setModifyDate(LocalDateTime.now(TIME_ZONE));
         // post company to openjob
         String uri = OJ_COMPANY_BY_NAME + signup.companyEntity.getName();
-        CompanyEntity openJobEntity = CommonUtils.handleOpenJobApi(uri, HttpMethod.GET, null,
-                CompanyEntity.class);
+        OpenjobCompanyEntity openJobEntity = CommonUtils.handleOpenJobApi(uri, HttpMethod.GET, null,
+                OpenjobCompanyEntity.class);
         if (openJobEntity == null) {
             OpenjobCompanyEntity openjobCompanyEntity = new OpenjobCompanyEntity();
             openjobCompanyEntity.setAccountId(1);
