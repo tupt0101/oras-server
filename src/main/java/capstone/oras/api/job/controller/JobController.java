@@ -53,9 +53,6 @@ public class JobController {
     private IActivityService activityService;
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
-
-    @Autowired
     public JobController(IJobService jobService, IActivityService activityService) {
         this.jobService = jobService;
         this.activityService = activityService;
@@ -110,9 +107,6 @@ public class JobController {
         }
         JobEntity job = jobService.getJobById(id);
         int openjobJobId = job.getOpenjobJobId();
-        //get openjob token
-//        CustomUserDetailsService userDetailsService = new CustomUserDetailsService();
-        String token = CommonUtils.getOjToken();
         // post job to openjob
         String uri = OJ_JOB + "/" + openjobJobId + "/close";
         CommonUtils.handleOpenJobApi(uri, HttpMethod.PUT, null, OpenjobJobEntity.class);
@@ -176,20 +170,6 @@ public class JobController {
         if (jobService.existsByCreatorIdEqualsAndTitleEqualsAndStatusIs(job.getCreatorId(), job.getTitle())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This job title already exists");
         }
-        AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(job.getCreatorId());
-        if (accountPackageEntity == null) {
-            throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
-        }
-        int numOfPost = accountPackageEntity.getNumOfPost();
-        if (numOfPost > 0) {
-            accountPackageEntity.setNumOfPost(numOfPost - 1);
-        } else {
-            throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
-        }
-        if (accountPackageEntity.getNumOfPost() == 0) {
-            accountPackageEntity.setExpired(true);
-        }
-        job.setStatus(PUBLISHED);
         OpenjobJobEntity openjobJobEntity = new OpenjobJobEntity();
         openjobJobEntity.setApplyTo(job.getApplyTo());
         openjobJobEntity.setAccountId(1);
@@ -211,9 +191,23 @@ public class JobController {
         openjobJobEntity.setVacancies(job.getVacancies());
         // post job to openjob
         OpenjobJobEntity openJobEntity = CommonUtils.handleOpenJobApi(OJ_JOB, HttpMethod.POST, openjobJobEntity, OpenjobJobEntity.class);
+        AccountPackageEntity accountPackageEntity = accountPackageService.findAccountPackageByAccountId(job.getCreatorId());
+        if (accountPackageEntity == null) {
+            throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
+        }
+        int numOfPost = accountPackageEntity.getNumOfPost();
+        if (numOfPost > 0) {
+            accountPackageEntity.setNumOfPost(numOfPost - 1);
+        } else {
+            throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Payment required");
+        }
+        if (accountPackageEntity.getNumOfPost() == 0) {
+            accountPackageEntity.setExpired(true);
+        }
         job.setOpenjobJobId(openJobEntity.getId());
         job.setExpireDate(accountPackageEntity.getValidTo());
         job.setApplyFrom(LocalDateTime.now(TIME_ZONE));
+        job.setStatus(PUBLISHED);
 
         ActivityEntity activityEntity = new ActivityEntity();
         activityEntity.setCreatorId(job.getCreatorId());
